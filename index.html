@@ -339,10 +339,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">picoclaw/config.json</span>
         </div>
-        <div class="file-item" onclick="openFile('/home/pi/.openclaw/openclaw.json','OpenClaw Config')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="file-item-name">openclaw/openclaw.json</span>
-        </div>
         <div class="file-group-label">Integrations</div>
         <div class="file-item" onclick="openFile('/home/pi/.clawbot-telegram.env','Telegram Config')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -361,10 +357,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="file-item" onclick="openFile('/etc/systemd/system/picoclaw.service','picoclaw.service')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">picoclaw.service</span>
-        </div>
-        <div class="file-item" onclick="openFile('/etc/systemd/system/openclaw.service','openclaw.service')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="file-item-name">openclaw.service</span>
         </div>
       </div>
       <div class="file-editor" id="file-editor">
@@ -393,7 +385,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="logs-bar">
         <div class="logs-svc-btns">
           <button class="log-svc-btn active" onclick="selectLogSvc('picoclaw',this)">PicoClaw</button>
-          <button class="log-svc-btn" onclick="selectLogSvc('openclaw',this)">OpenClaw</button>
           <button class="log-svc-btn" onclick="selectLogSvc('nginx',this)">nginx</button>
           <button class="log-svc-btn" onclick="selectLogSvc('clawbot-status-api',this)">Status API</button>
           <button class="log-svc-btn" onclick="selectLogSvc('clawbot-telegram',this)">Telegram</button>
@@ -436,17 +427,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <div class="ag-nm" id="ag-nm">PicoClaw</div>
             <div class="ag-sb" id="ag-sb">Go · &lt;10MB RAM · port 8080</div>
           </div>
-          <label class="tgl" title="Toggle PicoClaw / OpenClaw">
-            <input type="checkbox" id="ag-tgl">
-            <div class="tgl-tk"></div><div class="tgl-th"></div>
-          </label>
         </div>
       </div>
       <div class="card">
         <div class="sec-t">Services</div>
         <div class="svc-l">
           <div class="svc-r"><div class="svc-d on" id="sd-picoclaw"></div><span class="svc-n">picoclaw.service</span><span class="svc-s" id="ss-picoclaw">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('picoclaw','restart')">Restart</button><button class="sb-btn dng" onclick="svcAct('picoclaw','stop')">Stop</button></div></div>
-          <div class="svc-r"><div class="svc-d off" id="sd-openclaw"></div><span class="svc-n">openclaw.service</span><span class="svc-s" id="ss-openclaw">inactive</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('openclaw','start')">Start</button></div></div>
           <div class="svc-r"><div class="svc-d on" id="sd-nginx"></div><span class="svc-n">nginx.service</span><span class="svc-s" id="ss-nginx">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('nginx','restart')">Restart</button></div></div>
           <div class="svc-r"><div class="svc-d off" id="sd-clawbot-telegram"></div><span class="svc-n">clawbot-telegram.service</span><span class="svc-s" id="ss-clawbot-telegram">inactive</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('clawbot-telegram','start')">Start</button><button class="sb-btn" onclick="svcAct('clawbot-telegram','restart')">Restart</button></div></div>
         </div>
@@ -490,12 +476,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="warn-box">Install the <strong>clawbot-telegram</strong> module to enable. Once installed, configure your bot here and enable the service in the Services panel.</div>
           <div class="fg"><label class="fl" for="tg-token">Bot Token</label><input class="fi" type="password" id="tg-token" placeholder="123456:ABC-DEF..."></div>
           <div class="fg"><label class="fl" for="tg-users">Allowed User IDs <span style="font-size:.55rem;color:var(--td)">(comma-separated, leave empty = anyone)</span></label><input class="fi" type="text" id="tg-users" placeholder="123456789,987654321"></div>
-          <div class="fg"><label class="fl" for="tg-agent">AI Agent to use</label>
-            <select class="fs" id="tg-agent">
-              <option value="picoclaw">PicoClaw (port 8080) — Recommended</option>
-              <option value="openclaw">OpenClaw (port 8081)</option>
-            </select>
-          </div>
           <button class="btn-save" onclick="saveTelegram()">Save Telegram Config</button>
         </div>
       </div>
@@ -794,16 +774,6 @@ function applyStats(st) {
 }
 async function refreshStats() { applyStats(await fetchStats()); }
 
-// ═══ AGENT TOGGLE ═══
-$id('ag-tgl').addEventListener('change', function() {
-  const oc = this.checked;
-  S.agent = oc ? 'openclaw' : 'picoclaw';
-  $('ag-nm').textContent = oc ? 'OpenClaw' : 'PicoClaw';
-  $('ag-sb').textContent = oc ? 'Node.js · ~500MB RAM · port 8081' : 'Go · <10MB RAM · port 8080';
-  $('tb-agent').textContent = oc ? 'OpenClaw · port 8081' : 'PicoClaw · port 8080';
-  updateModelBar();
-  toast('Switched to ' + (oc ? 'OpenClaw' : 'PicoClaw'));
-});
 
 // ═══ SERVICE ACTIONS ═══
 function svcAct(svc, action) {
@@ -855,14 +825,13 @@ async function saveLLM() {
 async function saveTelegram() {
   const token = $id('tg-token').value;
   const users = $id('tg-users').value;
-  const agent = $id('tg-agent').value;
   if (!token) { toast('Bot token required', true); return; }
   try {
     const r = await fetch('/api/system/file', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         path: '/home/pi/.clawbot-telegram.env',
-        content: `TELEGRAM_BOT_TOKEN=${token}\nTELEGRAM_ALLOWED_USERS=${users}\nCLAWBOT_AGENT=${agent}\nCLAWBOT_AGENT_URL=http://127.0.0.1:${agent==='openclaw'?8081:8080}/v1/chat/completions\n`
+        content: `TELEGRAM_TOKEN=${token}\nALLOWED_USERS=${users}\n`
       })
     });
     if (r.ok) { toast('Telegram config saved — start clawbot-telegram.service'); updateSetupStatus(); }
@@ -1077,11 +1046,9 @@ async function doUpdate() {
 // ═══ FILE EDITOR ═══
 const FILE_SVC_MAP = {
   '/home/pi/.picoclaw/config.json': 'picoclaw',
-  '/home/pi/.openclaw/openclaw.json': 'openclaw',
   '/etc/nginx/sites-available/clawbot': 'nginx',
   '/etc/nginx/nginx.conf': 'nginx',
   '/etc/systemd/system/picoclaw.service': 'picoclaw',
-  '/etc/systemd/system/openclaw.service': 'openclaw',
   '/home/pi/.clawbot-telegram.env': 'clawbot-telegram'
 };
 
