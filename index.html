@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>ClawbotOS</title>
-<meta name="dashboard-version" content="__DASHBOARD_VERSION__">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -465,12 +464,12 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="cfg-form">
           <div class="fg"><label class="fl" for="cfg-p">LLM Provider</label>
             <select class="fs" id="cfg-p" onchange="onProv()">
-              <option value="openai">OpenAI</option>
-              <option value="anthropic">Anthropic (Claude)</option>
-              <option value="openrouter">OpenRouter</option>
-              <option value="deepseek">DeepSeek</option>
-              <option value="ollama">Ollama (remote)</option>
-              <option value="custom">Custom endpoint</option>
+              <option value="anthropic">Anthropic (Claude) — Recommended</option>
+              <option value="openai">OpenAI (GPT-4o)</option>
+              <option value="deepseek">DeepSeek — Budget</option>
+              <option value="openrouter">OpenRouter — Multi-provider</option>
+              <option value="ollama">Ollama (local/remote)</option>
+              <option value="custom">Custom OpenAI-compatible endpoint</option>
             </select>
           </div>
           <div class="fg"><label class="fl" for="cfg-m">Model</label>
@@ -494,7 +493,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fg"><label class="fl" for="tg-agent">AI Agent to use</label>
             <select class="fs" id="tg-agent">
               <option value="picoclaw">PicoClaw (port 8080)</option>
-              <option value="openclaw">OpenClaw (port 8081)</option>
             </select>
           </div>
           <button class="btn-save" onclick="saveTelegram()">Save Telegram Config</button>
@@ -516,59 +514,122 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
 
-      <div class="sec-t">Essential</div>
+      <!-- ─ STEP 1: Anthropic ─ -->
+      <div class="sec-t">Step 1 — AI Engine <span style="color:var(--td);font-size:.55rem;letter-spacing:1px">(pick one)</span></div>
       <div class="setup-grid">
 
-        <!-- LLM API Key -->
-        <div class="setup-card" id="sc-llm">
+        <!-- Anthropic -->
+        <div class="setup-card" id="sc-anthropic" style="border-color:#00ffe044">
           <div class="setup-h">
-            <div class="setup-ico">🔑</div>
-            <div class="setup-badge err" id="sb-llm">Not configured</div>
+            <div class="setup-ico">🧠</div>
+            <div class="setup-badge ok" id="sb-anthropic">Recommended</div>
           </div>
-          <div class="setup-title">AI Provider API Key</div>
-          <div class="setup-desc">Choose your LLM provider (OpenAI, Anthropic, DeepSeek, OpenRouter, Ollama…) and enter your API key. This is required for the chat to work.</div>
-          <div class="setup-key-val" id="sv-llm">No key saved</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">
-            <button class="mc" onclick="quickProv('openai')">OpenAI</button>
-            <button class="mc" onclick="quickProv('anthropic')">Anthropic</button>
-            <button class="mc" onclick="quickProv('deepseek')">DeepSeek</button>
-            <button class="mc" onclick="quickProv('openrouter')">OpenRouter</button>
-            <button class="mc" onclick="quickProv('ollama')">Ollama</button>
+          <div class="setup-title">Anthropic — Claude <span style="font-size:.65rem;color:var(--td);font-weight:400">Best for complex tasks</span></div>
+          <div class="setup-desc">console.anthropic.com/settings/keys</div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="password" id="setup-ant-key" placeholder="sk-ant-api03-..." oninput="liveApplyCheck()">
           </div>
-          <button class="setup-go" onclick="show('config')">Configure in Settings →</button>
+          <div class="model-chips" style="margin-top:4px">
+            <button class="mc" onclick="setSetupModel('claude-opus-4-6')">claude-opus-4-6</button>
+            <button class="mc" onclick="setSetupModel('claude-sonnet-4-6')">claude-sonnet-4-6 ★</button>
+            <button class="mc" onclick="setSetupModel('claude-haiku-4-5-20251001')">claude-haiku</button>
+          </div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="text" id="setup-ant-model" placeholder="claude-sonnet-4-6" value="claude-sonnet-4-6">
+          </div>
+          <button class="setup-go" id="btn-apply-ant" onclick="applyAnthropic()">Apply Anthropic config →</button>
+          <div class="setup-desc" id="msg-ant" style="color:var(--ok);margin-top:2px;display:none">✓ Applied — restart PicoClaw in Services</div>
         </div>
 
-        <!-- Telegram Bot -->
-        <div class="setup-card" id="sc-tg">
+        <!-- OpenAI -->
+        <div class="setup-card" id="sc-openai">
           <div class="setup-h">
-            <div class="setup-ico">✈️</div>
-            <div class="setup-badge opt" id="sb-tg">Optional</div>
+            <div class="setup-ico">⚡</div>
+            <div class="setup-badge opt" id="sb-openai">Alternative</div>
           </div>
-          <div class="setup-title">Telegram Bot</div>
-          <div class="setup-desc">Connect a Telegram bot to your AI assistant. Users can chat via Telegram — ideal for remote access without opening a browser. Create a bot via <strong>@BotFather</strong> on Telegram.</div>
-          <div class="setup-key-val" id="sv-tg">Token not set</div>
-          <button class="setup-go" onclick="show('config');setTimeout(()=>document.getElementById('tg-token').focus(),200)">Configure in Settings →</button>
+          <div class="setup-title">OpenAI — GPT-4o <span style="font-size:.65rem;color:var(--td);font-weight:400">Fast & reliable</span></div>
+          <div class="setup-desc">platform.openai.com/api-keys</div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="password" id="setup-oai-key" placeholder="sk-proj-..." oninput="liveApplyCheck()">
+          </div>
+          <div class="model-chips" style="margin-top:4px">
+            <button class="mc" onclick="setSetupOaiModel('gpt-4o')">gpt-4o ★</button>
+            <button class="mc" onclick="setSetupOaiModel('gpt-4o-mini')">gpt-4o-mini</button>
+            <button class="mc" onclick="setSetupOaiModel('gpt-4-turbo')">gpt-4-turbo</button>
+          </div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="text" id="setup-oai-model" placeholder="gpt-4o" value="gpt-4o">
+          </div>
+          <button class="setup-go" id="btn-apply-oai" onclick="applyOpenAI()">Apply OpenAI config →</button>
+          <div class="setup-desc" id="msg-oai" style="color:var(--ok);margin-top:2px;display:none">✓ Applied — restart PicoClaw in Services</div>
+        </div>
+
+        <!-- DeepSeek budget option -->
+        <div class="setup-card" id="sc-deepseek">
+          <div class="setup-h">
+            <div class="setup-ico">💎</div>
+            <div class="setup-badge opt">Budget</div>
+          </div>
+          <div class="setup-title">DeepSeek <span style="font-size:.65rem;color:var(--td);font-weight:400">High value · Low cost</span></div>
+          <div class="setup-desc">platform.deepseek.com/api_keys</div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="password" id="setup-ds-key" placeholder="sk-...">
+          </div>
+          <div class="model-chips" style="margin-top:4px">
+            <button class="mc" onclick="setSetupDsModel('deepseek-chat')">deepseek-chat ★</button>
+            <button class="mc" onclick="setSetupDsModel('deepseek-reasoner')">deepseek-reasoner</button>
+          </div>
+          <div class="fg" style="margin-top:6px">
+            <input class="fi" type="text" id="setup-ds-model" placeholder="deepseek-chat" value="deepseek-chat">
+          </div>
+          <button class="setup-go" onclick="applyDeepSeek()">Apply DeepSeek config →</button>
+          <div class="setup-desc" id="msg-ds" style="color:var(--ok);margin-top:2px;display:none">✓ Applied — restart PicoClaw in Services</div>
         </div>
 
       </div>
 
+      <!-- ─ STEP 2: Telegram ─ -->
+      <div class="sec-t" style="margin-top:6px">Step 2 — Telegram Bot <span style="color:var(--td);font-size:.55rem;letter-spacing:1px">(optional · remote access from mobile)</span></div>
+      <div class="setup-grid">
+
+        <div class="setup-card" id="sc-tg" style="grid-column:1/-1">
+          <div class="setup-h">
+            <div class="setup-ico">✈️</div>
+            <div class="setup-badge opt" id="sb-tg">Not configured</div>
+          </div>
+          <div class="setup-title">Telegram Bot — chat with your AI from anywhere</div>
+          <div class="setup-desc">Create a bot via <strong>@BotFather</strong> on Telegram → /newbot → copy the token below. Then start the service in the Services panel.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+            <div class="fg">
+              <label class="fl">Bot Token</label>
+              <input class="fi" type="password" id="setup-tg-token" placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
+            </div>
+            <div class="fg">
+              <label class="fl">Allowed Telegram User IDs <span style="font-size:.5rem;color:var(--td)">(empty = anyone)</span></label>
+              <input class="fi" type="text" id="setup-tg-users" placeholder="123456789,987654321">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <button class="setup-go" onclick="applyTelegram()">Save &amp; enable Telegram →</button>
+            <div class="setup-desc" id="msg-tg" style="color:var(--ok);display:none">✓ Saved — start clawbot-telegram in Services</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ─ STEP 3 / Quick Ref ─ -->
       <div class="sec-t" style="margin-top:6px">Quick reference</div>
       <div class="setup-grid">
 
-        <!-- Get API keys -->
-        <div class="setup-card">
+        <!-- Status summary -->
+        <div class="setup-card" id="sc-llm">
           <div class="setup-h">
-            <div class="setup-ico">🔗</div>
-            <div class="setup-badge opt">Links</div>
+            <div class="setup-ico">🔑</div>
+            <div class="setup-badge err" id="sb-llm">No AI configured</div>
           </div>
-          <div class="setup-title">Where to get API keys</div>
-          <div class="setup-desc" style="display:flex;flex-direction:column;gap:5px;margin-top:2px">
-            <span><strong style="color:var(--tp)">OpenAI</strong> — platform.openai.com/api-keys</span>
-            <span><strong style="color:var(--tp)">Anthropic</strong> — console.anthropic.com/settings/keys</span>
-            <span><strong style="color:var(--tp)">DeepSeek</strong> — platform.deepseek.com/api_keys</span>
-            <span><strong style="color:var(--tp)">OpenRouter</strong> — openrouter.ai/settings/keys</span>
-            <span><strong style="color:var(--tp)">Telegram bot</strong> — chat with @BotFather → /newbot</span>
-          </div>
+          <div class="setup-title">Current AI config</div>
+          <div class="setup-key-val" id="sv-llm">No API key saved</div>
+          <button class="setup-go" onclick="show('config')">Advanced Settings →</button>
         </div>
 
         <!-- SSH access -->
@@ -578,35 +639,39 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <div class="setup-badge opt">SSH</div>
           </div>
           <div class="setup-title">SSH access</div>
-          <div class="setup-desc">Access the terminal remotely to run commands or troubleshoot.</div>
           <div class="setup-key-val" id="sv-ssh">ssh pi@clawbot.local<br>Password: yumi</div>
-          <div class="setup-desc" style="margin-top:4px">If the host key changed after reflashing:<br><span style="color:var(--wn)">ssh-keygen -R clawbot.local</span></div>
+          <div class="setup-desc" style="margin-top:4px">Host key changed after reflashing?<br><span style="color:var(--wn)">ssh-keygen -R clawbot.local</span></div>
         </div>
 
-        <!-- Switch agent -->
-        <div class="setup-card">
-          <div class="setup-h">
-            <div class="setup-ico">🤖</div>
-            <div class="setup-badge opt">CLI</div>
-          </div>
-          <div class="setup-title">Switch AI agent</div>
-          <div class="setup-desc">PicoClaw (&lt;10MB RAM, recommended) vs OpenClaw (~500MB). Use the Services panel or the CLI command:</div>
-          <div class="setup-key-val">sudo clawbot-switch-agent picoclaw<br>sudo clawbot-switch-agent openclaw<br>sudo clawbot-switch-agent status</div>
-        </div>
-
-        <!-- Telegram bot setup -->
+        <!-- Telegram how-to -->
         <div class="setup-card">
           <div class="setup-h">
             <div class="setup-ico">📋</div>
-            <div class="setup-badge opt">How-to</div>
+            <div class="setup-badge opt">Telegram</div>
           </div>
           <div class="setup-title">Enable Telegram bot</div>
           <div class="setup-desc" style="display:flex;flex-direction:column;gap:3px">
-            <span>1. Create bot via @BotFather → copy token</span>
-            <span>2. Enter token in Settings → Telegram Bot</span>
-            <span>3. Go to Services → Start clawbot-telegram</span>
-            <span>4. Message your bot on Telegram — it should reply!</span>
+            <span>1. Telegram → @BotFather → /newbot</span>
+            <span>2. Enter token above → Save</span>
+            <span>3. Services panel → Start clawbot-telegram</span>
+            <span>4. Message your bot — it replies via Claude!</span>
           </div>
+        </div>
+
+        <!-- Dashboard update -->
+        <div class="setup-card" id="sc-update">
+          <div class="setup-h">
+            <div class="setup-ico">⬆️</div>
+            <div class="setup-badge opt" id="sb-update">Checking...</div>
+          </div>
+          <div class="setup-title">Dashboard Update</div>
+          <div class="setup-desc">Update the dashboard without reflashing the OS. Updates are pulled from <strong>Yumi-Lab/clawbot-interface</strong> on GitHub.</div>
+          <div class="setup-key-val" id="sv-update">Local: — · Remote: —</div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="setup-go" onclick="checkDashboardUpdate()">Check</button>
+            <button class="setup-go" id="btn-do-update" onclick="doUpdate()" style="display:none;border-color:#00ff8844;color:var(--ok);background:#00ff8811">Update now</button>
+          </div>
+          <div class="setup-desc" id="update-msg" style="color:var(--td);margin-top:2px"></div>
         </div>
 
       </div>
@@ -622,8 +687,8 @@ const S = {
   agent: 'picoclaw',
   sbCol: false,
   cfg: {
-    provider: localStorage.getItem('cfg_p') || 'openai',
-    model:    localStorage.getItem('cfg_m') || '',
+    provider: localStorage.getItem('cfg_p') || 'anthropic',
+    model:    localStorage.getItem('cfg_m') || 'claude-sonnet-4-6',
     apikey:   localStorage.getItem('cfg_k') || '',
     baseurl:  localStorage.getItem('cfg_u') || ''
   },
@@ -645,12 +710,12 @@ const MODELS = {
   custom:     []
 };
 const PROV_DEFAULTS = {
-  openai:     {model:'gpt-4o',     url:''},
-  anthropic:  {model:'claude-sonnet-4-6', url:''},
-  openrouter: {model:'anthropic/claude-sonnet-4-6', url:''},
-  deepseek:   {model:'deepseek-chat', url:''},
-  ollama:     {model:'llama3',     url:'http://192.168.1.100:11434/v1'},
-  custom:     {model:'',           url:''}
+  anthropic:  {model:'claude-sonnet-4-6', url:'', placeholder:'sk-ant-api03-...'},
+  openai:     {model:'gpt-4o',     url:'', placeholder:'sk-proj-...'},
+  deepseek:   {model:'deepseek-chat', url:'', placeholder:'sk-...'},
+  openrouter: {model:'anthropic/claude-sonnet-4-6', url:'', placeholder:'sk-or-v1-...'},
+  ollama:     {model:'llama3',     url:'http://192.168.1.100:11434/v1', placeholder:'(no key needed)'},
+  custom:     {model:'',           url:'', placeholder:'your-api-key'}
 };
 const PANEL_TITLES = {setup:'Getting Started',chat:'Chat',files:'Files',logs:'Logs',monitor:'System Monitor',services:'Services',config:'Settings'};
 
@@ -755,8 +820,9 @@ function onProv() {
   const showUrl = ['ollama','custom'].includes(p);
   $id('cfg-url-g').style.display = showUrl ? '' : 'none';
   const def = PROV_DEFAULTS[p] || {};
-  if (def.model && !$id('cfg-m').value) $id('cfg-m').value = def.model;
+  if (def.model) $id('cfg-m').value = def.model;
   if (def.url) $id('cfg-u').value = def.url;
+  if (def.placeholder) $id('cfg-k').placeholder = def.placeholder;
   const chips = (MODELS[p] || []).map(m => `<button class="mc" onclick="setModel('${m}')">${m}</button>`).join('');
   $('m-chips').innerHTML = chips;
 }
@@ -806,16 +872,91 @@ async function saveTelegram() {
 // ═══ SETUP PANEL ═══
 function quickProv(p) {
   show('config');
-  setTimeout(() => {
-    $id('cfg-p').value = p;
-    onProv();
-    $id('cfg-k').focus();
-  }, 100);
+  setTimeout(() => { $id('cfg-p').value = p; onProv(); $id('cfg-k').focus(); }, 100);
+}
+
+function setSetupModel(m) { $id('setup-ant-model').value = m; }
+function setSetupOaiModel(m) { $id('setup-oai-model').value = m; }
+function setSetupDsModel(m) { $id('setup-ds-model').value = m; }
+
+function liveApplyCheck() {
+  // Enable/disable apply buttons based on whether key is filled
+  const antKey = $id('setup-ant-key').value.trim();
+  const oaiKey = $id('setup-oai-key').value.trim();
+  // Visual hint: dim the other card when one is being filled
+}
+
+async function _applyProviderConfig(provider, model, apiKey, baseUrl) {
+  S.cfg = {provider, model, apikey: apiKey, baseurl: baseUrl || ''};
+  localStorage.setItem('cfg_p', provider);
+  localStorage.setItem('cfg_m', model);
+  localStorage.setItem('cfg_k', apiKey);
+  localStorage.setItem('cfg_u', baseUrl || '');
+  // Sync Settings panel
+  $id('cfg-p').value = provider; onProv();
+  $id('cfg-m').value = model;
+  $id('cfg-k').value = apiKey;
+  // Push to PicoClaw
+  try {
+    await fetch('/api/system/config', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({provider, model, api_key: apiKey, base_url: baseUrl || ''})
+    });
+  } catch {}
+  updateModelBar();
+  updateSetupStatus();
+  toast('✓ ' + provider + ' configured — restart PicoClaw');
+}
+
+async function applyAnthropic() {
+  const key = $id('setup-ant-key').value.trim();
+  const model = $id('setup-ant-model').value.trim() || 'claude-sonnet-4-6';
+  if (!key) { toast('Enter your Anthropic API key', true); return; }
+  await _applyProviderConfig('anthropic', model, key, '');
+  $id('msg-ant').style.display = '';
+  $id('sc-anthropic').style.borderColor = '#00ff8844';
+}
+
+async function applyOpenAI() {
+  const key = $id('setup-oai-key').value.trim();
+  const model = $id('setup-oai-model').value.trim() || 'gpt-4o';
+  if (!key) { toast('Enter your OpenAI API key', true); return; }
+  await _applyProviderConfig('openai', model, key, '');
+  $id('msg-oai').style.display = '';
+}
+
+async function applyDeepSeek() {
+  const key = $id('setup-ds-key').value.trim();
+  const model = $id('setup-ds-model').value.trim() || 'deepseek-chat';
+  if (!key) { toast('Enter your DeepSeek API key', true); return; }
+  await _applyProviderConfig('deepseek', model, key, 'https://api.deepseek.com/v1');
+  $id('msg-ds').style.display = '';
+}
+
+async function applyTelegram() {
+  const token = $id('setup-tg-token').value.trim();
+  const users = $id('setup-tg-users').value.trim();
+  if (!token) { toast('Enter your Telegram bot token', true); return; }
+  // Also sync to the Settings Telegram fields
+  $id('tg-token').value = token;
+  $id('tg-users').value = users;
+  await saveTelegram();
+  $id('msg-tg').style.display = '';
+  $id('sb-tg').className = 'setup-badge ok';
+  $id('sb-tg').textContent = '✓ Configured';
+  // Auto-start telegram service
+  svcAct('clawbot-telegram', 'start');
 }
 
 function updateSetupStatus() {
   const hasKey = !!(S.cfg.apikey && S.cfg.apikey.length > 6);
-  const hasProv = !!S.cfg.provider;
+
+  // Pre-fill setup fields with saved values
+  if (hasKey) {
+    if (S.cfg.provider === 'anthropic') $id('setup-ant-key').value = S.cfg.apikey;
+    else if (S.cfg.provider === 'openai') $id('setup-oai-key').value = S.cfg.apikey;
+    else if (S.cfg.provider === 'deepseek') $id('setup-ds-key').value = S.cfg.apikey;
+  }
 
   // LLM card
   const llmCard = $id('sc-llm');
@@ -824,13 +965,17 @@ function updateSetupStatus() {
   if (hasKey) {
     llmCard.className = 'setup-card done';
     llmBadge.className = 'setup-badge ok';
-    llmBadge.textContent = '✓ Configured';
-    llmVal.textContent = (S.cfg.provider || 'custom') + ' · ' + S.cfg.model + ' · sk-****' + S.cfg.apikey.slice(-4);
+    llmBadge.textContent = '✓ ' + (S.cfg.provider || 'custom');
+    llmVal.textContent = (S.cfg.provider || 'custom') + ' · ' + (S.cfg.model || '?') + ' · ****' + S.cfg.apikey.slice(-4);
+    // Show applied confirmation on correct card
+    if (S.cfg.provider === 'anthropic') $id('msg-ant').style.display = '';
+    else if (S.cfg.provider === 'openai') $id('msg-oai').style.display = '';
+    else if (S.cfg.provider === 'deepseek') $id('msg-ds').style.display = '';
   } else {
     llmCard.className = 'setup-card req';
     llmBadge.className = 'setup-badge err';
-    llmBadge.textContent = '✗ Required';
-    llmVal.textContent = 'No API key saved';
+    llmBadge.textContent = 'No AI configured';
+    llmVal.textContent = 'Enter an API key above in Step 1';
   }
 
   // Telegram card — try to detect from API
@@ -873,6 +1018,59 @@ function updateSetupStatus() {
   // Update SSH hint with real IP
   const ip = $('sb-ip').textContent;
   if (ip && ip !== '---.---') $id('sv-ssh').innerHTML = `ssh pi@${ip}<br>Password: yumi`;
+}
+
+// ═══ DASHBOARD UPDATER ═══
+async function checkDashboardUpdate() {
+  $id('sb-update').textContent = 'Checking...';
+  $id('sv-update').textContent = 'Contacting GitHub...';
+  try {
+    const r = await fetch('/api/system/dashboard-version', {signal: AbortSignal.timeout(12000)});
+    if (!r.ok) throw new Error('API error');
+    const d = await r.json();
+    if (d.error) { $id('sv-update').textContent = 'Error: ' + d.error; return; }
+    $id('sv-update').textContent = `Local: v${d.local} · Remote: v${d.remote}`;
+    if (d.update_available) {
+      $id('sb-update').className = 'setup-badge warn';
+      $id('sb-update').textContent = '↑ Update available';
+      $id('btn-do-update').style.display = '';
+      $id('update-msg').textContent = `v${d.local} → v${d.remote}`;
+    } else {
+      $id('sb-update').className = 'setup-badge ok';
+      $id('sb-update').textContent = '✓ Up to date';
+      $id('btn-do-update').style.display = 'none';
+      $id('update-msg').textContent = 'Latest version installed.';
+    }
+  } catch(e) {
+    $id('sb-update').textContent = 'Offline';
+    $id('sv-update').textContent = 'Cannot reach GitHub (no internet?)';
+  }
+}
+
+async function doUpdate() {
+  $id('btn-do-update').disabled = true;
+  $id('update-msg').textContent = 'Downloading... please wait.';
+  try {
+    const r = await fetch('/api/system/update-dashboard', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:'{}',
+      signal: AbortSignal.timeout(45000)
+    });
+    const d = await r.json();
+    if (d.updated) {
+      $id('sb-update').className = 'setup-badge ok';
+      $id('sb-update').textContent = '✓ Updated!';
+      $id('sv-update').textContent = `v${d.from} → v${d.to}`;
+      $id('update-msg').textContent = 'Reload the page to use the new version.';
+      $id('btn-do-update').style.display = 'none';
+      setTimeout(() => location.reload(), 2500);
+    } else {
+      $id('update-msg').textContent = d.message || d.error || 'No update applied.';
+      $id('btn-do-update').disabled = false;
+    }
+  } catch(e) {
+    $id('update-msg').textContent = 'Update failed: ' + e.message;
+    $id('btn-do-update').disabled = false;
+  }
 }
 
 // ═══ FILE EDITOR ═══
@@ -1065,6 +1263,8 @@ updateModelBar();
 updateSetupStatus();
 refreshStats();
 setInterval(refreshStats, 5000);
+// Check for dashboard updates in background (after 3s to not block init)
+setTimeout(checkDashboardUpdate, 3000);
 
 // Show Setup panel first if API key not yet configured
 if (!S.cfg.apikey) {
