@@ -492,7 +492,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fg"><label class="fl" for="tg-users">Allowed User IDs <span style="font-size:.55rem;color:var(--td)">(comma-separated, leave empty = anyone)</span></label><input class="fi" type="text" id="tg-users" placeholder="123456789,987654321"></div>
           <div class="fg"><label class="fl" for="tg-agent">AI Agent to use</label>
             <select class="fs" id="tg-agent">
-              <option value="picoclaw">PicoClaw (port 8080)</option>
+              <option value="picoclaw">PicoClaw (port 8080) — Recommended</option>
+              <option value="openclaw">OpenClaw (port 8081)</option>
             </select>
           </div>
           <button class="btn-save" onclick="saveTelegram()">Save Telegram Config</button>
