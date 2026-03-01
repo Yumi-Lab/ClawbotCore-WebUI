@@ -1,0 +1,35 @@
+name: Release Dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'VERSION'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        id: ver
+        run: echo "version=$(cat VERSION | tr -d '[:space:]')" >> $GITHUB_OUTPUT
+
+      - name: Inject version into index.html
+        run: |
+          sed -i "s/__DASHBOARD_VERSION__/${{ steps.ver.outputs.version }}/g" index.html
+
+      - name: Create or update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: "ClawbotOS Dashboard v${{ steps.ver.outputs.version }}"
+          body: "Dashboard update — install via `clawbot-update-dashboard` or the Setup panel in the UI."
+          files: |
+            index.html
+            VERSION
+          make_latest: true

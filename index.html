@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ClawbotOS</title>
+<meta name="dashboard-version" content="__DASHBOARD_VERSION__">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#050a0e;--bg-d:#0a1118;--bg-c:#0d1a24;--bg-ch:#112230;--bg-i:#081018;
+  --br:#1a3040;--br-g:#0ff3;--tp:#e0f0f8;--ts:#6a8fa8;--td:#3a5a70;
+  --ac:#00ffe0;--ac-d:#00ffe033;--ac-m:#00ffe066;--ac2:#00b8ff;
+  --ok:#00ff88;--wn:#ffaa00;--er:#ff3860;
+  --fm:'Outfit',sans-serif;--fmo:'JetBrains Mono',monospace;
+  --r:8px;--rl:14px;--sbw:230px;--sbwc:60px;--tbh:52px;
+  --tr:.25s cubic-bezier(.4,0,.2,1);
+}
+html,body{height:100%}
+body{font-family:var(--fm);background:var(--bg);color:var(--tp);overflow:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 0%,#00ffe008 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 100%,#00b8ff06 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* APP SHELL */
+.app{position:relative;z-index:1;display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sb{width:var(--sbw);flex-shrink:0;display:flex;flex-direction:column;background:var(--bg-c);border-right:1px solid var(--br);transition:width var(--tr);overflow:hidden;position:relative;z-index:10}
+.sb.col{width:var(--sbwc)}
+.sb-top{display:flex;align-items:center;gap:12px;padding:14px 12px;border-bottom:1px solid var(--br);min-height:var(--tbh);flex-shrink:0}
+.sb-hbg{width:36px;height:36px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;background:transparent;border:1px solid var(--br);border-radius:var(--r);cursor:pointer;transition:var(--tr)}
+.sb-hbg:hover{border-color:var(--ac);background:var(--ac-d)}
+.sb-hbg span{display:block;width:16px;height:2px;background:var(--ts);border-radius:2px;transition:var(--tr)}
+.sb-hbg:hover span{background:var(--ac)}
+.sb-brand{display:flex;flex-direction:column;gap:1px;overflow:hidden;white-space:nowrap;transition:opacity var(--tr)}
+.sb.col .sb-brand{opacity:0;pointer-events:none}
+.sb-title{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.sb-sub{font-family:var(--fmo);font-size:.58rem;color:var(--td);letter-spacing:2px;text-transform:uppercase}
+
+/* NAV */
+.sb-nav{flex:1;display:flex;flex-direction:column;gap:3px;padding:8px;overflow-y:auto}
+.sb-item{display:flex;align-items:center;gap:11px;padding:9px 9px;border-radius:var(--r);border:1px solid transparent;background:transparent;color:var(--ts);font-family:var(--fm);font-size:.83rem;font-weight:500;cursor:pointer;transition:var(--tr);text-align:left;white-space:nowrap;width:100%}
+.sb-item:hover{background:var(--bg-i);color:var(--tp);border-color:var(--br)}
+.sb-item.active{background:var(--ac-d);color:var(--ac);border-color:var(--ac-m)}
+.sb-item svg{width:17px;height:17px;flex-shrink:0}
+.sb-item .lbl{transition:opacity var(--tr)}
+.sb.col .lbl{opacity:0;width:0;overflow:hidden}
+.sb-sep{height:1px;background:var(--br);margin:4px 0}
+
+/* SIDEBAR FOOTER */
+.sb-ft{padding:8px 8px 12px;border-top:1px solid var(--br);display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.sb-st{display:flex;align-items:center;gap:9px;padding:5px 7px;border-radius:var(--r)}
+.sb-si{font-size:.8rem;flex-shrink:0;width:17px;text-align:center}
+.sb-stx{display:flex;flex-direction:column;gap:1px;overflow:hidden;white-space:nowrap;transition:opacity var(--tr)}
+.sb.col .sb-stx{opacity:0}
+.sb-sl{font-family:var(--fmo);font-size:.52rem;color:var(--td);text-transform:uppercase;letter-spacing:1.5px}
+.sb-sv{font-family:var(--fmo);font-size:.68rem;font-weight:500;color:var(--ts)}
+
+/* CONTENT */
+.cnt{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* TOPBAR */
+.tb{height:var(--tbh);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--bg-c);border-bottom:1px solid var(--br);position:relative}
+.tb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--ac-m),transparent)}
+.tb-l{display:flex;align-items:center;gap:12px}
+.tb-t{font-family:var(--fmo);font-size:.75rem;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:2px}
+.tb-a{font-family:var(--fmo);font-size:.63rem;color:var(--td);background:var(--bg-i);padding:2px 8px;border-radius:4px;border:1px solid var(--br)}
+.tb-s{font-family:var(--fmo);font-size:.6rem;font-weight:600;color:var(--ok);letter-spacing:1px}
+.tb-s.off{color:var(--er)}
+
+/* PANELS */
+.pnl{display:none;flex:1;overflow:hidden}
+.pnl.active{display:flex;flex-direction:column}
+
+/* ─── CHAT ─── */
+.chat-wrap{display:flex;flex-direction:column;height:100%;background:var(--bg)}
+.chat-msgs{flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.chat-row{display:flex;gap:11px;align-items:flex-start;animation:mIn .3s ease}
+.chat-row.user{flex-direction:row-reverse}
+@keyframes mIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-av{width:30px;height:30px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;background:var(--bg-c);border:1px solid var(--br)}
+.chat-av.bot{background:var(--ac-d);border-color:var(--ac-m)}
+.chat-bub{max-width:72%;padding:11px 15px;border-radius:11px;font-size:.87rem;line-height:1.6}
+.chat-row.bot .chat-bub{background:var(--bg-c);border:1px solid var(--br);color:var(--tp);border-radius:2px 11px 11px 11px;white-space:pre-wrap}
+.chat-row.user .chat-bub{background:var(--ac-d);border:1px solid var(--ac-m);color:var(--ac);font-family:var(--fmo);font-size:.78rem;border-radius:11px 2px 11px 11px}
+.chat-bub.streaming::after{content:'▊';animation:bl .7s infinite;color:var(--ac);margin-left:2px}
+.chat-bub.err{color:var(--er);border-color:#ff386033}
+@keyframes bl{50%{opacity:0}}
+.chat-ft{flex-shrink:0;background:var(--bg-c);border-top:1px solid var(--br);padding:11px 18px 15px}
+.chat-mb{font-family:var(--fmo);font-size:.6rem;color:var(--td);margin-bottom:7px;display:flex;align-items:center;gap:7px}
+.chat-mb::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok);animation:pd 2s infinite}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-ir{display:flex;gap:9px;align-items:flex-end}
+.chat-inp{flex:1;padding:11px 15px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fm);font-size:.88rem;outline:none;resize:none;max-height:120px;min-height:42px;transition:var(--tr);line-height:1.4}
+.chat-inp:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-d)}
+.chat-inp::placeholder{color:var(--td)}
+.chat-snd{width:42px;height:42px;background:var(--ac);border:none;border-radius:var(--r);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.chat-snd:hover{box-shadow:0 0 20px var(--ac-d);transform:scale(1.05)}
+.chat-snd:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.chat-snd svg{width:17px;height:17px}
+
+/* ─── PANEL SCROLL ─── */
+.pscr{flex:1;overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:18px;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.sec-t{font-family:var(--fmo);font-size:.63rem;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sec-t::before{content:'';width:6px;height:6px;background:var(--ac);border-radius:1px;transform:rotate(45deg);box-shadow:0 0 8px var(--ac)}
+.card{background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);padding:16px;position:relative;overflow:hidden}
+.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,var(--br) 50%,transparent 90%)}
+
+/* GAUGES */
+.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gi{display:flex;flex-direction:column;align-items:center;gap:7px}
+.gr{width:76px;height:76px;position:relative}
+.gr svg{width:100%;height:100%;transform:rotate(-90deg)}
+.gr .tk{fill:none;stroke:var(--bg-i);stroke-width:5}
+.gr .fl{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .5s ease;filter:drop-shadow(0 0 4px currentColor)}
+.gr .vt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fmo);font-size:.95rem;font-weight:700}
+.gr .un{font-size:.55rem;font-weight:400;color:var(--td)}
+.gl{font-family:var(--fmo);font-size:.58rem;color:var(--ts);text-transform:uppercase;letter-spacing:1.5px}
+.ni{margin-top:12px;padding-top:12px;border-top:1px solid var(--br);display:flex;gap:16px;flex-wrap:wrap}
+.nd-row{display:flex;align-items:center;gap:6px}
+.nd{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok);animation:pd 2s infinite}
+.nd.off{background:var(--td);box-shadow:none;animation:none}
+.nl{font-family:var(--fmo);font-size:.63rem;color:var(--ts)}
+
+/* SERVICES */
+.ag-row{display:flex;align-items:center;gap:13px;padding:11px 15px;background:var(--bg-i);border-radius:var(--r);border:1px solid var(--br);margin-bottom:12px}
+.ag-inf{flex:1}
+.ag-nm{font-weight:700;font-size:.93rem}
+.ag-sb{font-family:var(--fmo);font-size:.58rem;color:var(--td)}
+.tgl{position:relative;width:52px;height:28px;cursor:pointer}
+.tgl input{display:none}
+.tgl-tk{position:absolute;inset:0;background:var(--bg);border:1px solid var(--br);border-radius:14px;transition:var(--tr)}
+.tgl input:checked+.tgl-tk{background:var(--ac-d);border-color:var(--ac)}
+.tgl-th{position:absolute;top:3px;left:3px;width:22px;height:22px;background:var(--ts);border-radius:50%;transition:var(--tr)}
+.tgl input:checked~.tgl-th{left:27px;background:var(--ac);box-shadow:0 0 12px var(--ac-d)}
+.svc-l{display:flex;flex-direction:column;gap:7px}
+.svc-r{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--bg-i);border-radius:var(--r);border:1px solid transparent;transition:border-color var(--tr)}
+.svc-r:hover{border-color:var(--br)}
+.svc-d{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.svc-d.on{background:var(--ok);box-shadow:0 0 8px #00ff8866;animation:pd 2s infinite}
+.svc-d.off{background:var(--td)}
+.svc-n{flex:1;font-family:var(--fmo);font-size:.73rem;font-weight:500}
+.svc-s{font-family:var(--fmo);font-size:.58rem;color:var(--td);margin-right:7px}
+.svc-acts{display:flex;gap:4px}
+.sb-btn{padding:3px 9px;font-family:var(--fmo);font-size:.55rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--br);border-radius:4px;background:transparent;color:var(--ts);cursor:pointer;transition:var(--tr)}
+.sb-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-d)}
+.sb-btn.dng:hover{border-color:var(--er);color:var(--er);background:#ff386018}
+
+/* CONFIG/SETTINGS */
+.cfg-form{display:flex;flex-direction:column;gap:12px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-family:var(--fmo);font-size:.6rem;color:var(--td);text-transform:uppercase;letter-spacing:1.5px}
+.fi,.fs{padding:9px 13px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fmo);font-size:.78rem;outline:none;transition:var(--tr);-webkit-appearance:none}
+.fi:focus,.fs:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-d)}
+.fs{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236a8fa8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.model-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.mc{padding:3px 9px;font-family:var(--fmo);font-size:.58rem;background:var(--bg-i);border:1px solid var(--br);border-radius:12px;color:var(--td);cursor:pointer;transition:var(--tr)}
+.mc:hover{border-color:var(--ac);color:var(--ac)}
+.btn-save{align-self:flex-start;padding:9px 26px;background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;border-radius:var(--r);color:var(--bg);font-family:var(--fmo);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;cursor:pointer;transition:var(--tr)}
+.btn-save:hover{box-shadow:0 0 20px var(--ac-d),0 4px 16px #0006}
+.btn-save:active{transform:scale(.97)}
+.info-box{padding:9px 13px;background:var(--ac-d);border:1px solid var(--ac-m);border-radius:var(--r);font-family:var(--fmo);font-size:.68rem;color:var(--ac);line-height:1.5}
+.warn-box{padding:9px 13px;background:#ffaa0011;border:1px solid #ffaa0033;border-radius:var(--r);font-family:var(--fmo);font-size:.68rem;color:var(--wn);line-height:1.5}
+.divider{height:1px;background:var(--br);margin:4px 0}
+
+/* ─── FILES PANEL ─── */
+.files-wrap{display:flex;flex:1;overflow:hidden;min-width:0}
+.files-tree{width:220px;flex-shrink:0;border-right:1px solid var(--br);display:flex;flex-direction:column;overflow-y:auto;padding:8px;gap:2px;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.file-group-label{font-family:var(--fmo);font-size:.55rem;color:var(--td);text-transform:uppercase;letter-spacing:2px;padding:8px 8px 4px;border-top:1px solid var(--br);margin-top:4px}
+.file-group-label:first-child{border-top:none;margin-top:0}
+.file-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r);border:1px solid transparent;cursor:pointer;transition:var(--tr);color:var(--ts)}
+.file-item:hover{background:var(--bg-i);border-color:var(--br);color:var(--tp)}
+.file-item.active{background:var(--ac-d);border-color:var(--ac-m);color:var(--ac)}
+.file-item svg{width:14px;height:14px;flex-shrink:0;opacity:.6}
+.file-item.active svg{opacity:1}
+.file-item-name{font-family:var(--fmo);font-size:.7rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.file-editor{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.file-editor-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--br);background:var(--bg-c);flex-shrink:0}
+.file-path{font-family:var(--fmo);font-size:.68rem;color:var(--ts);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-btns{display:flex;gap:6px;flex-shrink:0}
+.file-btn{padding:5px 14px;font-family:var(--fmo);font-size:.62rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--br);border-radius:var(--r);background:transparent;color:var(--ts);cursor:pointer;transition:var(--tr)}
+.file-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-d)}
+.file-btn.primary{background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;color:var(--bg)}
+.file-btn.primary:hover{box-shadow:0 0 16px var(--ac-d)}
+.file-textarea{flex:1;width:100%;padding:16px 18px;background:var(--bg-i);border:none;color:var(--tp);font-family:var(--fmo);font-size:.78rem;line-height:1.7;outline:none;resize:none;tab-size:2;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.file-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--td)}
+.file-placeholder svg{width:40px;height:40px;opacity:.3}
+.file-placeholder p{font-family:var(--fmo);font-size:.72rem}
+
+/* ─── LOGS PANEL ─── */
+.logs-wrap{display:flex;flex-direction:column;flex:1;overflow:hidden}
+.logs-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--br);background:var(--bg-c);flex-shrink:0}
+.logs-svc-btns{display:flex;gap:6px}
+.log-svc-btn{padding:5px 14px;font-family:var(--fmo);font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;border:1px solid var(--br);border-radius:var(--r);background:transparent;color:var(--ts);cursor:pointer;transition:var(--tr)}
+.log-svc-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-d)}
+.log-svc-btn.active{background:var(--ac-d);color:var(--ac);border-color:var(--ac-m)}
+.log-auto{display:flex;align-items:center;gap:6px;margin-left:auto;font-family:var(--fmo);font-size:.62rem;color:var(--td);cursor:pointer}
+.log-auto input{accent-color:var(--ac)}
+.logs-out{flex:1;overflow-y:auto;padding:14px 18px;font-family:var(--fmo);font-size:.72rem;line-height:1.8;color:var(--ts);white-space:pre-wrap;word-break:break-all;scrollbar-width:thin;scrollbar-color:var(--br) transparent;background:var(--bg)}
+.log-line.err{color:var(--er)}
+.log-line.wrn{color:var(--wn)}
+.log-line.ok{color:var(--ok)}
+
+/* ─── SETUP PANEL ─── */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.setup-grid{grid-template-columns:1fr}}
+.setup-card{background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);padding:16px 18px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:border-color var(--tr)}
+.setup-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,var(--br) 50%,transparent 90%)}
+.setup-card.done{border-color:#00ff8844}
+.setup-card.done::after{background:linear-gradient(90deg,transparent 10%,#00ff8833 50%,transparent 90%)}
+.setup-card.req{border-color:#ff386033}
+.setup-card.req::after{background:linear-gradient(90deg,transparent 10%,#ff386033 50%,transparent 90%)}
+.setup-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:10px;font-family:var(--fmo);font-size:.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:fit-content}
+.setup-badge.ok{background:#00ff8818;color:var(--ok);border:1px solid #00ff8844}
+.setup-badge.warn{background:#ffaa0018;color:var(--wn);border:1px solid #ffaa0044}
+.setup-badge.err{background:#ff386018;color:var(--er);border:1px solid #ff386044}
+.setup-badge.opt{background:var(--bg-i);color:var(--td);border:1px solid var(--br)}
+.setup-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.setup-ico{font-size:1.4rem;line-height:1;flex-shrink:0}
+.setup-title{font-size:.92rem;font-weight:700;color:var(--tp);margin-bottom:2px}
+.setup-desc{font-family:var(--fmo);font-size:.65rem;color:var(--td);line-height:1.6}
+.setup-key-val{font-family:var(--fmo);font-size:.65rem;color:var(--ts);padding:6px 10px;background:var(--bg-i);border-radius:5px;border:1px solid var(--br);word-break:break-all}
+.setup-go{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;font-family:var(--fmo);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--ac-m);border-radius:var(--r);background:var(--ac-d);color:var(--ac);cursor:pointer;transition:var(--tr);align-self:flex-start}
+.setup-go:hover{box-shadow:0 0 16px var(--ac-d);background:var(--ac-m)}
+.setup-banner{padding:14px 18px;background:var(--ac-d);border:1px solid var(--ac-m);border-radius:var(--rl);display:flex;align-items:center;gap:14px}
+.setup-banner-ico{font-size:1.8rem;flex-shrink:0}
+.setup-banner-tx{flex:1}
+.setup-banner-t{font-size:.95rem;font-weight:700;color:var(--ac);margin-bottom:3px}
+.setup-banner-s{font-family:var(--fmo);font-size:.65rem;color:var(--ac);opacity:.7}
+.setup-done-banner{background:#00ff8811;border-color:#00ff8833}
+.setup-done-banner .setup-banner-t{color:var(--ok)}
+.setup-done-banner .setup-banner-s{color:var(--ok)}
+.notif-dot{display:none;position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--er);box-shadow:0 0 6px var(--er)}
+.sb-item{position:relative}
+.notif-dot.show{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;background:var(--bg-c);border:1px solid var(--ac);border-radius:var(--r);color:var(--ac);font-family:var(--fmo);font-size:.73rem;box-shadow:0 0 20px var(--ac-d);z-index:1000;animation:tIn .3s ease,tOut .3s ease 2.7s forwards}
+.toast.err{border-color:var(--er);color:var(--er)}
+@keyframes tIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tOut{from{opacity:1}to{opacity:0;transform:translateY(20px)}}
+
+@media(max-width:768px){.sb{position:fixed;left:0;top:0;bottom:0;z-index:100}.sb.col{width:0;border:none}.gg{grid-template-columns:repeat(2,1fr)}.files-tree{width:160px}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sb" id="sb">
+  <div class="sb-top">
+    <button class="sb-hbg" onclick="toggleSB()" title="Toggle sidebar">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="sb-brand">
+      <span class="sb-title">ClawbotOS</span>
+      <span class="sb-sub">AI Assistant Hub</span>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <button class="sb-item" id="nav-setup" onclick="show('setup')" title="Getting Started">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <span class="lbl">Setup</span>
+      <div class="notif-dot" id="setup-dot"></div>
+    </button>
+    <div class="sb-sep"></div>
+    <button class="sb-item active" id="nav-chat" onclick="show('chat')" title="Chat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="lbl">Chat</span>
+    </button>
+    <button class="sb-item" id="nav-files" onclick="show('files')" title="Files">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span class="lbl">Files</span>
+    </button>
+    <button class="sb-item" id="nav-logs" onclick="show('logs')" title="Logs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H5l-3 3V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="14" y2="14"/></svg>
+      <span class="lbl">Logs</span>
+    </button>
+    <div class="sb-sep"></div>
+    <button class="sb-item" id="nav-monitor" onclick="show('monitor')" title="System Monitor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span class="lbl">System</span>
+    </button>
+    <button class="sb-item" id="nav-services" onclick="show('services')" title="Services">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      <span class="lbl">Services</span>
+    </button>
+    <button class="sb-item" id="nav-config" onclick="show('config')" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span class="lbl">Settings</span>
+    </button>
+  </nav>
+
+  <div class="sb-ft">
+    <div class="sb-st"><span class="sb-si">🖥</span><div class="sb-stx"><span class="sb-sl">Host</span><span class="sb-sv" id="sb-host">clawbot</span></div></div>
+    <div class="sb-st"><span class="sb-si">🌐</span><div class="sb-stx"><span class="sb-sl">IP</span><span class="sb-sv" id="sb-ip">---.---</span></div></div>
+    <div class="sb-st"><span class="sb-si">⏱</span><div class="sb-stx"><span class="sb-sl">Uptime</span><span class="sb-sv" id="sb-uptime">--:--:--</span></div></div>
+  </div>
+</aside>
+
+<!-- ═══ CONTENT ═══ -->
+<div class="cnt">
+  <div class="tb">
+    <div class="tb-l">
+      <span class="tb-t" id="tb-title">Chat</span>
+      <span class="tb-a" id="tb-agent">PicoClaw · port 8080</span>
+    </div>
+    <span class="tb-s" id="tb-status">● RUNNING</span>
+  </div>
+
+  <!-- ─── CHAT ─── -->
+  <div class="pnl active" id="pnl-chat">
+    <div class="chat-wrap">
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="chat-row bot">
+          <div class="chat-av bot">🤖</div>
+          <div class="chat-bub">Hello! I'm your ClawbotOS assistant. How can I help you today?</div>
+        </div>
+      </div>
+      <div class="chat-ft">
+        <div class="chat-mb" id="chat-mb">picoclaw · connecting...</div>
+        <div class="chat-ir">
+          <textarea class="chat-inp" id="chat-inp" rows="1" placeholder="Ask your AI assistant..." onkeydown="chatKey(event)" oninput="autoH(this)"></textarea>
+          <button class="chat-snd" id="chat-snd" onclick="sendChat()" title="Send (Enter)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FILES ─── -->
+  <div class="pnl" id="pnl-files">
+    <div class="files-wrap">
+      <div class="files-tree" id="files-tree">
+        <div class="file-group-label">AI Agents</div>
+        <div class="file-item" onclick="openFile('/home/pi/.picoclaw/config.json','PicoClaw Config')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">picoclaw/config.json</span>
+        </div>
+        <div class="file-item" onclick="openFile('/home/pi/.openclaw/openclaw.json','OpenClaw Config')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">openclaw/openclaw.json</span>
+        </div>
+        <div class="file-group-label">Integrations</div>
+        <div class="file-item" onclick="openFile('/home/pi/.clawbot-telegram.env','Telegram Config')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">.clawbot-telegram.env</span>
+        </div>
+        <div class="file-group-label">nginx</div>
+        <div class="file-item" onclick="openFile('/etc/nginx/sites-available/clawbot','nginx site config')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">sites-available/clawbot</span>
+        </div>
+        <div class="file-item" onclick="openFile('/etc/nginx/nginx.conf','nginx.conf')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">nginx.conf</span>
+        </div>
+        <div class="file-group-label">Systemd</div>
+        <div class="file-item" onclick="openFile('/etc/systemd/system/picoclaw.service','picoclaw.service')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">picoclaw.service</span>
+        </div>
+        <div class="file-item" onclick="openFile('/etc/systemd/system/openclaw.service','openclaw.service')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">openclaw.service</span>
+        </div>
+      </div>
+      <div class="file-editor" id="file-editor">
+        <div class="file-placeholder" id="file-ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p>Select a file to edit</p>
+        </div>
+        <div id="file-edit-area" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+          <div class="file-editor-top">
+            <span class="file-path" id="file-path-label">—</span>
+            <div class="file-btns">
+              <button class="file-btn" onclick="reloadFile()">Reload</button>
+              <button class="file-btn" onclick="reloadServiceAfterSave()" id="file-svc-reload" style="display:none">+ Reload service</button>
+              <button class="file-btn primary" onclick="saveFile()">Save</button>
+            </div>
+          </div>
+          <textarea class="file-textarea" id="file-content" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── LOGS ─── -->
+  <div class="pnl" id="pnl-logs">
+    <div class="logs-wrap">
+      <div class="logs-bar">
+        <div class="logs-svc-btns">
+          <button class="log-svc-btn active" onclick="selectLogSvc('picoclaw',this)">PicoClaw</button>
+          <button class="log-svc-btn" onclick="selectLogSvc('openclaw',this)">OpenClaw</button>
+          <button class="log-svc-btn" onclick="selectLogSvc('nginx',this)">nginx</button>
+          <button class="log-svc-btn" onclick="selectLogSvc('clawbot-status-api',this)">Status API</button>
+          <button class="log-svc-btn" onclick="selectLogSvc('clawbot-telegram',this)">Telegram</button>
+        </div>
+        <label class="log-auto">
+          <input type="checkbox" id="log-auto" checked> Auto-refresh
+        </label>
+      </div>
+      <div class="logs-out" id="logs-out">Loading logs...</div>
+    </div>
+  </div>
+
+  <!-- ─── MONITOR ─── -->
+  <div class="pnl" id="pnl-monitor">
+    <div class="pscr">
+      <div class="card">
+        <div class="sec-t">System Monitor</div>
+        <div class="gg">
+          <div class="gi"><div class="gr" id="g-cpu"><svg viewBox="0 0 76 76"><circle class="tk" cx="38" cy="38" r="32"/><circle class="fl" cx="38" cy="38" r="32" stroke="var(--ac)"/></svg><div class="vt"><span id="v-cpu">--</span><span class="un">%</span></div></div><div class="gl">CPU</div></div>
+          <div class="gi"><div class="gr" id="g-ram"><svg viewBox="0 0 76 76"><circle class="tk" cx="38" cy="38" r="32"/><circle class="fl" cx="38" cy="38" r="32" stroke="var(--ac2)"/></svg><div class="vt"><span id="v-ram">--</span><span class="un">%</span></div></div><div class="gl">RAM</div></div>
+          <div class="gi"><div class="gr" id="g-disk"><svg viewBox="0 0 76 76"><circle class="tk" cx="38" cy="38" r="32"/><circle class="fl" cx="38" cy="38" r="32" stroke="#ff9f43"/></svg><div class="vt"><span id="v-disk">--</span><span class="un">%</span></div></div><div class="gl">Disk</div></div>
+          <div class="gi"><div class="gr" id="g-temp"><svg viewBox="0 0 76 76"><circle class="tk" cx="38" cy="38" r="32"/><circle class="fl" cx="38" cy="38" r="32" stroke="var(--er)"/></svg><div class="vt"><span id="v-temp">--</span><span class="un">°</span></div></div><div class="gl">Temp</div></div>
+        </div>
+        <div class="ni">
+          <div class="nd-row"><div class="nd" id="nd-eth"></div><span class="nl" id="nl-eth">eth0: --</span></div>
+          <div class="nd-row"><div class="nd off" id="nd-wifi"></div><span class="nl" id="nl-wifi">wlan0: --</span></div>
+          <div class="nd-row"><div class="nd" id="nd-swap"></div><span class="nl" id="nl-swap">swap: --</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SERVICES ─── -->
+  <div class="pnl" id="pnl-services">
+    <div class="pscr">
+      <div class="card">
+        <div class="sec-t">Active Agent</div>
+        <div class="ag-row">
+          <div class="ag-inf">
+            <div class="ag-nm" id="ag-nm">PicoClaw</div>
+            <div class="ag-sb" id="ag-sb">Go · &lt;10MB RAM · port 8080</div>
+          </div>
+          <label class="tgl" title="Toggle PicoClaw / OpenClaw">
+            <input type="checkbox" id="ag-tgl">
+            <div class="tgl-tk"></div><div class="tgl-th"></div>
+          </label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-t">Services</div>
+        <div class="svc-l">
+          <div class="svc-r"><div class="svc-d on" id="sd-picoclaw"></div><span class="svc-n">picoclaw.service</span><span class="svc-s" id="ss-picoclaw">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('picoclaw','restart')">Restart</button><button class="sb-btn dng" onclick="svcAct('picoclaw','stop')">Stop</button></div></div>
+          <div class="svc-r"><div class="svc-d off" id="sd-openclaw"></div><span class="svc-n">openclaw.service</span><span class="svc-s" id="ss-openclaw">inactive</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('openclaw','start')">Start</button></div></div>
+          <div class="svc-r"><div class="svc-d on" id="sd-nginx"></div><span class="svc-n">nginx.service</span><span class="svc-s" id="ss-nginx">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('nginx','restart')">Restart</button></div></div>
+          <div class="svc-r"><div class="svc-d off" id="sd-clawbot-telegram"></div><span class="svc-n">clawbot-telegram.service</span><span class="svc-s" id="ss-clawbot-telegram">inactive</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('clawbot-telegram','start')">Start</button><button class="sb-btn" onclick="svcAct('clawbot-telegram','restart')">Restart</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SETTINGS ─── -->
+  <div class="pnl" id="pnl-config">
+    <div class="pscr">
+
+      <!-- LLM Config -->
+      <div class="card">
+        <div class="sec-t">LLM Configuration</div>
+        <div class="cfg-form">
+          <div class="fg"><label class="fl" for="cfg-p">LLM Provider</label>
+            <select class="fs" id="cfg-p" onchange="onProv()">
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic (Claude)</option>
+              <option value="openrouter">OpenRouter</option>
+              <option value="deepseek">DeepSeek</option>
+              <option value="ollama">Ollama (remote)</option>
+              <option value="custom">Custom endpoint</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl" for="cfg-m">Model</label>
+            <input class="fi" type="text" id="cfg-m" placeholder="gpt-4o">
+            <div class="model-chips" id="m-chips"></div>
+          </div>
+          <div class="fg"><label class="fl" for="cfg-k">API Key</label><input class="fi" type="password" id="cfg-k" placeholder="sk-..."></div>
+          <div class="fg" id="cfg-url-g" style="display:none"><label class="fl" for="cfg-u">Base URL</label><input class="fi" type="text" id="cfg-u" placeholder="https://api.example.com/v1"></div>
+          <div class="info-box" id="cfg-info">Config saved to PicoClaw and takes effect after restart.</div>
+          <button class="btn-save" onclick="saveLLM()">Save &amp; Apply</button>
+        </div>
+      </div>
+
+      <!-- Telegram -->
+      <div class="card">
+        <div class="sec-t">Telegram Bot</div>
+        <div class="cfg-form">
+          <div class="warn-box">Install the <strong>clawbot-telegram</strong> module to enable. Once installed, configure your bot here and enable the service in the Services panel.</div>
+          <div class="fg"><label class="fl" for="tg-token">Bot Token</label><input class="fi" type="password" id="tg-token" placeholder="123456:ABC-DEF..."></div>
+          <div class="fg"><label class="fl" for="tg-users">Allowed User IDs <span style="font-size:.55rem;color:var(--td)">(comma-separated, leave empty = anyone)</span></label><input class="fi" type="text" id="tg-users" placeholder="123456789,987654321"></div>
+          <div class="fg"><label class="fl" for="tg-agent">AI Agent to use</label>
+            <select class="fs" id="tg-agent">
+              <option value="picoclaw">PicoClaw (port 8080)</option>
+              <option value="openclaw">OpenClaw (port 8081)</option>
+            </select>
+          </div>
+          <button class="btn-save" onclick="saveTelegram()">Save Telegram Config</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── SETUP ─── -->
+  <div class="pnl" id="pnl-setup">
+    <div class="pscr">
+
+      <div class="setup-banner" id="setup-banner">
+        <div class="setup-banner-ico">🚀</div>
+        <div class="setup-banner-tx">
+          <div class="setup-banner-t">Welcome to ClawbotOS — configure your AI assistant</div>
+          <div class="setup-banner-s">Complete the steps below to get started. Required items must be configured for the AI to work.</div>
+        </div>
+      </div>
+
+      <div class="sec-t">Essential</div>
+      <div class="setup-grid">
+
+        <!-- LLM API Key -->
+        <div class="setup-card" id="sc-llm">
+          <div class="setup-h">
+            <div class="setup-ico">🔑</div>
+            <div class="setup-badge err" id="sb-llm">Not configured</div>
+          </div>
+          <div class="setup-title">AI Provider API Key</div>
+          <div class="setup-desc">Choose your LLM provider (OpenAI, Anthropic, DeepSeek, OpenRouter, Ollama…) and enter your API key. This is required for the chat to work.</div>
+          <div class="setup-key-val" id="sv-llm">No key saved</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px">
+            <button class="mc" onclick="quickProv('openai')">OpenAI</button>
+            <button class="mc" onclick="quickProv('anthropic')">Anthropic</button>
+            <button class="mc" onclick="quickProv('deepseek')">DeepSeek</button>
+            <button class="mc" onclick="quickProv('openrouter')">OpenRouter</button>
+            <button class="mc" onclick="quickProv('ollama')">Ollama</button>
+          </div>
+          <button class="setup-go" onclick="show('config')">Configure in Settings →</button>
+        </div>
+
+        <!-- Telegram Bot -->
+        <div class="setup-card" id="sc-tg">
+          <div class="setup-h">
+            <div class="setup-ico">✈️</div>
+            <div class="setup-badge opt" id="sb-tg">Optional</div>
+          </div>
+          <div class="setup-title">Telegram Bot</div>
+          <div class="setup-desc">Connect a Telegram bot to your AI assistant. Users can chat via Telegram — ideal for remote access without opening a browser. Create a bot via <strong>@BotFather</strong> on Telegram.</div>
+          <div class="setup-key-val" id="sv-tg">Token not set</div>
+          <button class="setup-go" onclick="show('config');setTimeout(()=>document.getElementById('tg-token').focus(),200)">Configure in Settings →</button>
+        </div>
+
+      </div>
+
+      <div class="sec-t" style="margin-top:6px">Quick reference</div>
+      <div class="setup-grid">
+
+        <!-- Get API keys -->
+        <div class="setup-card">
+          <div class="setup-h">
+            <div class="setup-ico">🔗</div>
+            <div class="setup-badge opt">Links</div>
+          </div>
+          <div class="setup-title">Where to get API keys</div>
+          <div class="setup-desc" style="display:flex;flex-direction:column;gap:5px;margin-top:2px">
+            <span><strong style="color:var(--tp)">OpenAI</strong> — platform.openai.com/api-keys</span>
+            <span><strong style="color:var(--tp)">Anthropic</strong> — console.anthropic.com/settings/keys</span>
+            <span><strong style="color:var(--tp)">DeepSeek</strong> — platform.deepseek.com/api_keys</span>
+            <span><strong style="color:var(--tp)">OpenRouter</strong> — openrouter.ai/settings/keys</span>
+            <span><strong style="color:var(--tp)">Telegram bot</strong> — chat with @BotFather → /newbot</span>
+          </div>
+        </div>
+
+        <!-- SSH access -->
+        <div class="setup-card">
+          <div class="setup-h">
+            <div class="setup-ico">💻</div>
+            <div class="setup-badge opt">SSH</div>
+          </div>
+          <div class="setup-title">SSH access</div>
+          <div class="setup-desc">Access the terminal remotely to run commands or troubleshoot.</div>
+          <div class="setup-key-val" id="sv-ssh">ssh pi@clawbot.local<br>Password: yumi</div>
+          <div class="setup-desc" style="margin-top:4px">If the host key changed after reflashing:<br><span style="color:var(--wn)">ssh-keygen -R clawbot.local</span></div>
+        </div>
+
+        <!-- Switch agent -->
+        <div class="setup-card">
+          <div class="setup-h">
+            <div class="setup-ico">🤖</div>
+            <div class="setup-badge opt">CLI</div>
+          </div>
+          <div class="setup-title">Switch AI agent</div>
+          <div class="setup-desc">PicoClaw (&lt;10MB RAM, recommended) vs OpenClaw (~500MB). Use the Services panel or the CLI command:</div>
+          <div class="setup-key-val">sudo clawbot-switch-agent picoclaw<br>sudo clawbot-switch-agent openclaw<br>sudo clawbot-switch-agent status</div>
+        </div>
+
+        <!-- Telegram bot setup -->
+        <div class="setup-card">
+          <div class="setup-h">
+            <div class="setup-ico">📋</div>
+            <div class="setup-badge opt">How-to</div>
+          </div>
+          <div class="setup-title">Enable Telegram bot</div>
+          <div class="setup-desc" style="display:flex;flex-direction:column;gap:3px">
+            <span>1. Create bot via @BotFather → copy token</span>
+            <span>2. Enter token in Settings → Telegram Bot</span>
+            <span>3. Go to Services → Start clawbot-telegram</span>
+            <span>4. Message your bot on Telegram — it should reply!</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /cnt -->
+</div><!-- /app -->
+
+<script>
+// ═══ STATE ═══
+const S = {
+  agent: 'picoclaw',
+  sbCol: false,
+  cfg: {
+    provider: localStorage.getItem('cfg_p') || 'openai',
+    model:    localStorage.getItem('cfg_m') || '',
+    apikey:   localStorage.getItem('cfg_k') || '',
+    baseurl:  localStorage.getItem('cfg_u') || ''
+  },
+  curFile: null,
+  curLogSvc: 'picoclaw',
+  logAutoRefresh: true,
+  logTimer: null
+};
+const chatHistory = [];
+let streaming = false;
+
+// ═══ MODEL SUGGESTIONS ═══
+const MODELS = {
+  openai:     ['gpt-4o','gpt-4o-mini','gpt-4-turbo','gpt-3.5-turbo'],
+  anthropic:  ['claude-opus-4-6','claude-sonnet-4-6','claude-haiku-4-5-20251001'],
+  openrouter: ['anthropic/claude-sonnet-4-6','openai/gpt-4o','google/gemini-flash-1.5'],
+  deepseek:   ['deepseek-chat','deepseek-reasoner','deepseek-coder'],
+  ollama:     ['llama3','mistral','phi3','gemma3','qwen2'],
+  custom:     []
+};
+const PROV_DEFAULTS = {
+  openai:     {model:'gpt-4o',     url:''},
+  anthropic:  {model:'claude-sonnet-4-6', url:''},
+  openrouter: {model:'anthropic/claude-sonnet-4-6', url:''},
+  deepseek:   {model:'deepseek-chat', url:''},
+  ollama:     {model:'llama3',     url:'http://192.168.1.100:11434/v1'},
+  custom:     {model:'',           url:''}
+};
+const PANEL_TITLES = {setup:'Getting Started',chat:'Chat',files:'Files',logs:'Logs',monitor:'System Monitor',services:'Services',config:'Settings'};
+
+// ═══ SIDEBAR ═══
+function toggleSB() {
+  S.sbCol = !S.sbCol;
+  document.getElementById('sb').classList.toggle('col', S.sbCol);
+}
+
+// ═══ PANELS ═══
+function show(name) {
+  document.querySelectorAll('.pnl').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('pnl-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  document.getElementById('tb-title').textContent = PANEL_TITLES[name];
+  if (name === 'logs') startLogRefresh();
+  else stopLogRefresh();
+}
+
+// ═══ GAUGES ═══
+const CIRC = 2 * Math.PI * 32;
+function setG(id, pct, max) {
+  max = max || 100;
+  const ratio = Math.min(pct / max, 1);
+  const el = document.querySelector('#' + id + ' .fl');
+  el.style.strokeDasharray = CIRC;
+  el.style.strokeDashoffset = CIRC * (1 - ratio);
+  if (ratio > .85) el.style.stroke = 'var(--er)';
+  else if (ratio > .65) el.style.stroke = 'var(--wn)';
+}
+function fmtUp(s) {
+  const d=Math.floor(s/86400),h=Math.floor((s%86400)/3600),m=Math.floor((s%3600)/60),sec=Math.floor(s%60);
+  if(d>0) return `${d}d ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+// ═══ SYSTEM STATS ═══
+async function fetchStats() {
+  try {
+    const r = await fetch('/api/system/stats', {signal: AbortSignal.timeout(4000)});
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}
+function applyStats(st) {
+  if (!st) return;
+  $('v-cpu').textContent = st.cpu ?? '--';
+  $('v-ram').textContent = st.ram ?? '--';
+  $('v-disk').textContent = st.disk ?? '--';
+  $('v-temp').textContent = st.temp ?? '--';
+  if (st.cpu  != null) setG('g-cpu',  st.cpu);
+  if (st.ram  != null) setG('g-ram',  st.ram);
+  if (st.disk != null) setG('g-disk', st.disk);
+  if (st.temp != null) setG('g-temp', st.temp, 80);
+  const eth = st.eth_connected, wifi = st.wifi_ssid;
+  $('nd-eth').className = 'nd' + (eth ? '' : ' off');
+  $('nl-eth').textContent = eth ? 'eth0: connected' : 'eth0: disconnected';
+  $('nd-wifi').className = 'nd' + (wifi ? '' : ' off');
+  $('nl-wifi').textContent = wifi ? 'wlan0: ' + wifi : 'wlan0: off';
+  $('nl-swap').textContent = (st.swap_mb||0) > 0 ? `swap: ${st.swap_mb}MB` : 'swap: none';
+  if (st.hostname) $('sb-host').textContent = st.hostname;
+  if (st.ip)       $('sb-ip').textContent = st.ip;
+  if (st.uptime != null) $('sb-uptime').textContent = fmtUp(st.uptime);
+  if (st.services) {
+    Object.entries(st.services).forEach(([svc, on]) => {
+      const dot = $(('sd-'+svc).replace('.','-')), ss = $(('ss-'+svc).replace('.','-'));
+      if (dot) dot.className = 'svc-d ' + (on ? 'on' : 'off');
+      if (ss)  ss.textContent = on ? 'active' : 'inactive';
+    });
+  }
+  const pico = st.services?.picoclaw;
+  $('tb-status').textContent = pico ? '● RUNNING' : '● STOPPED';
+  $('tb-status').className = 'tb-s' + (pico ? '' : ' off');
+  updateModelBar();
+}
+async function refreshStats() { applyStats(await fetchStats()); }
+
+// ═══ AGENT TOGGLE ═══
+$id('ag-tgl').addEventListener('change', function() {
+  const oc = this.checked;
+  S.agent = oc ? 'openclaw' : 'picoclaw';
+  $('ag-nm').textContent = oc ? 'OpenClaw' : 'PicoClaw';
+  $('ag-sb').textContent = oc ? 'Node.js · ~500MB RAM · port 8081' : 'Go · <10MB RAM · port 8080';
+  $('tb-agent').textContent = oc ? 'OpenClaw · port 8081' : 'PicoClaw · port 8080';
+  updateModelBar();
+  toast('Switched to ' + (oc ? 'OpenClaw' : 'PicoClaw'));
+});
+
+// ═══ SERVICE ACTIONS ═══
+function svcAct(svc, action) {
+  toast(svc + ': ' + action + '...');
+  fetch('/api/system/service', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({service: svc, action})
+  }).then(() => setTimeout(refreshStats, 1500)).catch(() => {});
+}
+
+// ═══ LLM CONFIG ═══
+function onProv() {
+  const p = $id('cfg-p').value;
+  const showUrl = ['ollama','custom'].includes(p);
+  $id('cfg-url-g').style.display = showUrl ? '' : 'none';
+  const def = PROV_DEFAULTS[p] || {};
+  if (def.model && !$id('cfg-m').value) $id('cfg-m').value = def.model;
+  if (def.url) $id('cfg-u').value = def.url;
+  const chips = (MODELS[p] || []).map(m => `<button class="mc" onclick="setModel('${m}')">${m}</button>`).join('');
+  $('m-chips').innerHTML = chips;
+}
+function setModel(m) { $id('cfg-m').value = m; }
+function loadCfg() {
+  $id('cfg-p').value = S.cfg.provider;
+  $id('cfg-m').value = S.cfg.model;
+  $id('cfg-k').value = S.cfg.apikey;
+  $id('cfg-u').value = S.cfg.baseurl;
+  onProv();
+}
+async function saveLLM() {
+  const p = $id('cfg-p').value, m = $id('cfg-m').value, k = $id('cfg-k').value, u = $id('cfg-u').value;
+  S.cfg = {provider:p, model:m, apikey:k, baseurl:u};
+  localStorage.setItem('cfg_p',p); localStorage.setItem('cfg_m',m);
+  localStorage.setItem('cfg_k',k); localStorage.setItem('cfg_u',u);
+  try {
+    const r = await fetch('/api/system/config', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({provider:p, model:m, api_key:k, base_url:u})
+    });
+    toast(r.ok ? 'Config applied to PicoClaw' : 'Saved locally (restart PicoClaw to apply)');
+  } catch { toast('Saved locally (restart PicoClaw to apply)'); }
+  updateModelBar();
+  updateSetupStatus();
+}
+
+// ═══ TELEGRAM CONFIG ═══
+async function saveTelegram() {
+  const token = $id('tg-token').value;
+  const users = $id('tg-users').value;
+  const agent = $id('tg-agent').value;
+  if (!token) { toast('Bot token required', true); return; }
+  try {
+    const r = await fetch('/api/system/file', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        path: '/home/pi/.clawbot-telegram.env',
+        content: `TELEGRAM_BOT_TOKEN=${token}\nTELEGRAM_ALLOWED_USERS=${users}\nCLAWBOT_AGENT=${agent}\nCLAWBOT_AGENT_URL=http://127.0.0.1:${agent==='openclaw'?8081:8080}/v1/chat/completions\n`
+      })
+    });
+    if (r.ok) { toast('Telegram config saved — start clawbot-telegram.service'); updateSetupStatus(); }
+    else toast('Save failed: check status API', true);
+  } catch { toast('Save failed', true); }
+}
+
+// ═══ SETUP PANEL ═══
+function quickProv(p) {
+  show('config');
+  setTimeout(() => {
+    $id('cfg-p').value = p;
+    onProv();
+    $id('cfg-k').focus();
+  }, 100);
+}
+
+function updateSetupStatus() {
+  const hasKey = !!(S.cfg.apikey && S.cfg.apikey.length > 6);
+  const hasProv = !!S.cfg.provider;
+
+  // LLM card
+  const llmCard = $id('sc-llm');
+  const llmBadge = $id('sb-llm');
+  const llmVal = $id('sv-llm');
+  if (hasKey) {
+    llmCard.className = 'setup-card done';
+    llmBadge.className = 'setup-badge ok';
+    llmBadge.textContent = '✓ Configured';
+    llmVal.textContent = (S.cfg.provider || 'custom') + ' · ' + S.cfg.model + ' · sk-****' + S.cfg.apikey.slice(-4);
+  } else {
+    llmCard.className = 'setup-card req';
+    llmBadge.className = 'setup-badge err';
+    llmBadge.textContent = '✗ Required';
+    llmVal.textContent = 'No API key saved';
+  }
+
+  // Telegram card — try to detect from API
+  fetch('/api/system/file?path=' + encodeURIComponent('/home/pi/.clawbot-telegram.env'))
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      const content = d?.content || '';
+      const hasTok = content.includes('TELEGRAM_TOKEN=') && !content.includes('TELEGRAM_TOKEN=\n') && !content.match(/TELEGRAM_TOKEN=\s*\n/);
+      const tgCard = $id('sc-tg');
+      const tgBadge = $id('sb-tg');
+      const tgVal = $id('sv-tg');
+      if (hasTok) {
+        tgCard.className = 'setup-card done';
+        tgBadge.className = 'setup-badge ok';
+        tgBadge.textContent = '✓ Configured';
+        tgVal.textContent = 'Token set — enable clawbot-telegram in Services';
+      } else {
+        tgCard.className = 'setup-card';
+        tgBadge.className = 'setup-badge opt';
+        tgBadge.textContent = 'Optional';
+        tgVal.textContent = 'Token not set';
+      }
+    }).catch(() => {});
+
+  // Banner
+  const banner = $id('setup-banner');
+  if (hasKey) {
+    banner.className = 'setup-banner setup-done-banner';
+    banner.querySelector('.setup-banner-t').textContent = '✓ ClawbotOS is configured and ready';
+    banner.querySelector('.setup-banner-s').textContent = 'Your AI assistant is set up. Go to Chat to start talking.';
+  } else {
+    banner.className = 'setup-banner';
+    banner.querySelector('.setup-banner-t').textContent = 'Welcome to ClawbotOS — configure your AI assistant';
+    banner.querySelector('.setup-banner-s').textContent = 'Complete the steps below to get started. Required items must be configured for the AI to work.';
+  }
+
+  // Notification dot on sidebar
+  $id('setup-dot').classList.toggle('show', !hasKey);
+
+  // Update SSH hint with real IP
+  const ip = $('sb-ip').textContent;
+  if (ip && ip !== '---.---') $id('sv-ssh').innerHTML = `ssh pi@${ip}<br>Password: yumi`;
+}
+
+// ═══ FILE EDITOR ═══
+const FILE_SVC_MAP = {
+  '/home/pi/.picoclaw/config.json': 'picoclaw',
+  '/home/pi/.openclaw/openclaw.json': 'openclaw',
+  '/etc/nginx/sites-available/clawbot': 'nginx',
+  '/etc/nginx/nginx.conf': 'nginx',
+  '/etc/systemd/system/picoclaw.service': 'picoclaw',
+  '/etc/systemd/system/openclaw.service': 'openclaw',
+  '/home/pi/.clawbot-telegram.env': 'clawbot-telegram'
+};
+
+async function openFile(path, name) {
+  document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  S.curFile = path;
+  $('file-path-label').textContent = name + '  (' + path + ')';
+  $('file-content').value = 'Loading...';
+  $id('file-ph').style.display = 'none';
+  const ea = $id('file-edit-area');
+  ea.style.display = 'flex';
+  const svc = FILE_SVC_MAP[path];
+  $id('file-svc-reload').style.display = svc ? '' : 'none';
+  $id('file-svc-reload').textContent = '+ Reload ' + (svc || '');
+  try {
+    const r = await fetch('/api/system/file?path=' + encodeURIComponent(path));
+    if (r.ok) {
+      const d = await r.json();
+      $id('file-content').value = d.content || '';
+    } else {
+      $id('file-content').value = '# File not found or not accessible\n# ' + path;
+    }
+  } catch { $id('file-content').value = '# Error loading file'; }
+}
+
+async function saveFile() {
+  if (!S.curFile) return;
+  const content = $id('file-content').value;
+  try {
+    const r = await fetch('/api/system/file', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({path: S.curFile, content})
+    });
+    toast(r.ok ? 'File saved' : 'Save failed');
+  } catch { toast('Save failed', true); }
+}
+
+function reloadFile() { if (S.curFile) openFile(S.curFile, $('file-path-label').textContent.split('  ')[0]); }
+
+function reloadServiceAfterSave() {
+  const svc = FILE_SVC_MAP[S.curFile];
+  if (!svc) return;
+  svcAct(svc, 'restart');
+}
+
+// ═══ LOGS ═══
+function selectLogSvc(svc, btn) {
+  S.curLogSvc = svc;
+  document.querySelectorAll('.log-svc-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fetchLogs();
+}
+
+async function fetchLogs() {
+  if (!S.logAutoRefresh && document.getElementById('pnl-logs').classList.contains('active')) return;
+  try {
+    const r = await fetch(`/api/system/logs?service=${S.curLogSvc}&lines=100`);
+    if (!r.ok) { $('logs-out').textContent = 'No logs available (service not running or status API not reachable)'; return; }
+    const d = await r.json();
+    const el = $('logs-out');
+    const rawLines = typeof d.logs === 'string' ? d.logs.split('\n') : (d.lines || []);
+    el.innerHTML = rawLines.map(line => {
+      const l = line.toLowerCase();
+      let cls = '';
+      if (l.includes('error') || l.includes('err') || l.includes('failed') || l.includes('fatal')) cls = ' err';
+      else if (l.includes('warn')) cls = ' wrn';
+      else if (l.includes('start') || l.includes('ready') || l.includes('running')) cls = ' ok';
+      return `<span class="log-line${cls}">${escH(line)}</span>`;
+    }).join('\n');
+    el.scrollTop = el.scrollHeight;
+  } catch { $('logs-out').textContent = 'Status API not reachable. Is clawbot-status-api running?'; }
+}
+
+function startLogRefresh() {
+  fetchLogs();
+  S.logTimer = setInterval(() => {
+    if (document.getElementById('log-auto').checked) fetchLogs();
+  }, 3000);
+}
+function stopLogRefresh() { if (S.logTimer) { clearInterval(S.logTimer); S.logTimer = null; } }
+
+// ═══ CHAT ═══
+function updateModelBar() {
+  const m = S.cfg.model || 'default';
+  $('chat-mb').textContent = S.agent + ' · ' + m;
+}
+function autoH(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 120) + 'px'; }
+function chatKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }
+function scrollChat() { const c = $('chat-msgs'); c.scrollTop = c.scrollHeight; }
+
+function addRow(role) {
+  const c = $('chat-msgs');
+  const row = document.createElement('div');
+  row.className = 'chat-row ' + role;
+  const av = document.createElement('div');
+  av.className = 'chat-av' + (role==='bot' ? ' bot' : '');
+  av.textContent = role==='bot' ? '🤖' : '👤';
+  const bub = document.createElement('div');
+  bub.className = 'chat-bub';
+  row.appendChild(av); row.appendChild(bub);
+  c.appendChild(row); scrollChat();
+  return bub;
+}
+
+async function sendChat() {
+  if (streaming) return;
+  const inp = $id('chat-inp');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = ''; inp.style.height = 'auto';
+  const ub = addRow('user'); ub.textContent = msg;
+  chatHistory.push({role:'user', content:msg});
+  const bb = addRow('bot'); bb.classList.add('streaming');
+  streaming = true; $id('chat-snd').disabled = true;
+  try {
+    const ep = `/api/${S.agent}/v1/chat/completions`;
+    const hdrs = {'Content-Type':'application/json'};
+    if (S.cfg.apikey) hdrs['Authorization'] = 'Bearer ' + S.cfg.apikey;
+    const res = await fetch(ep, {
+      method:'POST', headers:hdrs,
+      body: JSON.stringify({model: S.cfg.model || 'default', messages: chatHistory, stream:true})
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}: ${(await res.text()).slice(0,200)}`);
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let full = '', buf = '';
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, {stream:true});
+      const lines = buf.split('\n');
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        if (data === '[DONE]') break;
+        try {
+          const json = JSON.parse(data);
+          const delta = json.choices?.[0]?.delta?.content;
+          if (delta) { full += delta; bb.textContent = full; scrollChat(); }
+        } catch {}
+      }
+    }
+    if (!full) full = '(empty response)';
+    bb.textContent = full;
+    chatHistory.push({role:'assistant', content:full});
+  } catch(err) {
+    bb.textContent = '⚠ ' + err.message;
+    bb.classList.add('err');
+    chatHistory.pop();
+  } finally {
+    bb.classList.remove('streaming');
+    streaming = false; $id('chat-snd').disabled = false;
+    scrollChat();
+  }
+}
+
+// ═══ TOAST ═══
+function toast(msg, isErr) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (isErr ? ' err' : '');
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ═══ HELPERS ═══
+function $(id) { return document.getElementById(id); }
+function $id(id) { return document.getElementById(id); }
+function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ═══ INIT ═══
+// IP from browser
+const hn = window.location.hostname;
+if (hn && hn !== 'localhost') $('sb-ip').textContent = hn;
+
+loadCfg();
+updateModelBar();
+updateSetupStatus();
+refreshStats();
+setInterval(refreshStats, 5000);
+
+// Show Setup panel first if API key not yet configured
+if (!S.cfg.apikey) {
+  show('setup');
+}
+</script>
+</body>
+</html>
