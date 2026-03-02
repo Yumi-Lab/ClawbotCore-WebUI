@@ -3,7 +3,7 @@
 > Ultra-lightweight web dashboard for [PicoClaw](https://github.com/Sipeed/PicoClaw) and OpenClaw AI agents — part of the [ClawbotOS](https://github.com/Yumi-Lab/ClawBot-OS) project by [Yumi Lab](https://yumi-lab.com).
 
 ![Version](https://img.shields.io/github/v/release/Yumi-Lab/ClawbotCore-WebUI?label=version&color=00ffe0)
-![License](https://img.shields.io/badge/license-GPLv3-blue)
+![License](https://img.shields.io/badge/license-BUSL--1.1-orange)
 ![Size](https://img.shields.io/badge/size-%3C100KB-green)
 
 ---
@@ -135,6 +135,6 @@ Works on any Armbian/Debian device running nginx + PicoClaw.
 
 ## License
 
-GPLv3 — see [LICENSE](LICENSE)
+BUSL-1.1 — Non-commercial use free. Commercial use requires a license from Yumi Lab. See [LICENSE](LICENSE)
 
 © Yumi Lab
