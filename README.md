@@ -1,8 +1,8 @@
-# ClawbotOS Interface
+# ClawbotCore WebUI
 
-> Ultra-lightweight web dashboard for [PicoClaw](https://github.com/Sipeed/PicoClaw) and OpenClaw AI agents — part of the [ClawbotOS](https://github.com/Yumi-Lab/clawbot) project by [Yumi Lab](https://yumi-lab.com).
+> Ultra-lightweight web dashboard for [PicoClaw](https://github.com/Sipeed/PicoClaw) and OpenClaw AI agents — part of the [ClawbotOS](https://github.com/Yumi-Lab/ClawBot-OS) project by [Yumi Lab](https://yumi-lab.com).
 
-![Version](https://img.shields.io/github/v/release/Yumi-Lab/clawbot-interface?label=version&color=00ffe0)
+![Version](https://img.shields.io/github/v/release/Yumi-Lab/ClawbotCore-WebUI?label=version&color=00ffe0)
 ![License](https://img.shields.io/badge/license-GPLv3-blue)
 ![Size](https://img.shields.io/badge/size-%3C100KB-green)
 
@@ -10,7 +10,7 @@
 
 ## What is this?
 
-`clawbot-interface` is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the PicoClaw AI agent (OpenAI-compatible API on port 8080) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
+`**ClawbotCore WebUI** is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the PicoClaw AI agent (OpenAI-compatible API on port 8080) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
 
 Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to control your AI assistant running on low-resource ARM hardware.
 
@@ -79,10 +79,10 @@ To manually install on any Armbian/Debian device running PicoClaw + nginx:
 
 ```bash
 # Download latest dashboard
-curl -fsSL https://github.com/Yumi-Lab/clawbot-interface/releases/latest/download/index.html \
+curl -fsSL https://github.com/Yumi-Lab/ClawbotCore-WebUI/releases/latest/download/index.html \
   -o /home/pi/clawbot-dashboard/index.html
 
-# Configure nginx to serve it (see clawbot OS for nginx config)
+# Configure nginx to serve it (see ClawbotOS for nginx config)
 ```
 
 ---
@@ -92,8 +92,8 @@ curl -fsSL https://github.com/Yumi-Lab/clawbot-interface/releases/latest/downloa
 The entire interface is a single `index.html` file — edit it directly, no build required.
 
 ```bash
-git clone https://github.com/Yumi-Lab/clawbot-interface.git
-cd clawbot-interface
+git clone https://github.com/Yumi-Lab/ClawbotCore-WebUI.git
+cd ClawbotCore-WebUI
 
 # Edit index.html
 # Bump VERSION
@@ -128,7 +128,7 @@ Works on any Armbian/Debian device running nginx + PicoClaw.
 
 | Repo | Description |
 |------|-------------|
-| [Yumi-Lab/clawbot](https://github.com/Yumi-Lab/clawbot) | ClawbotOS — the full OS build (CustomPiOS) |
+| [Yumi-Lab/ClawBot-OS](https://github.com/Yumi-Lab/ClawBot-OS) | ClawbotOS — the full OS build (CustomPiOS) |
 | [Sipeed/PicoClaw](https://github.com/Sipeed/PicoClaw) | PicoClaw — lightweight Go AI agent |
 
 ---
