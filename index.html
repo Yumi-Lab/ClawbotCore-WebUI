@@ -253,8 +253,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <span></span><span></span><span></span>
     </button>
     <div class="sb-brand">
-      <span class="sb-title">ClawbotOS</span>
-      <span class="sb-sub">AI Assistant Hub</span>
+      <img src="https://wiki.yumi-lab.com/img/YUMI_LOGO.svg" alt="Yumi Lab" style="height:22px;filter:brightness(0) invert(1);opacity:.9;margin-bottom:2px">
+      <span class="sb-sub">ClawbotOS · AI Hub</span>
     </div>
   </div>
 
@@ -304,7 +304,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="tb">
     <div class="tb-l">
       <span class="tb-t" id="tb-title">Chat</span>
-      <span class="tb-a" id="tb-agent">PicoClaw · port 8080</span>
+      <span class="tb-a" id="tb-agent">ClawbotCore · port 8090</span>
     </div>
     <span class="tb-s" id="tb-status">● RUNNING</span>
   </div>
@@ -319,7 +319,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
       <div class="chat-ft">
-        <div class="chat-mb" id="chat-mb">picoclaw · connecting...</div>
+        <div class="chat-mb" id="chat-mb">clawbot-core · connecting...</div>
         <div class="chat-ir">
           <textarea class="chat-inp" id="chat-inp" rows="1" placeholder="Ask your AI assistant..." onkeydown="chatKey(event)" oninput="autoH(this)"></textarea>
           <button class="chat-snd" id="chat-snd" onclick="sendChat()" title="Send (Enter)">
@@ -432,6 +432,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="card">
         <div class="sec-t">Services</div>
         <div class="svc-l">
+          <div class="svc-r"><div class="svc-d on" id="sd-clawbot-core"></div><span class="svc-n">clawbot-core.service</span><span class="svc-s" id="ss-clawbot-core">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('clawbot-core','restart')">Restart</button></div></div>
+          <div class="svc-r"><div class="svc-d on" id="sd-clawbot-cloud"></div><span class="svc-n">clawbot-cloud.service</span><span class="svc-s" id="ss-clawbot-cloud">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('clawbot-cloud','restart')">Restart</button></div></div>
           <div class="svc-r"><div class="svc-d on" id="sd-picoclaw"></div><span class="svc-n">picoclaw.service</span><span class="svc-s" id="ss-picoclaw">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('picoclaw','restart')">Restart</button><button class="sb-btn dng" onclick="svcAct('picoclaw','stop')">Stop</button></div></div>
           <div class="svc-r"><div class="svc-d on" id="sd-nginx"></div><span class="svc-n">nginx.service</span><span class="svc-s" id="ss-nginx">active</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('nginx','restart')">Restart</button></div></div>
           <div class="svc-r"><div class="svc-d off" id="sd-clawbot-telegram"></div><span class="svc-n">clawbot-telegram.service</span><span class="svc-s" id="ss-clawbot-telegram">inactive</span><div class="svc-acts"><button class="sb-btn" onclick="svcAct('clawbot-telegram','start')">Start</button><button class="sb-btn" onclick="svcAct('clawbot-telegram','restart')">Restart</button></div></div>
@@ -493,6 +495,22 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="setup-banner-tx">
           <div class="setup-banner-t">Welcome to ClawbotOS — configure your AI assistant</div>
           <div class="setup-banner-s">Complete the steps below to get started. Required items must be configured for the AI to work.</div>
+        </div>
+      </div>
+
+      <!-- ─ STEP 0: Clawbot Cloud ─ -->
+      <div class="sec-t">Clawbot Cloud Subscription <span style="color:var(--td);font-size:.55rem;letter-spacing:1px">(skip if using your own API keys)</span></div>
+      <div class="setup-grid" style="margin-bottom:12px">
+        <div class="setup-card" id="sc-cloud" style="grid-column:1/-1;border-color:#00ffe044">
+          <div class="setup-h">
+            <div class="setup-ico">☁️</div>
+            <div class="setup-badge" id="sb-cloud" style="background:var(--ac-d);color:var(--ac)">Checking…</div>
+          </div>
+          <div class="setup-title">OpenJarvis — Clawbot Cloud</div>
+          <div class="setup-desc" id="sv-cloud">Link this device to your subscription at <a href="https://openjarvis.io" target="_blank" style="color:var(--ac)">openjarvis.io</a> to activate AI without entering an API key.</div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <a href="https://openjarvis.io" target="_blank" class="setup-go" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px">Open openjarvis.io →</a>
+          </div>
         </div>
       </div>
 
@@ -640,6 +658,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
         </div>
 
+        <!-- ClawbotCore OTA update -->
+        <div class="setup-card" id="sc-core-update">
+          <div class="setup-h">
+            <div class="setup-ico">🔧</div>
+            <div class="setup-badge opt" id="sb-core-update">v<span id="sv-core-ver">…</span></div>
+          </div>
+          <div class="setup-title">ClawbotCore Update</div>
+          <div class="setup-desc">Update the AI middleware engine without reflashing. Pulls the latest code from <strong>Yumi-Lab/clawbot-core</strong> on GitHub and restarts the service.</div>
+          <button class="setup-go" id="btn-update-core" onclick="updateCore()">Update ClawbotCore</button>
+          <div class="setup-desc" id="msg-core-update" style="color:var(--ok);margin-top:4px"></div>
+        </div>
+
         <!-- Dashboard update -->
         <div class="setup-card" id="sc-update">
           <div class="setup-h">
@@ -666,7 +696,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 <script>
 // ═══ STATE ═══
 const S = {
-  agent: 'picoclaw',
+  agent: 'core',
   sbCol: false,
   cfg: {
     provider: localStorage.getItem('cfg_p') || 'anthropic',
@@ -997,6 +1027,61 @@ function updateSetupStatus() {
   if (ip && ip !== '---.---') $id('sv-ssh').innerHTML = `ssh pi@${ip}<br>Password: yumi`;
 }
 
+// ═══ CLAWBOT CLOUD STATUS ═══
+function updateCloudStatus() {
+  const badge = $id('sb-cloud');
+  const desc = $id('sv-cloud');
+  if (!badge) return;
+  const key = S.cfg.apikey || '';
+  const isCloud = key.startsWith('clb-p-') || key.startsWith('clb-b-') || S.cfg.provider === 'clawbot';
+  if (isCloud && key.length > 6) {
+    badge.textContent = '✓ Active';
+    badge.style.background = '#00ff8822'; badge.style.color = 'var(--ok)';
+    desc.innerHTML = `Subscription active · model: <strong>${S.cfg.model||'?'}</strong> · key: ****${key.slice(-4)}<br>Manage at <a href="https://openjarvis.io" target="_blank" style="color:var(--ac)">openjarvis.io</a>`;
+  } else {
+    badge.textContent = '⏳ Not activated';
+    badge.style.background = '#ffaa0022'; badge.style.color = 'var(--wn)';
+    desc.innerHTML = 'Scan the QR code on your device box or visit <a href="https://openjarvis.io" target="_blank" style="color:var(--ac)">openjarvis.io</a> to link this device.';
+  }
+}
+
+// ═══ CLAWBOTCORE OTA UPDATER ═══
+async function loadCoreVersion() {
+  try {
+    const r = await fetch('/api/system/core-version', {signal: AbortSignal.timeout(4000)});
+    if (r.ok) {
+      const d = await r.json();
+      const el = $id('sv-core-ver');
+      if (el) el.textContent = d.version || '?';
+    }
+  } catch {}
+}
+async function updateCore() {
+  const btn = $id('btn-update-core'), msg = $id('msg-core-update');
+  if (btn) { btn.disabled = true; btn.textContent = 'Updating…'; }
+  if (msg) msg.textContent = '';
+  try {
+    const r = await fetch('/api/system/update-core', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:'{}',
+      signal: AbortSignal.timeout(90000)
+    });
+    const d = await r.json();
+    if (d.updated) {
+      if (msg) { msg.textContent = `v${d.from} → v${d.to} — Service restarted.`; msg.style.color = 'var(--ok)'; }
+      const badge = $id('sb-core-update');
+      if (badge) { badge.textContent = 'UPDATED!'; badge.style.background = '#00ff8822'; badge.style.color = 'var(--ok)'; }
+      const ver = $id('sv-core-ver'); if (ver) ver.textContent = d.to || '?';
+    } else {
+      if (msg) { msg.textContent = 'Error: ' + (d.error || 'unknown'); msg.style.color = 'var(--er)'; }
+    }
+  } catch(err) {
+    if (msg) { msg.textContent = '⚠ ' + err.message; msg.style.color = 'var(--er)'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Update ClawbotCore'; }
+  }
+}
+setTimeout(loadCoreVersion, 1000);
+
 // ═══ DASHBOARD UPDATER ═══
 async function checkDashboardUpdate() {
   $id('sb-update').textContent = 'Checking...';
@@ -1233,18 +1318,33 @@ function escH(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/
 const hn = window.location.hostname;
 if (hn && hn !== 'localhost') $('sb-ip').textContent = hn;
 
-loadCfg();
-updateModelBar();
-updateSetupStatus();
+async function initFromServer() {
+  // Try to load current config from server (overrides stale localStorage after reflash/activation)
+  try {
+    const r = await fetch('/api/system/config', {signal: AbortSignal.timeout(3000)});
+    if (r.ok) {
+      const d = await r.json();
+      if (d.apikey && d.apikey.length > 6) {
+        S.cfg = {provider: d.provider || 'custom', model: d.model || '', apikey: d.apikey, baseurl: d.baseurl || ''};
+        localStorage.setItem('cfg_p', S.cfg.provider);
+        localStorage.setItem('cfg_m', S.cfg.model);
+        localStorage.setItem('cfg_k', S.cfg.apikey);
+        localStorage.setItem('cfg_u', S.cfg.baseurl);
+      }
+    }
+  } catch {}
+  loadCfg();
+  updateModelBar();
+  updateSetupStatus();
+  if (!S.cfg.apikey) show('setup');
+  // Update Clawbot Cloud activation card
+  updateCloudStatus();
+}
+
+initFromServer();
 refreshStats();
 setInterval(refreshStats, 5000);
-// Check for dashboard updates in background (after 3s to not block init)
 setTimeout(checkDashboardUpdate, 3000);
-
-// Show Setup panel first if API key not yet configured
-if (!S.cfg.apikey) {
-  show('setup');
-}
 </script>
 </body>
 </html>
