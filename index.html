@@ -704,6 +704,9 @@ const S = {
     apikey:   localStorage.getItem('cfg_k') || '',
     baseurl:  localStorage.getItem('cfg_u') || ''
   },
+  mac: null,
+  device_code: null,
+  activate_url: null,
   curFile: null,
   curLogSvc: 'picoclaw',
   logAutoRefresh: true,
@@ -1028,6 +1031,14 @@ function updateSetupStatus() {
 }
 
 // ═══ CLAWBOT CLOUD STATUS ═══
+function copyDeviceCode() {
+  const code = S.device_code || '';
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = $id('btn-copy-code');
+    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = 'Copy'; }, 2000); }
+  }).catch(() => {});
+}
 function updateCloudStatus() {
   const badge = $id('sb-cloud');
   const desc = $id('sv-cloud');
@@ -1041,7 +1052,16 @@ function updateCloudStatus() {
   } else {
     badge.textContent = '⏳ Not activated';
     badge.style.background = '#ffaa0022'; badge.style.color = 'var(--wn)';
-    desc.innerHTML = 'Scan the QR code on your device box or visit <a href="https://openjarvis.io" target="_blank" style="color:var(--ac)">openjarvis.io</a> to link this device.';
+    const code = S.device_code || '----';
+    const url = S.activate_url || 'https://openjarvis.io';
+    desc.innerHTML = `
+      <div style="margin-bottom:8px">Scan the QR code on your device box or enter the device code on <a href="https://openjarvis.io" target="_blank" style="color:var(--ac)">openjarvis.io</a>.</div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg-i);border:1px solid var(--br);border-radius:6px;padding:8px 12px;margin-bottom:8px">
+        <span style="font-family:var(--fmo);font-size:1.1rem;font-weight:700;color:var(--ac);letter-spacing:3px;flex:1">${code}</span>
+        <button id="btn-copy-code" onclick="copyDeviceCode()" style="font-family:var(--fmo);font-size:.65rem;padding:4px 10px;background:var(--ac-d);border:1px solid var(--ac-m);color:var(--ac);border-radius:5px;cursor:pointer">Copy</button>
+      </div>
+      ${S.mac ? `<div style="font-family:var(--fmo);font-size:.65rem;color:var(--td);margin-bottom:6px">MAC: ${S.mac}</div>` : ''}
+      <a href="${url}" target="_blank" style="font-family:var(--fmo);font-size:.7rem;color:var(--ac);text-decoration:underline">Activate at openjarvis.io →</a>`;
   }
 }
 
@@ -1331,6 +1351,9 @@ async function initFromServer() {
         localStorage.setItem('cfg_k', S.cfg.apikey);
         localStorage.setItem('cfg_u', S.cfg.baseurl);
       }
+      if (d.mac && d.mac !== 'unknown') S.mac = d.mac;
+      if (d.device_code) S.device_code = d.device_code;
+      if (d.activate_url) S.activate_url = d.activate_url;
     }
   } catch {}
   loadCfg();
