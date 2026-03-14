@@ -1389,7 +1389,10 @@ async function sessSwitch(id) {
   chatHistory.forEach(m => {
     const b = addRow(m.role==='user'?'user':'bot');
     if (m.role === 'user') b.textContent = m.content;
-    else renderBotContent(b, m.content);
+    else {
+      if (m.tool_trace?.length) restoreTracePanel(m.tool_trace, b.parentElement);
+      renderBotContent(b, m.content);
+    }
   });
   setChatMode(sess.mode || 'agents', { compact: false });
   updateCtxBar();
@@ -2505,6 +2508,38 @@ function finalizeTracePanel(wrap, totalCount) {
   // Timeline stays open — nothing to finalize
 }
 
+function restoreTracePanel(trace, beforeRow) {
+  if (!trace?.length) return;
+  const wrap = createTracePanel();
+  beforeRow.parentNode.insertBefore(wrap, beforeRow);
+  for (const entry of trace) {
+    const name = entry.name || 'tool';
+    const humanLabel = TOOL_LABELS[name] || 'En train de travailler...';
+    const argsText = formatToolArgs(name, entry.args || {});
+    const row = document.createElement('div');
+    row.className = 'tl-row';
+    row.dataset.resolved = '1';
+    const hasResult = entry.result !== undefined;
+    const isErr = hasResult && (String(entry.result).startsWith('[error]') || String(entry.result).startsWith('Error'));
+    const iconChar = hasResult ? (isErr ? '✗' : '✓') : '·';
+    const iconColor = hasResult ? (isErr ? 'var(--er)' : '#22c55e') : 'var(--td)';
+    const labelColor = hasResult ? (isErr ? 'var(--er)' : 'var(--ts)') : '';
+    const argsHtml = argsText ? `<pre class="tl-cmd" onclick="this.classList.toggle('expanded')">${argsText.replace(/</g,'&lt;')}</pre>` : '';
+    const labelHtml = `<div class="tl-label"><span class="tl-label-human" style="${labelColor ? 'color:'+labelColor : ''}">${humanLabel}</span></div>`;
+    row.innerHTML = `<span class="tl-icon" style="color:${iconColor}">${iconChar}</span><div class="tl-body">${labelHtml}${argsHtml}</div>`;
+    if (hasResult) {
+      const txt = String(entry.result);
+      const out = document.createElement('pre');
+      out.className = 'tl-out' + (isErr ? ' err' : '');
+      out.textContent = txt.length > 500 ? txt.slice(0, 500) + '…' : txt;
+      if (txt.length > 500) { out.dataset.full = txt; out.title = 'Cliquer pour tout afficher'; }
+      out.onclick = () => { if (out.dataset.full) { out.classList.toggle('expanded'); out.textContent = out.classList.contains('expanded') ? out.dataset.full : out.dataset.full.slice(0,500)+'…'; } };
+      row.querySelector('.tl-body').appendChild(out);
+    }
+    wrap.appendChild(row);
+  }
+}
+
 function formatToolArgs(toolName, args) {
   if (!args || typeof args !== 'object') return String(args || '');
   if (toolName === 'system__handoff' || args.agent_id) {
@@ -2568,6 +2603,7 @@ async function sendChat() {
   const chatMsgs = botRow.parentNode;
   let traceWrap = null;
   let tcCount = 0;
+  let currentTrace = []; // persisted to chatHistory for session restore
   // Agents mode: track per-agent bubbles
   const agentBubbles = {};
   const agentTraces = {};
@@ -2679,11 +2715,18 @@ async function sendChat() {
             }
             tcCount += (parsed.calls?.length || 0);
             addToolCallsToTrace(traceWrap, parsed);
+            for (const call of (parsed.calls || [])) {
+              currentTrace.push({id: call.id||'', name: call.name||'', args: call.args||{}});
+            }
             scrollChat();
             curEvent = null;
           } else if (curEvent === 'tool_result' && !isAgent && !isAgents) {
             // Core mode: tool result → timeline (no spinner re-show, timeline is always visible)
             if (traceWrap) addToolResultsToTrace(traceWrap, parsed);
+            const pending = currentTrace.filter(t => t.result === undefined);
+            (parsed.results || []).forEach((res, i) => {
+              if (pending[i]) pending[i].result = String(res.result ?? '');
+            });
             scrollChat();
             curEvent = null;
           } else if (curEvent === 'content_delta' && !isAgent && !isAgents) {
@@ -2723,7 +2766,9 @@ async function sendChat() {
     }
     if (!full) full = '(empty response)';
     if (!doneFired && (!isAgents || !agentsMeta?.length)) renderBotContent(bb, full);
-    chatHistory.push({role: 'assistant', content: full});
+    const assistantMsg = {role: 'assistant', content: full};
+    if (currentTrace.length) assistantMsg.tool_trace = currentTrace;
+    chatHistory.push(assistantMsg);
     sessSave();
     updateCtxBar();
   } catch (err) {
