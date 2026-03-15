@@ -115,6 +115,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .chat-bub.streaming::after{content:'▊';animation:bl .7s infinite;color:var(--ac);margin-left:2px}
 .chat-bub.streaming:has(.thinking)::after{display:none}
 .chat-bub.err{color:var(--er);border-color:#ff386033}
+.chat-ts{font-size:.62rem;color:var(--td);opacity:.65;margin-top:5px;font-family:var(--fmo);text-align:right}
+.chat-row.bot .chat-ts{text-align:left}
+.chat-date-sep{display:flex;align-items:center;gap:8px;padding:14px 4px 8px;pointer-events:none}
+.chat-date-sep::before,.chat-date-sep::after{content:'';flex:1;height:1px;background:var(--br)}
+.chat-date-sep span{font-family:var(--fmo);font-size:.6rem;color:var(--td);text-transform:uppercase;letter-spacing:1.2px;white-space:nowrap;opacity:.7}
 .chat-bub p{margin-bottom:.7em}.chat-bub p:last-child{margin-bottom:0}
 .chat-bub h1,.chat-bub h2,.chat-bub h3{font-weight:700;margin:1em 0 .4em;color:var(--ac)}
 .chat-bub h1{font-size:1.1rem}.chat-bub h2{font-size:1rem}.chat-bub h3{font-size:.92rem}
@@ -176,6 +181,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .csb-item-del:hover{background:var(--er);color:#fff;opacity:1}
 .csb-item.streaming-indicator .csb-item-name::after{content:' ●';color:var(--ac);animation:pd 1.5s infinite}
 .csb-empty{padding:20px 10px;font-family:var(--fmo);font-size:.65rem;color:var(--td);text-align:center}
+.csb-trash-footer{flex-shrink:0;padding:6px 10px 10px;border-top:1px solid var(--br);display:none}
+.csb-trash-footer.visible{display:block}
+.csb-trash-btn{width:100%;display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:var(--r);border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fm);font-size:.75rem;cursor:pointer;transition:var(--tr);justify-content:space-between}
+.csb-trash-btn:hover{border-color:#ef444466;background:#ef44440d;color:var(--er)}
+.csb-trash-btn .csb-trash-label{display:flex;align-items:center;gap:6px}
+.csb-trash-btn .csb-trash-count{font-size:.65rem;padding:1px 5px;border-radius:10px;background:var(--bg-i);color:var(--td)}
+.csb-trash-btn:hover .csb-trash-count{background:#ef44441a;color:var(--er)}
+.csb-trash-empty{font-size:.65rem;color:var(--td);opacity:.8}
+.csb-item-restore{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;opacity:0;color:var(--td);font-size:.85rem;border-radius:4px;transition:var(--tr)}
+.csb-item:hover .csb-item-restore{opacity:1}
+.csb-item-restore:hover{background:#22c55e22;color:#22c55e;opacity:1}
+.csb-trash-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 4px}
+.csb-trash-hdr-title{font-family:var(--fmo);font-size:.6rem;font-weight:600;color:var(--td);text-transform:uppercase;letter-spacing:1.5px}
+.csb-trash-hdr-back{font-family:var(--fm);font-size:.7rem;color:var(--ac);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px}
+.csb-trash-hdr-back:hover{background:var(--ac-d)}
 .chat-sessions-bar::-webkit-scrollbar{display:none}
 .sess-tab{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:7px 7px 0 0;border:1px solid transparent;border-bottom:none;background:transparent;color:var(--ts);font-family:var(--fmo);font-size:.65rem;cursor:pointer;white-space:nowrap;transition:var(--tr);max-width:140px}
 .sess-tab:hover{background:var(--bg-i);color:var(--td)}
@@ -189,13 +209,13 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ctx-bar{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:var(--fmo);font-size:.58rem;color:var(--td)}
 .ctx-track{width:60px;height:4px;background:var(--bg-i);border-radius:2px;overflow:hidden}
 .ctx-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .4s ease;box-shadow:0 0 6px var(--ac)}
-/* Mode buttons masqués — routing automatique (Story 2.3) */
-.chat-mode-btn{display:none}
-#mode-core-sep{display:none}
+.chat-mode-btn{padding:2px 9px;border-radius:20px;border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.58rem;cursor:pointer;transition:var(--tr)}
+.chat-mode-btn.active{background:#1a2a3a;border-color:var(--ac);color:var(--ac)}
 .mdl-btn{padding:2px 9px;border-radius:20px;border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.58rem;cursor:pointer;transition:var(--tr)}
 .mdl-btn.active{background:#1a2a3a;border-color:#2a4a6a;color:#7ac8ff}
 .mdl-btn.active.haiku{background:#1a2a1a;border-color:#2a5a2a;color:var(--ok)}
 .mdl-btn.active.opus{background:#2a1a2a;border-color:#5a2a5a;color:#d088ff}
+.mdl-btn.active.kimi{background:#2a1e10;border-color:#6a3e10;color:#ff9a3c}
 .mode-sep{width:1px;height:14px;background:var(--br);flex-shrink:0;margin:0 2px}
 .chat-view-toggle{margin-left:auto;display:flex;align-items:center;gap:5px;font-family:var(--fmo);font-size:.58rem;color:var(--td)}
 .chat-view-toggle span{user-select:none}
@@ -688,6 +708,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="csb-list" id="csb-list">
           <div class="csb-empty">Loading...</div>
         </div>
+        <div class="csb-trash-footer" id="csb-trash-footer">
+          <button class="csb-trash-btn" id="csb-trash-toggle" onclick="trashToggle()" title="Voir la corbeille">
+            <span class="csb-trash-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              Corbeille
+            </span>
+            <span class="csb-trash-count" id="csb-trash-count">0</span>
+          </button>
+        </div>
       </div>
 
       <!-- Right: main chat area -->
@@ -708,19 +737,21 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           </div>
           <div id="att-pills" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px"></div>
           <div class="chat-mode-bar">
-            <button class="chat-mode-btn active" id="mode-core" onclick="setChatMode('core')" title="ClawbotCore orchestrator + module tools">Core</button>
-            <button class="chat-mode-btn" id="mode-agent" onclick="setChatMode('agent')" title="Picoclaw native agent — 14 built-in tools (files, exec, web...)">PicoClaw</button>
-            <button class="chat-mode-btn" id="mode-agents" onclick="setChatMode('agents')" title="Core-Agents — sub-agents with personas, routed by ClawbotCore">Core-Agent</button>
+            <button class="chat-mode-btn active" id="mode-core" onclick="setChatMode('core')" title="ClawbotCore — outil loop + tools intégrés">ClawBot Core</button>
+            <button class="chat-mode-btn" id="mode-agents" onclick="setChatMode('agents')" title="Core-Agent — multi-agents avec personas, orchestrés par ClawbotCore">Core-Agent</button>
             <div class="mode-sep" id="mode-core-sep"></div>
             <button class="mdl-btn haiku active" id="mdl-haiku" onclick="setChatModel('claude-haiku-4-5-20251001')" title="Haiku 4.5 — $0.25/$1.25 per M tokens · fastest · recommended for most tasks">Haiku</button>
             <button class="mdl-btn" id="mdl-sonnet" onclick="setChatModel('claude-sonnet-4-6')" title="Sonnet 4.6 — $3/$15 per M tokens · balanced">Sonnet</button>
             <button class="mdl-btn opus" id="mdl-opus" onclick="setChatModel('claude-opus-4-6')" title="Opus 4.6 — $15/$75 per M tokens · most powerful · use sparingly">Opus</button>
+            <div class="mode-sep"></div>
+            <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">KimiCode 2.5</button>
             <div class="chat-view-toggle" id="view-toggle-wrap" style="display:none">
               <span>Clean</span>
               <button class="toggle-sw" id="view-toggle" onclick="toggleVerbose()" title="Show full trace / iterations"></button>
               <span>Trace</span>
             </div>
             <div class="ctx-bar" title="Estimated context usage (200k token window)">
+              <button onclick="manualCompact()" title="Compacter le contexte maintenant" style="padding:1px 7px;border-radius:10px;border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.55rem;cursor:pointer;transition:var(--tr)" onmouseover="this.style.borderColor='var(--ac)';this.style.color='var(--ac)'" onmouseout="this.style.borderColor='var(--br)';this.style.color='var(--td)'">compact</button>
               <span id="ctx-pct">ctx 0%</span>
               <div class="ctx-track"><div class="ctx-fill" id="ctx-fill" style="width:0%"></div></div>
             </div>
@@ -736,28 +767,44 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     <div class="files-wrap">
       <div class="files-tree" id="files-tree">
         <div class="file-group-label">AI Agents</div>
-        <div class="file-item" onclick="openFile('/home/pi/.picoclaw/config.json','PicoClaw Config')">
+        <div class="file-item" onclick="openFile('/home/pi/.picoclaw/config.json','PicoClaw Config',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">picoclaw/config.json</span>
         </div>
+        <div class="file-item" onclick="openFile('/home/pi/.clawbot/core-prompts.json','Core Prompts',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">core-prompts.json</span>
+        </div>
+        <div class="file-group-label">Dashboard</div>
+        <div class="file-item" onclick="openFile('/home/pi/clawbot-dashboard/index.html','Dashboard (index.html)',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="file-item-name">index.html</span>
+        </div>
         <div class="file-group-label">Integrations</div>
-        <div class="file-item" onclick="openFile('/home/pi/.clawbot-telegram.env','Telegram Config')">
+        <div class="file-item" onclick="openFile('/home/pi/.clawbot-telegram.env','Telegram Config',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">.clawbot-telegram.env</span>
         </div>
         <div class="file-group-label">nginx</div>
-        <div class="file-item" onclick="openFile('/etc/nginx/sites-available/clawbot','nginx site config')">
+        <div class="file-item" onclick="openFile('/etc/nginx/sites-available/clawbot','nginx site config',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">sites-available/clawbot</span>
         </div>
-        <div class="file-item" onclick="openFile('/etc/nginx/nginx.conf','nginx.conf')">
+        <div class="file-item" onclick="openFile('/etc/nginx/nginx.conf','nginx.conf',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">nginx.conf</span>
         </div>
         <div class="file-group-label">Systemd</div>
-        <div class="file-item" onclick="openFile('/etc/systemd/system/picoclaw.service','picoclaw.service')">
+        <div class="file-item" onclick="openFile('/etc/systemd/system/picoclaw.service','picoclaw.service',this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="file-item-name">picoclaw.service</span>
+        </div>
+        <div class="file-group-label" style="margin-top:12px">Open any file</div>
+        <div style="padding:6px 10px;display:flex;gap:5px;align-items:center">
+          <input type="text" id="custom-file-path" class="fi" placeholder="/path/to/file.json"
+                 style="font-size:.65rem;padding:5px 8px;flex:1;min-width:0"
+                 onkeydown="if(event.key==='Enter')openCustomFile()">
+          <button class="file-btn" onclick="openCustomFile()" style="flex-shrink:0;font-size:.55rem;padding:5px 10px">Open</button>
         </div>
       </div>
       <div class="file-editor" id="file-editor">
@@ -767,14 +814,18 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
         <div id="file-edit-area" style="display:none;flex-direction:column;flex:1;overflow:hidden">
           <div class="file-editor-top">
-            <span class="file-path" id="file-path-label">—</span>
+            <div style="display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0">
+              <span class="file-path" id="file-path-label">—</span>
+              <span id="file-dirty-dot" style="display:none;color:#f59e0b;font-size:.65rem;font-weight:700;flex-shrink:0">● unsaved</span>
+            </div>
             <div class="file-btns">
+              <button class="file-btn" onclick="cancelFile()">Cancel</button>
               <button class="file-btn" onclick="reloadFile()">Reload</button>
               <button class="file-btn" onclick="reloadServiceAfterSave()" id="file-svc-reload" style="display:none">+ Reload service</button>
               <button class="file-btn primary" onclick="saveFile()">Save</button>
             </div>
           </div>
-          <textarea class="file-textarea" id="file-content" spellcheck="false"></textarea>
+          <textarea class="file-textarea" id="file-content" spellcheck="false" oninput="onFileInput()"></textarea>
         </div>
       </div>
     </div>
@@ -810,7 +861,23 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
       <div id="ws-content" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-        <div class="ws-grid" id="ws-grid"><div class="ws-empty">Loading...</div></div>
+        <div id="ws-grid-wrap" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+          <div class="ws-grid" id="ws-grid"><div class="ws-empty">Loading...</div></div>
+        </div>
+        <!-- Inline text editor overlay -->
+        <div id="ws-editor-overlay" style="display:none;flex-direction:column;flex:1;overflow:hidden;background:var(--bg)">
+          <div class="file-editor-top">
+            <div style="display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0">
+              <button class="file-btn" onclick="wsEditorClose()" style="flex-shrink:0">← Back</button>
+              <span class="file-path" id="ws-editor-name">—</span>
+              <span id="ws-editor-dirty" style="display:none;color:#f59e0b;font-size:.65rem;font-weight:700;flex-shrink:0">● unsaved</span>
+            </div>
+            <div class="file-btns">
+              <button class="file-btn primary" onclick="wsEditorSave()">Save</button>
+            </div>
+          </div>
+          <textarea class="file-textarea" id="ws-editor-content" spellcheck="false" oninput="wsEditorOnInput()"></textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -1022,6 +1089,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <select class="fs" id="cfg-p" onchange="onProv()">
               <option value="clawbot">Clawbot Cloud ✦ — Subscription</option>
               <option value="anthropic">Anthropic (Claude) — Recommended</option>
+              <option value="kimi">Kimi (Moonshot AI) — Budget</option>
               <option value="openai">OpenAI (GPT-4o)</option>
               <option value="deepseek">DeepSeek — Budget</option>
               <option value="openrouter">OpenRouter — Multi-provider</option>
@@ -1037,6 +1105,22 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <div class="fg" id="cfg-url-g" style="display:none"><label class="fl" for="cfg-u">Base URL</label><input class="fi" type="text" id="cfg-u" placeholder="https://api.example.com/v1"></div>
           <div class="info-box" id="cfg-info">Config saved to PicoClaw and takes effect after restart.</div>
           <button class="btn-save" onclick="saveLLM()">Save &amp; Apply</button>
+        </div>
+      </div>
+
+      <!-- Search Engine -->
+      <div class="card">
+        <div class="sec-t">Search Engine</div>
+        <div class="cfg-form">
+          <div class="fg"><label class="fl" for="cfg-se">Web Search Provider</label>
+            <select class="fs" id="cfg-se">
+              <option value="auto">Auto (Bing → DuckDuckGo fallback)</option>
+              <option value="bing">Bing only</option>
+              <option value="duckduckgo">DuckDuckGo only</option>
+            </select>
+          </div>
+          <div class="info-box">Bing is recommended if DuckDuckGo is blocked on your network.</div>
+          <button class="btn-save" onclick="saveSearchEngine()">Save</button>
         </div>
       </div>
 
@@ -1303,6 +1387,7 @@ const S = {
 };
 let chatHistory = [];
 const _streamingBySession = {};
+const _liveStreamContent = {}; // sessionId → latest streamed content (session-switch recovery)
 let currentSessionId = null;
 let _abortCtrl = null;       // AbortController for current fetch
 let _pendingQueue = [];      // messages queued while streaming (injected after)
@@ -1330,11 +1415,31 @@ function setStreaming(v) {
 
 function chatSendOrStop() {
   if (isStreaming()) {
-    // Stop active fetch
+    // 1. Signal server to cancel at next round boundary
+    const _stopSessionId = currentSessionId;
+    fetch('/api/core/v1/cancel', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({session_id: _stopSessionId})
+    }).catch(() => {});
+    // 2. Kill the SSE connection
     if (_abortCtrl) { _abortCtrl.abort(); _abortCtrl = null; }
-    // Stop pending response polling (checkPendingResponse)
-    if (_pendingPollId) { clearInterval(_pendingPollId); _pendingPollId = null; }
+    const savedBubble = _pendingBubble; // capture before cancelPendingPoll clears it
+    cancelPendingPoll();
     setStreaming(false);
+    // 3. Inject a stopped message so checkPendingResponse won't restart the spinner
+    const stopMsg = '⛔ Tâche arrêtée par l\'utilisateur.';
+    if (chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'user') {
+      // Reuse poll bubble if it exists (avoids duplicate bot rows)
+      const bb = savedBubble || addRow('bot');
+      hideThinking(bb); bb.classList.remove('streaming');
+      bb.textContent = stopMsg;
+      chatHistory.push({role: 'assistant', content: stopMsg});
+      sessSave();
+    } else if (savedBubble) {
+      // Poll bubble exists but chatHistory already has assistant — remove the orphaned bubble
+      hideThinking(savedBubble); savedBubble.classList.remove('streaming');
+      savedBubble.remove();
+    }
   } else {
     sendChat();
   }
@@ -1378,33 +1483,95 @@ async function sessDelete(id, e) {
   try { await fetch(SESS_API + '/' + id, { method:'DELETE' }); } catch {}
   if (id === currentSessionId) await sessNew();
   else await sessRender();
+  trashRefresh();
+}
+let _trashOpen = false;
+let _allTrashSessions = [];
+
+async function trashRefresh() {
+  try {
+    const r = await fetch(SESS_API + '/trash');
+    if (!r.ok) return;
+    const d = await r.json();
+    _allTrashSessions = d.sessions || [];
+    const count = _allTrashSessions.length;
+    const footer = document.getElementById('csb-trash-footer');
+    const badge = document.getElementById('csb-trash-count');
+    if (footer) footer.classList.toggle('visible', count > 0 || _trashOpen);
+    if (badge) badge.textContent = count;
+    if (_trashOpen) _renderCsbList();
+  } catch {}
+}
+
+function trashToggle() {
+  _trashOpen = !_trashOpen;
+  const btn = document.getElementById('csb-trash-toggle');
+  if (btn) btn.title = _trashOpen ? 'Retour aux conversations' : 'Voir la corbeille';
+  const search = document.querySelector('.csb-search-wrap');
+  if (search) search.style.display = _trashOpen ? 'none' : '';
+  _renderCsbList();
+}
+
+async function trashRestore(id, e) {
+  e.stopPropagation();
+  try { await fetch(SESS_API + '/trash/' + id, { method:'POST' }); } catch {}
+  await sessRender();
+  await trashRefresh();
+  if (_allTrashSessions.length === 0) { _trashOpen = false; _renderCsbList(); }
+}
+
+async function trashDeleteOne(id, e) {
+  e.stopPropagation();
+  try { await fetch(SESS_API + '/trash/' + id, { method:'DELETE' }); } catch {}
+  trashRefresh();
+}
+
+async function trashEmpty() {
+  if (!confirm('Vider la corbeille ? Cette action est irréversible.')) return;
+  try { await fetch(SESS_API + '/trash', { method:'DELETE' }); } catch {}
+  _trashOpen = false;
+  const search = document.querySelector('.csb-search-wrap');
+  if (search) search.style.display = '';
+  await trashRefresh();
+  _renderCsbList();
 }
 async function sessSwitch(id) {
+  cancelPendingPoll();
   const sess = await sessLoad(id);
   if (!sess) return;
   currentSessionId = id;
-  $id('chat-snd').disabled = !!_streamingBySession[id];
+  history.replaceState(null, '', '?session=' + id + '#chat');
+  setStreaming(!!_streamingBySession[id]);
   chatHistory = sess.messages || [];
   clearChatUI();
+  let _lastDayKey = null;
   chatHistory.forEach(m => {
+    if (m.ts) {
+      const dk = _dayKey(m.ts);
+      if (dk !== _lastDayKey) { addDateSep(m.ts); _lastDayKey = dk; }
+    }
     const b = addRow(m.role==='user'?'user':'bot');
-    if (m.role === 'user') b.textContent = m.content;
+    if (m.role === 'user') { b.textContent = m.content; addTimestamp(b, m.ts); }
     else {
       if (m.tool_trace?.length) restoreTracePanel(m.tool_trace, b.parentElement);
       renderBotContent(b, m.content);
+      addTimestamp(b, m.ts);
     }
   });
-  setChatMode(sess.mode || 'agents', { compact: false });
+  const savedMode = sess.mode;
+  setChatMode((!savedMode || savedMode === 'agent') ? 'core' : savedMode, { compact: false });
   updateCtxBar();
   await sessRender();
   checkPendingResponse();
 }
 async function sessNew() {
+  cancelPendingPoll();
   currentSessionId = sessId();
-  $id('chat-snd').disabled = false;
+  setStreaming(false);
   chatHistory = [];
   clearChatUI();
   setChatMode('core', { compact: false });
+  history.replaceState(null, '', '?session=' + currentSessionId + '#chat');
   await sessSave();
   await sessRender();
 }
@@ -1450,6 +1617,42 @@ function _groupByDate(sessions) {
 function _renderCsbList() {
   const list = document.getElementById('csb-list');
   if (!list) return;
+
+  if (_trashOpen) {
+    list.innerHTML = '';
+    const hdr = document.createElement('div');
+    hdr.className = 'csb-trash-hdr';
+    hdr.innerHTML = '<span class="csb-trash-hdr-title">Corbeille</span>'
+      + '<button class="csb-trash-hdr-back" onclick="trashToggle()">← Retour</button>';
+    list.appendChild(hdr);
+    if (!_allTrashSessions.length) {
+      list.innerHTML += '<div class="csb-empty">Corbeille vide</div>';
+      return;
+    }
+    for (const s of _allTrashSessions) {
+      const item = document.createElement('div');
+      item.className = 'csb-item';
+      const name = document.createElement('span');
+      name.className = 'csb-item-name';
+      name.textContent = s.name || 'New chat';
+      const restore = document.createElement('span');
+      restore.className = 'csb-item-restore';
+      restore.textContent = '↩';
+      restore.title = 'Restaurer';
+      restore.onclick = (e) => trashRestore(s.id, e);
+      const del = document.createElement('span');
+      del.className = 'csb-item-del';
+      del.textContent = '✕';
+      del.title = 'Supprimer définitivement';
+      del.onclick = (e) => trashDeleteOne(s.id, e);
+      item.appendChild(name);
+      item.appendChild(restore);
+      item.appendChild(del);
+      list.appendChild(item);
+    }
+    return;
+  }
+
   const filtered = _sessFilter
     ? _allSessions.filter(s => (s.name||'New chat').toLowerCase().includes(_sessFilter))
     : _allSessions;
@@ -1495,48 +1698,99 @@ async function sessRender() {
 async function sessInit() {
   let sessions = [];
   try { const r = await fetch(SESS_API); if (r.ok) { const d = await r.json(); sessions = d.sessions || []; } } catch {}
-  if (sessions.length) { await sessSwitch(sessions[0].id); }
-  else { await sessNew(); }
+  const urlSession = new URLSearchParams(window.location.search).get('session');
+  if (urlSession && sessions.find(s => s.id === urlSession)) {
+    await sessSwitch(urlSession);
+  } else if (sessions.length) {
+    await sessSwitch(sessions[0].id);
+  } else {
+    await sessNew();
+  }
+  trashRefresh();
 }
 
 // ═══ PENDING RESPONSE RECOVERY (after refresh) ═══
 let _pendingPollId = null;
-function checkPendingResponse() {
+let _pendingPollToken = 0; // Incremented to cancel async callbacks after session switch
+let _pendingBubble = null; // Bot bubble created by checkPendingResponse — reused on stop
+const PENDING_MAX_MS = 5 * 60 * 1000;
+
+function cancelPendingPoll() {
+  _pendingPollToken++;
   if (_pendingPollId) { clearInterval(_pendingPollId); _pendingPollId = null; }
-  if (chatHistory.length === 0) return;
-  const last = chatHistory[chatHistory.length - 1];
-  if (last.role !== 'user') return;
-  // Last message is user with no assistant response — backend may still be processing
-  const bb = addRow('bot'); bb.classList.add('streaming');
+  _pendingBubble = null;
+}
+
+function checkPendingResponse() {
+  cancelPendingPoll();
+  // Two conditions to check:
+  // 1. chatHistory ends with user message (normal case)
+  // 2. _streamingBySession[id] is true (sendChat started but sessSave not yet persisted — race condition)
   const _pollSessionId = currentSessionId;
-  setStreaming(true);
-  const _startTime = Date.now();
-  const _updateLabel = () => {
-    const secs = Math.floor((Date.now() - _startTime) / 1000);
-    const min = Math.floor(secs / 60), sec = secs % 60;
-    const elapsed = min > 0 ? `${min}m ${sec}s` : `${sec}s`;
-    showThinking(bb, `Processing in progress — ${elapsed} elapsed...`);
-  };
-  _updateLabel();
-  _pendingPollId = setInterval(async () => {
-    _updateLabel();
-    try {
-      const sess = await sessLoad(_pollSessionId);
-      if (!sess) return;
-      const msgs = sess.messages || [];
-      const lastMsg = msgs[msgs.length - 1];
-      if (lastMsg && lastMsg.role === 'assistant') {
-        clearInterval(_pendingPollId); _pendingPollId = null;
+  const hasStreamingFlag = !!_streamingBySession[_pollSessionId];
+  if (chatHistory.length === 0 && !hasStreamingFlag) return;
+  const last = chatHistory.length > 0 ? chatHistory[chatHistory.length - 1] : null;
+  if ((!last || last.role !== 'user') && !hasStreamingFlag) return;
+  const myToken = _pendingPollToken;
+
+  sessLoad(_pollSessionId).then(sess => {
+    // Cancelled — user switched session or stopped manually
+    if (_pendingPollToken !== myToken) return;
+    if (!sess) return;
+    const msgs = sess.messages || [];
+    const lastMsg = msgs[msgs.length - 1];
+    if (lastMsg && lastMsg.role === 'assistant') {
+      // Response already saved — render without spinner
+      const bb = addRow('bot');
+      renderBotContent(bb, lastMsg.content);
+      chatHistory.push({role: 'assistant', content: lastMsg.content});
+      updateCtxBar(); scrollChat();
+      return;
+    }
+    // Still pending — start polling with timeout
+    const bb = addRow('bot'); bb.classList.add('streaming');
+    _pendingBubble = bb;
+    setStreaming(true);
+    const _startTime = Date.now();
+    const _updateLabel = () => {
+      const secs = Math.floor((Date.now() - _startTime) / 1000);
+      const min = Math.floor(secs / 60), sec = secs % 60;
+      showThinking(bb, `Processing in progress — ${min > 0 ? min + 'm ' : ''}${sec}s elapsed...`);
+    };
+    // Show live content immediately if the SSE stream is still active
+    const existingLive = _liveStreamContent[_pollSessionId];
+    if (existingLive) { hideThinking(bb); renderBotContent(bb, existingLive); }
+    else _updateLabel();
+    _pendingPollId = setInterval(async () => {
+      if (_pendingPollToken !== myToken) { clearInterval(_pendingPollId); return; }
+      if (Date.now() - _startTime > PENDING_MAX_MS) {
+        cancelPendingPoll();
         hideThinking(bb); bb.classList.remove('streaming');
-        renderBotContent(bb, lastMsg.content);
-        chatHistory.push({role: 'assistant', content: lastMsg.content});
+        bb.innerHTML = '<span style="opacity:.5;font-style:italic">⚠ Réponse interrompue. Relancez votre message.</span>';
         _streamingBySession[_pollSessionId] = false;
-        if (currentSessionId === _pollSessionId) $id('chat-snd').disabled = false;
-        updateCtxBar(); scrollChat();
+        if (currentSessionId === _pollSessionId) setStreaming(false);
+        await sessRender();
+        return;
       }
-    } catch {}
-    // No timeout — poll until the tab is closed or the response arrives
-  }, 3000);
+      // Only show timer if no live stream content (live content is pushed directly by renderLive)
+      if (!_liveStreamContent[_pollSessionId]) _updateLabel();
+      try {
+        const sess = await sessLoad(_pollSessionId);
+        if (_pendingPollToken !== myToken) return;
+        const lastMsg = (sess?.messages || []).slice(-1)[0];
+        if (lastMsg && lastMsg.role === 'assistant') {
+          cancelPendingPoll();
+          hideThinking(bb); bb.classList.remove('streaming');
+          renderBotContent(bb, lastMsg.content);
+          chatHistory.push({role: 'assistant', content: lastMsg.content});
+          _streamingBySession[_pollSessionId] = false;
+          if (currentSessionId === _pollSessionId) setStreaming(false);
+          updateCtxBar(); scrollChat();
+          await sessRender();
+        }
+      } catch {}
+    }, 3000);
+  }).catch(() => {});
 }
 
 // ═══ MODEL SUGGESTIONS ═══
@@ -1544,6 +1798,7 @@ const MODELS = {
   clawbot:    ['clawbot-smart','clawbot-mini'],
   openai:     ['gpt-4o','gpt-4o-mini','gpt-4-turbo','gpt-3.5-turbo'],
   anthropic:  ['claude-opus-4-6','claude-sonnet-4-6','claude-haiku-4-5-20251001'],
+  kimi:       ['kimi-for-coding'],
   openrouter: ['anthropic/claude-sonnet-4-6','openai/gpt-4o','google/gemini-flash-1.5'],
   deepseek:   ['deepseek-chat','deepseek-reasoner','deepseek-coder'],
   ollama:     ['llama3','mistral','phi3','gemma3','qwen2'],
@@ -1552,6 +1807,7 @@ const MODELS = {
 const PROV_DEFAULTS = {
   clawbot:    {model:'clawbot-smart', url:'https://clawbot-api.yumi-lab.com/v1', placeholder:'clb-...'},
   anthropic:  {model:'claude-sonnet-4-6', url:'', placeholder:'sk-ant-api03-...'},
+  kimi:       {model:'kimi-for-coding', url:'https://api.kimi.com/coding/v1', placeholder:'sk-kimi-...'},
   openai:     {model:'gpt-4o',     url:'', placeholder:'sk-proj-...'},
   deepseek:   {model:'deepseek-chat', url:'', placeholder:'sk-...'},
   openrouter: {model:'anthropic/claude-sonnet-4-6', url:'', placeholder:'sk-or-v1-...'},
@@ -1573,7 +1829,9 @@ function show(name) {
   document.getElementById('pnl-' + name).classList.add('active');
   document.getElementById('nav-' + name).classList.add('active');
   document.getElementById('tb-title').textContent = PANEL_TITLES[name];
-  if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+  const _sessParam = new URLSearchParams(window.location.search).get('session');
+  const _newUrl = (_sessParam ? '?session=' + _sessParam : '') + '#' + name;
+  if (window.location.href.split(window.location.origin)[1] !== _newUrl) history.replaceState(null, '', _newUrl);
   // Auto-collapse sidebar when in chat (conversation sidebar takes its place)
   if (name === 'chat') {
     S.sbCol = true;
@@ -2005,27 +2263,63 @@ const FILE_SVC_MAP = {
   '/home/pi/.clawbot-telegram.env': 'clawbot-telegram'
 };
 
-async function openFile(path, name) {
+let _fileDirty = false;
+
+function onFileInput() {
+  if (!_fileDirty) {
+    _fileDirty = true;
+    $id('file-dirty-dot').style.display = '';
+  }
+}
+
+function _fileSetClean() {
+  _fileDirty = false;
+  $id('file-dirty-dot').style.display = 'none';
+}
+
+async function openFile(path, name, el) {
+  if (_fileDirty && S.curFile && S.curFile !== path) {
+    if (!confirm('Discard unsaved changes to "' + S.curFile.split('/').pop() + '"?')) return;
+  }
   document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
   S.curFile = path;
-  $('file-path-label').textContent = name + '  (' + path + ')';
-  $('file-content').value = 'Loading...';
+  $id('file-path-label').textContent = name + '  (' + path + ')';
+  $id('file-content').value = 'Loading…';
   $id('file-ph').style.display = 'none';
-  const ea = $id('file-edit-area');
-  ea.style.display = 'flex';
+  $id('file-edit-area').style.display = 'flex';
   const svc = FILE_SVC_MAP[path];
   $id('file-svc-reload').style.display = svc ? '' : 'none';
   $id('file-svc-reload').textContent = '+ Reload ' + (svc || '');
+  _fileSetClean();
   try {
     const r = await fetch('/api/system/file?path=' + encodeURIComponent(path));
     if (r.ok) {
       const d = await r.json();
       $id('file-content').value = d.content || '';
     } else {
-      $id('file-content').value = '# File not found or not accessible\n# ' + path;
+      $id('file-content').value = '# File not found or not readable\n# Path: ' + path;
     }
   } catch { $id('file-content').value = '# Error loading file'; }
+  _fileSetClean(); // reset after load (oninput may have fired)
+}
+
+function openCustomFile() {
+  const path = ($id('custom-file-path').value || '').trim();
+  if (!path) return;
+  const name = path.split('/').pop() || path;
+  openFile(path, name, null);
+}
+
+function cancelFile() {
+  if (_fileDirty) {
+    if (!confirm('Discard unsaved changes to "' + (S.curFile || '').split('/').pop() + '"?')) return;
+  }
+  document.querySelectorAll('.file-item').forEach(i => i.classList.remove('active'));
+  $id('file-edit-area').style.display = 'none';
+  $id('file-ph').style.display = '';
+  S.curFile = null;
+  _fileSetClean();
 }
 
 async function saveFile() {
@@ -2036,11 +2330,16 @@ async function saveFile() {
       method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({path: S.curFile, content})
     });
-    toast(r.ok ? 'File saved' : 'Save failed');
+    if (r.ok) { toast('File saved'); _fileSetClean(); }
+    else toast('Save failed', true);
   } catch { toast('Save failed', true); }
 }
 
-function reloadFile() { if (S.curFile) openFile(S.curFile, $('file-path-label').textContent.split('  ')[0]); }
+function reloadFile() {
+  if (!S.curFile) return;
+  if (_fileDirty && !confirm('Reload and discard changes?')) return;
+  openFile(S.curFile, $id('file-path-label').textContent.split('  ')[0], null);
+}
 
 function reloadServiceAfterSave() {
   const svc = FILE_SVC_MAP[S.curFile];
@@ -2089,7 +2388,7 @@ function updateModelBar() {
   // Use the chat model selector state, not the system config
   const modelId = chatModelState.model || S.cfg.model || 'default';
   const key = CHAT_MODELS[modelId] || modelId;
-  const modeLabels = {core: 'clawbot-core', agent: 'picoclaw agent', agents: 'core-agent'};
+  const modeLabels = {core: 'clawbot-core', agent: 'auto', agents: 'core-agent'};
   const mode = modeLabels[chatModeState.mode] || 'clawbot-core';
   $('chat-mb').textContent = mode + ' · ' + key;
 }
@@ -2128,6 +2427,34 @@ function chatKey(e) {
 }
 function scrollChat() { const c = $('chat-msgs'); c.scrollTop = c.scrollHeight; }
 
+function _fmtTime(ts) {
+  return new Date(ts).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+}
+function _fmtDateSep(ts) {
+  return new Date(ts).toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+}
+function _dayKey(ts) {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+function addTimestamp(bub, ts) {
+  if (!ts) return;
+  // Remove existing ts if any
+  const old = bub.querySelector('.chat-ts');
+  if (old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'chat-ts';
+  el.textContent = _fmtTime(ts);
+  bub.appendChild(el);
+}
+function addDateSep(ts) {
+  const c = $('chat-msgs');
+  const sep = document.createElement('div');
+  sep.className = 'chat-date-sep';
+  sep.innerHTML = `<span>${_fmtDateSep(ts)}</span>`;
+  c.appendChild(sep);
+}
+
 function addRow(role) {
   const c = $('chat-msgs');
   const row = document.createElement('div');
@@ -2143,14 +2470,22 @@ function addRow(role) {
 }
 
 // ─── Markdown rendering ───────────────────────────────────────────────────────
-marked.setOptions({
-  highlight: (code, lang) => {
-    if (lang && hljs.getLanguage(lang)) {
-      try { return hljs.highlight(code, {language: lang}).value; } catch {}
-    }
-    return hljs.highlightAuto(code).value;
-  },
+marked.use({
   breaks: true,
+  renderer: {
+    code(code, language) {
+      const lang = language && hljs.getLanguage(language) ? language : null;
+      let highlighted;
+      try {
+        highlighted = lang
+          ? hljs.highlight(code, { language: lang }).value
+          : hljs.highlightAuto(code).value;
+      } catch {
+        highlighted = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      }
+      return `<pre><code class="hljs${lang ? ` language-${lang}` : ''}">${highlighted}\n</code></pre>\n`;
+    }
+  }
 });
 function parseMarkdown(text) {
   try { return marked.parse(text); } catch { return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>'); }
@@ -2235,12 +2570,11 @@ const chatModeState = { mode: 'agents', verbose: false };
 function setChatMode(m, { compact = true } = {}) {
   const prev = chatModeState.mode;
   chatModeState.mode = m;
-  ['core','agent','agents'].forEach(id => $id('mode-'+id).classList.toggle('active', id === m));
+  ['core','agents'].forEach(id => { const el = $id('mode-'+id); if (el) el.classList.toggle('active', id === m); });
   updateModelBar();
   const placeholders = {core: 'Ask your AI assistant...', agent: 'Ask PicoClaw (can read/write files, run commands, search web...)', agents: 'Ask — the best Core-Agent will be selected automatically...'};
   $id('chat-inp').placeholder = placeholders[m] || placeholders.core;
-  // Show verbose toggle only in agent mode
-  $id('view-toggle-wrap').style.display = m === 'agent' ? '' : 'none';
+  $id('view-toggle-wrap').style.display = '';
   // Show agent selector only in agents mode
   const sel = $id('agent-selector');
   if (m === 'agents') { sel.classList.add('visible'); loadAgentSelector(); } else { sel.classList.remove('visible'); }
@@ -2251,7 +2585,7 @@ function setChatMode(m, { compact = true } = {}) {
 }
 
 async function compactOnModeSwitch(fromMode, toMode) {
-  const modeNames = {core: 'ClawbotCore', agent: 'PicoClaw', agents: 'Core-Agent'};
+  const modeNames = {core: 'ClawBot Core', agent: 'Auto', agents: 'Core-Agent'};
   const convLen = chatHistory.reduce((s, m) => s + (m.content || '').length, 0);
   if (convLen < 50) return; // Very short — nothing to compact
 
@@ -2300,6 +2634,48 @@ async function compactOnModeSwitch(fromMode, toMode) {
   }
 }
 
+async function manualCompact() {
+  const convLen = chatHistory.reduce((s, m) => s + (m.content || '').length, 0);
+  if (convLen < 50) return;
+  const bb = addRow('bot');
+  bb.classList.add('streaming');
+  bb.textContent = '⟳ Compaction du contexte...';
+  try {
+    const maxTok = Math.min(800, Math.max(200, Math.round(convLen / 5)));
+    const compactPrompt = [
+      ...chatHistory,
+      {role: 'user', content:
+        `Résume cette conversation de manière concise pour libérer du contexte. ` +
+        `Inclus: ce qui a été fait, fichiers modifiés, état actuel, décisions clés. ` +
+        `Encadre ta réponse entre <passation> et </passation>.`}
+    ];
+    const ep = '/api/core/v1/chat/completions';
+    const hdrs = {'Content-Type': 'application/json'};
+    if (S.cfg.apikey) hdrs['Authorization'] = 'Bearer ' + S.cfg.apikey;
+    const res = await fetch(ep, {method: 'POST', headers: hdrs, body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001', messages: compactPrompt, stream: false, max_tokens: maxTok
+    })});
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    let summary = data.choices?.[0]?.message?.content || '';
+    const match = summary.match(/<passation>([\s\S]*?)<\/passation>/);
+    if (match) summary = match[1].trim();
+    if (!summary) throw new Error('Empty summary');
+    chatHistory = [
+      {role: 'user', content: `[Contexte compacté]\n\n${summary}`},
+      {role: 'assistant', content: `Compris. Je continue avec ce contexte.`}
+    ];
+    bb.textContent = `✓ Contexte compacté`;
+    bb.classList.remove('streaming');
+    updateCtxBar();
+    sessSave();
+  } catch (e) {
+    console.warn('Manual compact failed:', e);
+    bb.textContent = `⚠ Compaction échouée`;
+    bb.classList.remove('streaming');
+  }
+}
+
 function toggleVerbose() {
   chatModeState.verbose = !chatModeState.verbose;
   $id('view-toggle').classList.toggle('on', chatModeState.verbose);
@@ -2310,6 +2686,7 @@ const CHAT_MODELS = {
   'claude-haiku-4-5-20251001': 'haiku',
   'claude-sonnet-4-6': 'sonnet',
   'claude-opus-4-6': 'opus',
+  'kimi-for-coding': 'kimi',
 };
 const chatModelState = { model: 'claude-haiku-4-5-20251001' };
 
@@ -2562,6 +2939,7 @@ async function sendChat() {
   const inp = $id('chat-inp');
   let msg = inp.value.trim();
   if (!msg && pendingAttachments.length === 0) return;
+  const _sendSessionId = currentSessionId; // capture so finally block always resets the right session
 
   // If running: queue the message to be sent after current task finishes
   if (isStreaming()) {
@@ -2586,12 +2964,27 @@ async function sendChat() {
   }
 
   inp.value = ''; inp.style.height = 'auto';
-  const ub = addRow('user'); ub.textContent = msg;
-  chatHistory.push({role: 'user', content: msg});
+  const userTs = Date.now();
+  // Date separator if this message is on a different day than the last
+  const lastMsgTs = chatHistory.length ? chatHistory[chatHistory.length-1].ts : null;
+  if (!lastMsgTs || _dayKey(userTs) !== _dayKey(lastMsgTs)) addDateSep(userTs);
+  const ub = addRow('user'); ub.textContent = msg; addTimestamp(ub, userTs);
+  chatHistory.push({role: 'user', content: msg, ts: userTs});
   sessSave(); // Save immediately so user message survives refresh
   _promptHistoryIdx = -1; _promptDraft = '';
   const bb = addRow('bot'); bb.classList.add('streaming');
   showThinking(bb);
+  _liveStreamContent[_sendSessionId] = '';
+  // renderLive: write content to bb if connected, otherwise push to _pendingBubble (session switched back)
+  const renderLive = (content) => {
+    _liveStreamContent[_sendSessionId] = content;
+    if (bb.isConnected) {
+      renderBotContent(bb, content);
+    } else if (currentSessionId === _sendSessionId && _pendingBubble?.isConnected) {
+      hideThinking(_pendingBubble);
+      renderBotContent(_pendingBubble, content);
+    }
+  };
   setStreaming(true);
 
   const isAgent = chatModeState.mode === 'agent';
@@ -2706,8 +3099,8 @@ async function sendChat() {
             hideThinking(bb);
             if (parsed.steps?.length) renderAgentSteps(bb, parsed.steps);
             curEvent = null;
-          } else if (curEvent === 'tool_call' && !isAgent && !isAgents) {
-            // Core mode: tool call → timeline
+          } else if (curEvent === 'tool_call' && !isAgent) {
+            // Core / Core-Agent fallback: tool call → timeline
             hideThinking(bb);
             if (!traceWrap) {
               traceWrap = createTracePanel();
@@ -2720,8 +3113,8 @@ async function sendChat() {
             }
             scrollChat();
             curEvent = null;
-          } else if (curEvent === 'tool_result' && !isAgent && !isAgents) {
-            // Core mode: tool result → timeline (no spinner re-show, timeline is always visible)
+          } else if (curEvent === 'tool_result' && !isAgent) {
+            // Core / Core-Agent fallback: tool result → timeline
             if (traceWrap) addToolResultsToTrace(traceWrap, parsed);
             const pending = currentTrace.filter(t => t.result === undefined);
             (parsed.results || []).forEach((res, i) => {
@@ -2733,7 +3126,7 @@ async function sendChat() {
             // Core mode: streaming token from Anthropic direct
             hideThinking(bb);
             full += parsed.text || '';
-            renderBotContent(bb, full);
+            renderLive(full);
             scrollChat();
             curEvent = null;
           } else if (curEvent === 'done' && !isAgent && !isAgents) {
@@ -2743,7 +3136,7 @@ async function sendChat() {
             if (parsed.content) full = parsed.content;
             if (!full) full = parsed.content || '';
             if (traceWrap) finalizeTracePanel(traceWrap, tcCount);
-            renderBotContent(bb, full);
+            renderLive(full);
             scrollChat();
             curEvent = null;
           } else if (curEvent === 'context_usage') {
@@ -2757,7 +3150,7 @@ async function sendChat() {
           } else if (!doneFired) {
             // Standard delta (Agent mode final response) — skip if Core done already fired
             const delta = parsed.choices?.[0]?.delta?.content;
-            if (delta) { hideThinking(bb); full += delta; renderBotContent(bb, full); scrollChat(); }
+            if (delta) { hideThinking(bb); full += delta; renderLive(full); scrollChat(); }
           }
         } catch (parseErr) {
           if (parseErr.message && !parseErr.message.startsWith('JSON')) throw parseErr;
@@ -2765,12 +3158,17 @@ async function sendChat() {
       }
     }
     if (!full) full = '(empty response)';
-    if (!doneFired && (!isAgents || !agentsMeta?.length)) renderBotContent(bb, full);
-    const assistantMsg = {role: 'assistant', content: full};
+    if (!doneFired && (!isAgents || !agentsMeta?.length)) renderLive(full);
+    const assistantTs = Date.now();
+    const assistantMsg = {role: 'assistant', content: full, ts: assistantTs};
     if (currentTrace.length) assistantMsg.tool_trace = currentTrace;
-    chatHistory.push(assistantMsg);
-    sessSave();
-    updateCtxBar();
+    // Only update frontend state if still on this session (user may have switched away)
+    if (currentSessionId === _sendSessionId) {
+      chatHistory.push(assistantMsg);
+      addTimestamp(bb, assistantTs);
+      sessSave();
+      updateCtxBar();
+    }
   } catch (err) {
     hideThinking(bb);
     if (err.name === 'AbortError') {
@@ -2796,7 +3194,18 @@ async function sendChat() {
       finalizeTracePanel(agentTraces[aid], agentTcCounts[aid] || 0);
     }
     bb.classList.remove('streaming');
-    setStreaming(false);
+    // Always reset the session that started this stream (not currentSessionId which may have changed)
+    _streamingBySession[_sendSessionId] = false;
+    delete _liveStreamContent[_sendSessionId];
+    // If user returned to this session while streaming, clean up the poll bubble
+    if (currentSessionId === _sendSessionId) {
+      setStreaming(false);
+      if (_pendingBubble?.isConnected) {
+        _pendingBubble.classList.remove('streaming');
+        hideThinking(_pendingBubble);
+        cancelPendingPoll(); // stops poll interval, clears _pendingBubble
+      }
+    }
     scrollChat();
     // Auto-send pending queued message if any
     if (_pendingQueue.length > 0) {
@@ -3197,7 +3606,21 @@ async function loadCorePrompts() {
     $id('cp-system').value = d.system_prompt || '';
     $id('cp-extra').value = d.extra_rules || '';
     $id('cp-twins').value = d.twins_reviewer_prompt || '';
+    if (d.search_engine) $id('cfg-se').value = d.search_engine;
   } catch (e) { /* silently ignore if not available */ }
+}
+
+async function saveSearchEngine() {
+  try {
+    const r = await fetch('/api/core/prompts');
+    const d = await r.json();
+    d.search_engine = $id('cfg-se').value;
+    const r2 = await fetch('/api/core/prompts', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(d)
+    });
+    if (r2.ok) toast('Search engine saved');
+    else toast('Error saving', true);
+  } catch (e) { toast('Error: ' + e.message, true); }
 }
 
 async function saveCorePrompts() {
@@ -3229,7 +3652,11 @@ async function saveCorePrompts() {
 
 // ═══ WORKSPACE ═══
 // ═══ WORKSPACE ═══
-const WS_BROWSER_EXTS = new Set(['html','htm','pdf','png','jpg','jpeg','gif','svg','webp','mp4','mov','mp3','wav','ogg','txt','md','csv']);
+const WS_BROWSER_EXTS = new Set(['pdf','png','jpg','jpeg','gif','svg','webp','mp4','mov','mp3','wav','ogg','html','htm']);
+// Text extensions that open in the inline editor
+const WS_TEXT_EXTS = new Set(['txt','md','json','py','js','ts','sh','bash','css','yaml','yml','log','env','cfg','conf','ini','csv','xml','toml','service','sql','rs','go','java','c','cpp','h','rb','php','r','ipynb']);
+// Extensions viewable in browser but also editable as source via right-click
+const WS_SOURCE_EDITABLE = new Set(['html','htm']);
 let _wsPath = '';       // current subdir path
 let _wsView = 'grid';   // 'grid' | 'list'
 let _wsSort = 'name-asc';
@@ -3262,9 +3689,10 @@ function wsExt(name) {
   return p.length > 1 ? p.pop().toUpperCase() : '—';
 }
 function wsOpenFile(entry) {
-  const ext = entry.name.split('.').pop().toLowerCase();
-  if (WS_BROWSER_EXTS.has(ext)) {
-    // Open directly via nginx /workspace/ path (relative deps work)
+  const ext = (entry.name.split('.').pop() || '').toLowerCase();
+  if (WS_TEXT_EXTS.has(ext)) {
+    wsEditorOpen(entry);
+  } else if (WS_BROWSER_EXTS.has(ext)) {
     window.open('/workspace/' + encodeURIComponent(entry.path || entry.name).replace(/%2F/g,'/'), '_blank');
   } else {
     // Download via API
@@ -3274,7 +3702,70 @@ function wsOpenFile(entry) {
     a.click();
   }
 }
+
+let _wsEditorEntry = null;
+let _wsEditorDirty = false;
+
+async function wsEditorOpen(entry) {
+  _wsEditorEntry = entry;
+  _wsEditorDirty = false;
+  $id('ws-editor-name').textContent = entry.name;
+  $id('ws-editor-dirty').style.display = 'none';
+  $id('ws-editor-content').value = 'Loading…';
+  $id('ws-grid-wrap').style.display = 'none';
+  $id('ws-editor-overlay').style.display = 'flex';
+  try {
+    const r = await fetch('/api/core/workspace/' + encodeURIComponent(entry.path || entry.name).replace(/%2F/g,'/'));
+    if (r.ok) {
+      $id('ws-editor-content').value = await r.text();
+    } else {
+      $id('ws-editor-content').value = '# Could not read file (HTTP ' + r.status + ')';
+    }
+  } catch(e) {
+    $id('ws-editor-content').value = '# Error: ' + e.message;
+  }
+  _wsEditorDirty = false;
+  $id('ws-editor-dirty').style.display = 'none';
+}
+
+function wsEditorOnInput() {
+  if (!_wsEditorDirty) {
+    _wsEditorDirty = true;
+    $id('ws-editor-dirty').style.display = '';
+  }
+}
+
+function wsEditorClose() {
+  if (_wsEditorDirty && !confirm('Discard unsaved changes to "' + (_wsEditorEntry?.name || '') + '"?')) return;
+  $id('ws-editor-overlay').style.display = 'none';
+  $id('ws-grid-wrap').style.display = 'flex';
+  _wsEditorEntry = null;
+  _wsEditorDirty = false;
+}
+
+async function wsEditorSave() {
+  if (!_wsEditorEntry) return;
+  const content = $id('ws-editor-content').value;
+  const fullPath = '/home/pi/.clawbot/workspace/' + (_wsEditorEntry.path || _wsEditorEntry.name);
+  try {
+    const r = await fetch('/api/system/file', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({path: fullPath, content})
+    });
+    if (r.ok) {
+      toast('File saved');
+      _wsEditorDirty = false;
+      $id('ws-editor-dirty').style.display = 'none';
+    } else {
+      toast('Save failed — path not writable via status API', true);
+    }
+  } catch(e) { toast('Save error: ' + e.message, true); }
+}
 function wsNav(path) {
+  // Close editor if open (without confirm — navigating folder resets)
+  $id('ws-editor-overlay').style.display = 'none';
+  $id('ws-grid-wrap').style.display = 'flex';
+  _wsEditorEntry = null; _wsEditorDirty = false;
   _wsPath = path;
   loadWorkspace();
 }
@@ -3327,20 +3818,24 @@ async function wsDeleteEntry(entry, e) {
 }
 function wsRender() {
   wsRenderBreadcrumb();
-  const content = $id('ws-content');
+  const wrap = $id('ws-grid-wrap');
   const sorted = wsSorted(_wsFiles);
   if (!sorted.length) {
-    content.innerHTML = '<div class="ws-grid"><div class="ws-empty">Empty folder</div></div>';
+    wrap.innerHTML = '<div class="ws-grid"><div class="ws-empty">Empty folder</div></div>';
     return;
   }
   if (_wsView === 'grid') {
-    content.innerHTML = '';
+    wrap.innerHTML = '';
     const grid = document.createElement('div'); grid.className = 'ws-grid';
     sorted.forEach(f => {
       const card = document.createElement('div');
       card.className = 'ws-file' + (f.type === 'dir' ? ' dir' : '');
       card.title = f.name;
       card.onclick = () => f.type === 'dir' ? wsNav(f.path) : wsOpenFile(f);
+      if (f.type === 'file' && WS_SOURCE_EDITABLE.has((f.name.split('.').pop()||'').toLowerCase())) {
+        card.oncontextmenu = (e) => { e.preventDefault(); wsEditorOpen(f); };
+        card.title = f.name + ' — clic droit: ouvrir le code source';
+      }
       const ico = document.createElement('div'); ico.className='ws-file-icon'; ico.textContent=wsIcon(f);
       const nm = document.createElement('div'); nm.className='ws-file-name'; nm.textContent=f.name;
       const meta = document.createElement('div'); meta.className='ws-file-meta';
@@ -3351,9 +3846,9 @@ function wsRender() {
       if (f.type === 'file') card.appendChild(del);
       grid.appendChild(card);
     });
-    content.appendChild(grid);
+    wrap.appendChild(grid);
   } else {
-    content.innerHTML = '';
+    wrap.innerHTML = '';
     const tbl = document.createElement('div'); tbl.className='ws-list';
     // Header
     const hdr = document.createElement('div'); hdr.className='ws-list-hdr';
@@ -3385,6 +3880,10 @@ function wsRender() {
       const row = document.createElement('div');
       row.className = 'ws-list-row' + (f.type === 'dir' ? ' dir' : '');
       row.onclick = () => f.type === 'dir' ? wsNav(f.path) : wsOpenFile(f);
+      if (f.type === 'file' && WS_SOURCE_EDITABLE.has((f.name.split('.').pop()||'').toLowerCase())) {
+        row.oncontextmenu = (e) => { e.preventDefault(); wsEditorOpen(f); };
+        row.title = f.name + ' — clic droit: ouvrir le code source';
+      }
       const ico = document.createElement('span'); ico.className='ws-lr-icon'; ico.textContent=wsIcon(f);
       const nm = document.createElement('span'); nm.className='ws-lr-name'; nm.textContent=f.name;
       const tp = document.createElement('span'); tp.className='ws-lr-type'; tp.textContent=f.type==='dir'?'Folder':wsExt(f.name);
@@ -3400,11 +3899,11 @@ function wsRender() {
       }
       tbl.appendChild(row);
     });
-    content.appendChild(tbl);
+    wrap.appendChild(tbl);
   }
 }
 async function loadWorkspace() {
-  $id('ws-content').innerHTML = '<div class="ws-grid"><div class="ws-empty">Loading...</div></div>';
+  $id('ws-grid-wrap').innerHTML = '<div class="ws-grid"><div class="ws-empty">Loading...</div></div>';
   try {
     const url = '/api/core/workspace' + (_wsPath ? '?path=' + encodeURIComponent(_wsPath) : '');
     const r = await fetch(url);
@@ -3413,7 +3912,7 @@ async function loadWorkspace() {
     _wsFiles = d.files || [];
     wsRender();
   } catch(e) {
-    $id('ws-content').innerHTML = '<div class="ws-grid"><div class="ws-empty">Error: ' + e.message + '</div></div>';
+    $id('ws-grid-wrap').innerHTML = '<div class="ws-grid"><div class="ws-empty">Error: ' + e.message + '</div></div>';
   }
 }
 
