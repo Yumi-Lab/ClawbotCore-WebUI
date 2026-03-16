@@ -536,6 +536,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ae-skills-grid{display:flex;flex-wrap:wrap;gap:6px}
 .ae-skill-check{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1px solid var(--br);background:transparent;cursor:pointer;transition:var(--tr);font-family:var(--fmo);font-size:.62rem;color:var(--ts)}
 .ae-skill-check.on{background:var(--ac-d);border-color:var(--ac-m);color:var(--ac)}
+.ae-skill-check.ai-suggested{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac-m)}
 .ae-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
 .ae-save{padding:8px 24px;border-radius:var(--r);border:1px solid var(--ac);background:var(--ac-d);color:var(--ac);font-family:var(--fmo);font-size:.75rem;cursor:pointer;font-weight:600;transition:var(--tr)}
 .ae-save:hover{background:var(--ac);color:var(--bg)}
@@ -938,10 +939,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="ae-field" style="flex:1"><label class="ae-label">Couleur</label><input class="ae-input" id="ae-color" type="color" value="#00ffe0" style="padding:4px;height:38px"></div>
       </div>
       <div class="ae-field" style="margin-bottom:10px">
-        <label class="ae-label">Rôle &amp; personnalité *</label>
+        <label class="ae-label">Décris son rôle * <span style="font-size:.55rem;color:var(--ac);font-weight:600;text-transform:none;letter-spacing:0">→ l'IA sélectionne les capacités automatiquement</span></label>
         <div style="display:flex;gap:8px;align-items:flex-start">
-          <textarea class="ae-input ae-textarea ae-desc-natural" id="ae-desc" placeholder="Ma comptable, elle prépare les devis, gère la TVA et répond aux questions financières..."></textarea>
-          <button class="ae-gen-btn" id="ae-gen-btn" onclick="generateSystemPrompt()">▶ Générer</button>
+          <textarea class="ae-input ae-textarea ae-desc-natural" id="ae-desc" placeholder="Ex: Mon assistant comptable. Il gère les devis, la TVA et répond aux questions financières. Il peut lire des fichiers CSV et envoyer des emails de récap."></textarea>
+          <button class="ae-gen-btn" id="ae-gen-btn" onclick="generateSystemPrompt()">✦ Configurer</button>
         </div>
         <div class="ae-geek-zone" id="ae-geek-zone">
           <button class="ae-geek-toggle" onclick="this.parentElement.classList.toggle('open')">⚙ Prompt technique <span style="opacity:.5">(mode geek)</span></button>
@@ -3320,8 +3321,12 @@ const ALL_SKILLS = [
   {id:'git__push',             label:'Git push',         group:'Git'},
   {id:'system__get_system_info',label:'Info système',    group:'Système'},
   {id:'system__ssh_execute',   label:'SSH',              group:'Système'},
+  {id:'system__handoff',       label:'Handoff agents',  group:'Système'},
   {id:'system__bash',          label:'Bash (legacy)',    group:'Système'},
   {id:'system__python',        label:'Python (legacy)',  group:'Système'},
+  {id:'system__read_file',     label:'Read (legacy)',    group:'Système'},
+  {id:'system__write_file',    label:'Write (legacy)',   group:'Système'},
+  {id:'system__ssh',           label:'SSH (legacy)',     group:'Système'},
   {id:'system__web_search',    label:'Search (legacy)',  group:'Web'},
 ];
 let agentsCache = [];
@@ -3424,19 +3429,29 @@ async function generateSystemPrompt() {
   btn.disabled = true;
   btn.textContent = '⏳';
   try {
-    // Instruction embedded in user message (ClawbotCore injects its own system prompt)
-    const instruction = `Tu dois générer un system prompt pour un assistant IA. Réponds UNIQUEMENT avec le system prompt, sans introduction, sans commentaire, sans guillemets.
+    // Only offer new tools (not legacy) for AI suggestion
+    const toolIds = ALL_SKILLS.filter(s => !s.label.includes('legacy') && s.id !== 'system__handoff')
+                              .map(s => s.id).join(', ');
+    const instruction = `Tu es un configurateur d'assistant IA. Analyse ce rôle et retourne UNIQUEMENT un JSON valide, rien d'autre.
 
-CONTRAINTES:
-- Commence exactement par: "Tu es ${name}, "
-- 3 à 5 phrases maximum
-- Ton professionnel et précis
+Nom: ${name}
+Rôle: ${desc}
 
-Nom de l'assistant: ${name}
-Description: ${desc}`;
+JSON à retourner (exactement ce format, rien avant, rien après):
+{"prompt":"Tu es ${name}, [3-5 phrases professionnelles décrivant le rôle]","tools":["tool1","tool2"]}
+
+Règles:
+- Le champ "prompt" commence obligatoirement par "Tu es ${name}, "
+- Le champ "tools" contient uniquement des tools pertinents pour ce rôle, choisis parmi: ${toolIds}
+- Maximum 6 tools — choisir les plus utiles, pas tous
+- Si le rôle est lié à des fichiers: inclure files__read, files__write
+- Si le rôle fait des recherches web: inclure web__search
+- Si le rôle envoie des emails: inclure email__send
+- Si le rôle fait du code: inclure exec__run_python ou exec__run_bash`;
+
     const body = {
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
+      max_tokens: 500,
       stream: false,
       messages: [{role:'user', content: instruction}]
     };
@@ -3446,13 +3461,34 @@ Description: ${desc}`;
       body: JSON.stringify(body)
     });
     const d = await r.json();
-    const generated = (d.choices?.[0]?.message?.content || d.content?.[0]?.text || '').trim();
-    // Extract clean prompt — strip any preamble before "Tu es"
-    const match = generated.match(/(Tu es\s+.+)/s);
-    const clean = match ? match[1].trim() : generated;
-    if (clean) {
-      $id('ae-prompt').value = clean;
+    const raw = (d.choices?.[0]?.message?.content || d.content?.[0]?.text || '').trim();
+
+    // Extract JSON from response (may have preamble from ClawbotCore system prompt)
+    const jsonMatch = raw.match(/\{[\s\S]*"prompt"[\s\S]*"tools"[\s\S]*\}/);
+    if (!jsonMatch) { toast('Génération échouée — réessaie', true); btn.disabled=false; btn.textContent='▶ Générer'; return; }
+
+    let parsed;
+    try { parsed = JSON.parse(jsonMatch[0]); } catch { toast('Format invalide — réessaie', true); btn.disabled=false; btn.textContent='▶ Générer'; return; }
+
+    const generatedPrompt = (parsed.prompt || '').trim();
+    const suggestedTools = Array.isArray(parsed.tools) ? parsed.tools : [];
+
+    // Set the generated prompt
+    if (generatedPrompt) {
+      $id('ae-prompt').value = generatedPrompt;
       $id('ae-geek-zone').classList.add('open');
+    }
+
+    // Auto-select suggested tools + visual feedback
+    if (suggestedTools.length > 0) {
+      const skillBtns = $id('ae-skills').querySelectorAll('.ae-skill-check');
+      skillBtns.forEach(btn => {
+        const isSuggested = suggestedTools.includes(btn.dataset.skill);
+        btn.classList.toggle('on', isSuggested);
+        btn.classList.toggle('ai-suggested', isSuggested);
+      });
+      toast('Assistant configuré — ' + suggestedTools.length + ' capacités suggérées ✓');
+    } else if (generatedPrompt) {
       toast('Prompt généré ✓');
     } else {
       toast('Génération échouée', true);
