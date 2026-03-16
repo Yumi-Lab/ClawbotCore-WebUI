@@ -490,6 +490,38 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .agent-card-new svg{width:32px;height:32px;color:var(--td)}
 .agent-card-new span{font-family:var(--fmo);font-size:.7rem;color:var(--td)}
 
+/* Agents panel header + slot indicator */
+.agents-header{display:flex;align-items:center;gap:16px;padding:16px 24px 8px;flex-shrink:0}
+.slot-indicator{display:flex;align-items:center;gap:10px;flex:1}
+.slot-bar{width:140px;height:6px;background:var(--bg-i);border-radius:3px;overflow:hidden;flex-shrink:0}
+.slot-bar-fill{height:100%;border-radius:3px;transition:width .4s var(--tr),background .4s}
+.slot-label{font-family:var(--fmo);font-size:.62rem;color:var(--ts);white-space:nowrap}
+.hire-btn{padding:7px 16px;border-radius:var(--r);border:1px solid var(--ac);background:var(--ac-d);color:var(--ac);font-family:var(--fmo);font-size:.68rem;font-weight:600;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:6px}
+.hire-btn:hover{background:var(--ac);color:var(--bg)}
+/* Agent description friendly */
+.agent-desc-friendly{font-family:var(--fm);font-size:.72rem;color:var(--ts);line-height:1.4;margin-bottom:12px;font-style:italic;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.agent-badge-default{font-size:.52rem;color:var(--td);font-family:var(--fmo);padding:2px 6px;border:1px solid var(--br);border-radius:8px;vertical-align:middle;margin-left:4px}
+/* Agent editor — description naturelle */
+.ae-desc-natural{min-height:65px;resize:vertical}
+.ae-gen-btn{flex-shrink:0;padding:7px 12px;border-radius:var(--r);border:1px solid var(--ac-m);background:var(--ac-d);color:var(--ac);font-family:var(--fmo);font-size:.62rem;cursor:pointer;transition:var(--tr);white-space:nowrap;align-self:flex-start}
+.ae-gen-btn:hover{background:var(--ac);color:var(--bg)}
+.ae-gen-btn:disabled{opacity:.4;cursor:wait}
+.ae-geek-zone{margin-top:8px;border:1px solid var(--br);border-radius:var(--r);overflow:hidden}
+.ae-geek-toggle{width:100%;padding:6px 10px;background:transparent;border:none;color:var(--td);font-family:var(--fmo);font-size:.56rem;text-align:left;cursor:pointer;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:1px}
+.ae-geek-toggle:hover{color:var(--ts)}
+.ae-geek-content{display:none;padding:8px}
+.ae-geek-zone.open .ae-geek-content{display:block}
+/* Skill groups in editor */
+.ae-skill-group{margin-bottom:10px}
+.ae-group-label{font-family:var(--fmo);font-size:.52rem;color:var(--td);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:5px;display:block}
+/* Delete confirm dialog */
+.delete-confirm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.delete-confirm.open{display:flex}
+.delete-confirm-box{background:var(--bg-c);border:1px solid #ff386033;border-radius:var(--rl);padding:28px;max-width:380px;width:90%;animation:mIn .25s ease}
+.delete-confirm-msg{font-size:.95rem;color:var(--tp);margin-bottom:6px;font-weight:600}
+.delete-confirm-sub{font-size:.78rem;color:var(--ts);margin-bottom:22px;line-height:1.5}
+.delete-confirm-actions{display:flex;gap:10px;justify-content:flex-end}
+
 /* Agent editor modal */
 .agent-editor{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .agent-editor.open{display:flex}
@@ -642,9 +674,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
       <span class="lbl">Workspace</span>
     </button>
-    <button class="sb-item" id="nav-agents" onclick="show('agents');loadAgentsPanel()" title="Sub-Agents">
+    <button class="sb-item" id="nav-agents" onclick="show('agents');loadAgentsPanel()" title="Assistants">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      <span class="lbl">Agents</span>
+      <span class="lbl">Assistants</span>
     </button>
     <button class="sb-item" id="nav-skills" onclick="show('skills');loadSkillsPanel()" title="Skills">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
@@ -882,33 +914,49 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
-  <!-- ─── AGENTS ─── -->
+  <!-- ─── ASSISTANTS ─── -->
   <div class="pnl" id="pnl-agents">
+    <div class="agents-header">
+      <div class="slot-indicator" id="slot-indicator"></div>
+      <button class="hire-btn" id="hire-btn" onclick="openAgentEditor(null)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Embaucher
+      </button>
+    </div>
     <div class="agents-grid" id="agents-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--td);font-family:var(--fmo);font-size:.75rem">Loading agents...</div>
+      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--td);font-family:var(--fmo);font-size:.75rem">Chargement...</div>
     </div>
   </div>
 
   <!-- Agent editor modal -->
   <div class="agent-editor" id="agent-editor" onclick="if(event.target===this)closeAgentEditor()">
     <div class="agent-editor-box">
-      <div class="ae-title" id="ae-title">New Agent</div>
+      <div class="ae-title" id="ae-title">Embaucher un assistant</div>
       <div class="ae-row">
-        <div class="ae-field" style="flex:3"><label class="ae-label">Name</label><input class="ae-input" id="ae-name" placeholder="Python Dev"></div>
-        <div class="ae-field" style="flex:1"><label class="ae-label">Avatar</label><input class="ae-input" id="ae-avatar" placeholder="&#x1f40d;" style="text-align:center;font-size:1.4rem"></div>
-        <div class="ae-field" style="flex:1"><label class="ae-label">Color</label><input class="ae-input" id="ae-color" type="color" value="#00ffe0" style="padding:4px;height:38px"></div>
+        <div class="ae-field" style="flex:3"><label class="ae-label">Prénom *</label><input class="ae-input" id="ae-name" placeholder="Alice"></div>
+        <div class="ae-field" style="flex:1"><label class="ae-label">Avatar</label><input class="ae-input" id="ae-avatar" placeholder="💼" style="text-align:center;font-size:1.4rem"></div>
+        <div class="ae-field" style="flex:1"><label class="ae-label">Couleur</label><input class="ae-input" id="ae-color" type="color" value="#00ffe0" style="padding:4px;height:38px"></div>
+      </div>
+      <div class="ae-field" style="margin-bottom:10px">
+        <label class="ae-label">Rôle &amp; personnalité *</label>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <textarea class="ae-input ae-textarea ae-desc-natural" id="ae-desc" placeholder="Ma comptable, elle prépare les devis, gère la TVA et répond aux questions financières..."></textarea>
+          <button class="ae-gen-btn" id="ae-gen-btn" onclick="generateSystemPrompt()">▶ Générer</button>
+        </div>
+        <div class="ae-geek-zone" id="ae-geek-zone">
+          <button class="ae-geek-toggle" onclick="this.parentElement.classList.toggle('open')">⚙ Prompt technique <span style="opacity:.5">(mode geek)</span></button>
+          <div class="ae-geek-content">
+            <textarea class="ae-input ae-textarea" id="ae-prompt" placeholder="Tu es Alice, assistante comptable..." style="min-height:100px;font-family:var(--fmo);font-size:.72rem"></textarea>
+          </div>
+        </div>
       </div>
       <div class="ae-field" style="margin-bottom:14px">
-        <label class="ae-label">System Prompt (personality)</label>
-        <textarea class="ae-input ae-textarea" id="ae-prompt" placeholder="You are an expert Python developer..."></textarea>
+        <label class="ae-label">Capacités (outils disponibles)</label>
+        <div id="ae-skills"></div>
       </div>
       <div class="ae-field" style="margin-bottom:14px">
-        <label class="ae-label">Skills (tools this agent can use)</label>
-        <div class="ae-skills-grid" id="ae-skills"></div>
-      </div>
-      <div class="ae-field" style="margin-bottom:14px">
-        <label class="ae-label">Keywords (for auto-routing)</label>
-        <input class="ae-input" id="ae-keywords" placeholder="python, code, script, debug...">
+        <label class="ae-label">Mots-clés (pour le routage auto)</label>
+        <input class="ae-input" id="ae-keywords" placeholder="comptabilité, devis, TVA, facture...">
       </div>
       <div class="ae-field" style="margin-bottom:14px">
         <label class="ae-label" style="display:flex;align-items:center;gap:10px;cursor:pointer">
@@ -916,13 +964,24 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <span>Twins Partner <span style="font-size:.65rem;color:#f59e0b;font-weight:600">⚠ +tokens</span></span>
         </label>
         <div style="font-size:.65rem;color:var(--ts);margin-top:4px;line-height:1.4">
-          Enables a quality reviewer that validates and optionally requests a revision after each response.
-          Uses an extra Haiku call per response. Recommended for critical or complex tasks.
+          Active un relecteur qualité après chaque réponse. Utilise un appel Haiku supplémentaire.
         </div>
       </div>
       <div class="ae-footer">
-        <button class="ae-cancel" onclick="closeAgentEditor()">Cancel</button>
-        <button class="ae-save" onclick="saveAgentFromEditor()">Save Agent</button>
+        <button class="ae-cancel" onclick="closeAgentEditor()">Annuler</button>
+        <button class="ae-save" onclick="saveAgentFromEditor()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm dialog -->
+  <div class="delete-confirm" id="delete-confirm">
+    <div class="delete-confirm-box">
+      <div class="delete-confirm-msg" id="delete-confirm-msg">Mettre fin au contrat ?</div>
+      <div class="delete-confirm-sub">Ses conversations restent accessibles.</div>
+      <div class="delete-confirm-actions">
+        <button class="ae-cancel" onclick="closeDeleteConfirm()">Annuler</button>
+        <button class="ae-save" style="border-color:var(--er);background:#ff386020;color:var(--er)" id="delete-confirm-ok">Confirmer</button>
       </div>
     </div>
   </div>
@@ -3239,13 +3298,31 @@ async function sendChat() {
 
 // ═══ SUB-AGENTS ═══
 const AGENTS_API = '/api/core/agents';
+const MAX_SLOTS = 5;
 const ALL_SKILLS = [
-  {id: 'system__bash', label: 'Bash'},
-  {id: 'system__python', label: 'Python'},
-  {id: 'system__read_file', label: 'Read File'},
-  {id: 'system__write_file', label: 'Write File'},
-  {id: 'system__web_search', label: 'Web Search'},
-  {id: 'system__ssh', label: 'SSH'},
+  {id:'files__read',           label:'Lire fichier',     group:'Fichiers'},
+  {id:'files__write',          label:'Écrire fichier',   group:'Fichiers'},
+  {id:'files__list',           label:'Lister dossier',   group:'Fichiers'},
+  {id:'files__move',           label:'Déplacer',         group:'Fichiers'},
+  {id:'files__delete',         label:'Supprimer',        group:'Fichiers'},
+  {id:'files__dir_create',     label:'Créer dossier',    group:'Fichiers'},
+  {id:'documents__pdf_to_text',label:'PDF → texte',      group:'Documents'},
+  {id:'documents__csv_parse',  label:'Lire CSV',         group:'Documents'},
+  {id:'web__search',           label:'Recherche web',    group:'Web'},
+  {id:'web__http_get',         label:'HTTP GET',         group:'Web'},
+  {id:'web__http_post',        label:'HTTP POST',        group:'Web'},
+  {id:'web__file_download',    label:'Télécharger URL',  group:'Web'},
+  {id:'exec__run_python',      label:'Python',           group:'Exécution'},
+  {id:'exec__run_bash',        label:'Bash',             group:'Exécution'},
+  {id:'email__send',           label:'Envoyer email',    group:'Email'},
+  {id:'git__status',           label:'Git status',       group:'Git'},
+  {id:'git__commit',           label:'Git commit',       group:'Git'},
+  {id:'git__push',             label:'Git push',         group:'Git'},
+  {id:'system__get_system_info',label:'Info système',    group:'Système'},
+  {id:'system__ssh_execute',   label:'SSH',              group:'Système'},
+  {id:'system__bash',          label:'Bash (legacy)',    group:'Système'},
+  {id:'system__python',        label:'Python (legacy)',  group:'Système'},
+  {id:'system__web_search',    label:'Search (legacy)',  group:'Web'},
 ];
 let agentsCache = [];
 let editingAgentId = null;
@@ -3257,63 +3334,134 @@ async function loadAgentsPanel() {
     agentsCache = d.agents || [];
     renderAgentsGrid();
   } catch (e) {
-    $id('agents-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--er);font-family:var(--fmo);font-size:.75rem">Failed to load agents: ' + e.message + '</div>';
+    $id('agents-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--er);font-family:var(--fmo);font-size:.75rem">Erreur: ' + e.message + '</div>';
   }
+}
+
+function renderSlotIndicator() {
+  const used = agentsCache.length;
+  const pct = Math.min(100, Math.round(used / MAX_SLOTS * 100));
+  const color = pct >= 100 ? 'var(--er)' : pct >= 80 ? '#f59e0b' : 'var(--ok)';
+  $id('slot-indicator').innerHTML = `
+    <div class="slot-bar"><div class="slot-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+    <span class="slot-label">${used}/${MAX_SLOTS} assistants</span>`;
+  const hireBtn = $id('hire-btn');
+  if (hireBtn) hireBtn.onclick = used >= MAX_SLOTS
+    ? () => toast(used + ' assistants actifs. Upgrade sur openjarvis.io pour ajouter des slots.')
+    : () => openAgentEditor(null);
 }
 
 function renderAgentsGrid() {
   const grid = $id('agents-grid');
   grid.innerHTML = '';
+  renderSlotIndicator();
   for (const ag of agentsCache) {
     const card = document.createElement('div');
     card.className = 'agent-card';
     card.style.setProperty('--agent-color', ag.color || '#00ffe0');
-    const skillLabels = (ag.skills || []).map(s => {
+    const skillLabels = (ag.skills || []).slice(0, 5).map(s => {
       const sk = ALL_SKILLS.find(x => x.id === s);
-      return sk ? sk.label : s.replace('system__','');
+      return sk ? sk.label : s.split('__').pop();
     });
+    const isDefault = !ag.description;
+    const descHtml = ag.description
+      ? `<div class="agent-desc-friendly">${ag.description}</div>`
+      : `<div class="agent-desc">${(ag.system_prompt || '').slice(0, 100)}${ag.system_prompt && ag.system_prompt.length > 100 ? '…' : ''}</div>`;
+    const nameHtml = `${ag.name || ag.id}${isDefault ? '<span class="agent-badge-default">⚙ Défaut</span>' : ''}`;
     card.innerHTML = `
       <div class="agent-avatar">${ag.avatar || '\u{1f916}'}</div>
-      <div class="agent-name">${ag.name || ag.id}</div>
-      <div class="agent-desc">${(ag.system_prompt || '').slice(0, 120)}...</div>
-      <div class="agent-skills">${skillLabels.map(s => '<span class="agent-skill">'+s+'</span>').join('')}</div>
+      <div class="agent-name">${nameHtml}</div>
+      ${descHtml}
+      <div class="agent-skills">${skillLabels.map(s => '<span class="agent-skill">'+s+'</span>').join('')}${(ag.skills||[]).length > 5 ? '<span class="agent-skill">+'+((ag.skills||[]).length-5)+'</span>' : ''}</div>
       <div class="agent-footer">
-        <span class="agent-status ${ag.enabled === false ? 'off' : ''}">${ag.enabled === false ? 'Disabled' : 'Active'}</span>
-        ${ag.twins_partner ? '<span style="font-size:.58rem;color:#f59e0b;font-weight:600;padding:2px 6px;border:1px solid #f59e0b44;border-radius:10px">⚑ Twins</span>' : ''}
+        <span class="agent-status ${ag.enabled === false ? 'off' : ''}"></span>
+        ${ag.twins_partner ? '<span style="font-size:.55rem;color:#f59e0b;padding:2px 6px;border:1px solid #f59e0b44;border-radius:10px">⚑ Twins</span>' : ''}
         <div class="agent-actions">
-          <button class="agent-btn" onclick="openAgentEditor('${ag.id}')">Edit</button>
-          <button class="agent-btn del" onclick="deleteAgentUI('${ag.id}','${ag.name}')">Del</button>
+          <button class="agent-btn" title="Modifier" onclick="openAgentEditor('${ag.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="agent-btn del" title="Mettre fin au contrat" onclick="deleteAgentUI('${ag.id}','${ag.name}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
         </div>
       </div>`;
     grid.appendChild(card);
   }
-  // Add "new agent" card
-  const newCard = document.createElement('div');
-  newCard.className = 'agent-card-new';
-  newCard.onclick = () => openAgentEditor(null);
-  newCard.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>New Agent</span>`;
-  grid.appendChild(newCard);
 }
 
 function openAgentEditor(agentId) {
   editingAgentId = agentId;
-  const editor = $id('agent-editor');
-  $id('ae-title').textContent = agentId ? 'Edit Agent' : 'New Agent';
+  $id('ae-title').textContent = agentId ? 'Modifier l\'assistant' : 'Embaucher un assistant';
   const ag = agentId ? agentsCache.find(a => a.id === agentId) : null;
   $id('ae-name').value = ag ? ag.name : '';
-  $id('ae-avatar').value = ag ? ag.avatar : '';
+  $id('ae-avatar').value = ag ? (ag.avatar || '') : '';
   $id('ae-color').value = ag ? (ag.color || '#00ffe0') : '#00ffe0';
-  $id('ae-prompt').value = ag ? ag.system_prompt : '';
+  $id('ae-desc').value = ag ? (ag.description || '') : '';
+  $id('ae-prompt').value = ag ? (ag.system_prompt || '') : '';
   $id('ae-keywords').value = ag ? (ag.keywords || []).join(', ') : '';
   $id('ae-twins').checked = ag ? !!ag.twins_partner : false;
-  // Render skills checkboxes
-  const skillsGrid = $id('ae-skills');
+  // Auto-open geek zone if there's a prompt but no description
+  const geekZone = $id('ae-geek-zone');
+  if (ag && ag.system_prompt && !ag.description) geekZone.classList.add('open');
+  else geekZone.classList.remove('open');
+  // Render skills checkboxes grouped
+  const skillsContainer = $id('ae-skills');
   const agSkills = new Set(ag ? ag.skills : []);
-  skillsGrid.innerHTML = ALL_SKILLS.map(s => {
-    const on = agSkills.has(s.id) ? ' on' : '';
-    return `<button class="ae-skill-check${on}" data-skill="${s.id}" onclick="this.classList.toggle('on')">${s.label}</button>`;
-  }).join('');
-  editor.classList.add('open');
+  const groups = {};
+  ALL_SKILLS.forEach(s => { if (!groups[s.group]) groups[s.group] = []; groups[s.group].push(s); });
+  skillsContainer.innerHTML = Object.entries(groups).map(([grp, skills]) => `
+    <div class="ae-skill-group">
+      <span class="ae-group-label">${grp}</span>
+      <div class="ae-skills-grid">${skills.map(s => {
+        const on = agSkills.has(s.id) ? ' on' : '';
+        return `<button class="ae-skill-check${on}" data-skill="${s.id}" onclick="this.classList.toggle('on')">${s.label}</button>`;
+      }).join('')}</div>
+    </div>`).join('');
+  $id('agent-editor').classList.add('open');
+}
+
+async function generateSystemPrompt() {
+  const name = $id('ae-name').value.trim();
+  const desc = $id('ae-desc').value.trim();
+  if (!name || !desc) { toast('Renseigne le prénom et la description d\'abord', true); return; }
+  const btn = $id('ae-gen-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  try {
+    // Instruction embedded in user message (ClawbotCore injects its own system prompt)
+    const instruction = `Tu dois générer un system prompt pour un assistant IA. Réponds UNIQUEMENT avec le system prompt, sans introduction, sans commentaire, sans guillemets.
+
+CONTRAINTES:
+- Commence exactement par: "Tu es ${name}, "
+- 3 à 5 phrases maximum
+- Ton professionnel et précis
+
+Nom de l'assistant: ${name}
+Description: ${desc}`;
+    const body = {
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 400,
+      stream: false,
+      messages: [{role:'user', content: instruction}]
+    };
+    const r = await fetch('/api/core/v1/chat/completions', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    const generated = (d.choices?.[0]?.message?.content || d.content?.[0]?.text || '').trim();
+    // Extract clean prompt — strip any preamble before "Tu es"
+    const match = generated.match(/(Tu es\s+.+)/s);
+    const clean = match ? match[1].trim() : generated;
+    if (clean) {
+      $id('ae-prompt').value = clean;
+      $id('ae-geek-zone').classList.add('open');
+      toast('Prompt généré ✓');
+    } else {
+      toast('Génération échouée', true);
+    }
+  } catch(e) {
+    toast('Erreur: ' + e.message, true);
+  }
+  btn.disabled = false;
+  btn.textContent = '▶ Générer';
 }
 
 function closeAgentEditor() {
@@ -3323,36 +3471,66 @@ function closeAgentEditor() {
 
 async function saveAgentFromEditor() {
   const name = $id('ae-name').value.trim();
-  if (!name) { toast('Name required', true); return; }
-  const id = editingAgentId || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  if (!name) { toast('Prénom requis', true); return; }
+  const desc = $id('ae-desc').value.trim();
+  if (!desc) { toast('Description requise', true); return; }
+  const id = editingAgentId || name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const skills = Array.from($id('ae-skills').querySelectorAll('.ae-skill-check.on')).map(b => b.dataset.skill);
   const keywords = $id('ae-keywords').value.split(',').map(k => k.trim()).filter(Boolean);
+  // Auto-generate prompt if not already done
+  let systemPrompt = $id('ae-prompt').value.trim();
+  if (!systemPrompt) {
+    const saveBtn = document.querySelector('.ae-save');
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳'; }
+    try {
+      const body = {
+        model: 'claude-haiku-4-5-20251001', max_tokens: 400, stream: false,
+        messages: [{role:'user', content: `Tu dois générer un system prompt pour un assistant IA. Réponds UNIQUEMENT avec le system prompt, sans introduction.\nCommence par: "Tu es ${name}, "\n3-5 phrases. Nom: ${name}\nDescription: ${desc}`}]
+      };
+      const r = await fetch('/api/core/v1/chat/completions', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+      const d = await r.json();
+      const raw = (d.choices?.[0]?.message?.content || d.content?.[0]?.text || '').trim();
+      const m = raw.match(/(Tu es\s+.+)/s);
+      systemPrompt = m ? m[1].trim() : (raw || desc);
+    } catch { systemPrompt = desc; }
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Confirmer'; }
+  }
   const agent = {
     id, name,
+    description: desc,
     avatar: $id('ae-avatar').value || '\u{1f916}',
     color: $id('ae-color').value || '#00ffe0',
-    system_prompt: $id('ae-prompt').value,
+    system_prompt: systemPrompt,
     skills, keywords,
     twins_partner: $id('ae-twins').checked,
     enabled: true,
   };
   try {
-    await fetch(AGENTS_API + '/' + id, {method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(agent)});
+    await fetch(AGENTS_API + '/' + id, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(agent)});
     closeAgentEditor();
-    toast(editingAgentId ? 'Agent updated' : 'Agent created');
+    toast(editingAgentId ? 'Assistant mis à jour' : 'Assistant embauché !');
     loadAgentsPanel();
     agentSelectorDirty = true;
-  } catch (e) { toast('Save failed: ' + e.message, true); }
+  } catch (e) { toast('Erreur: ' + e.message, true); }
+}
+
+function closeDeleteConfirm() {
+  $id('delete-confirm').classList.remove('open');
+  $id('delete-confirm-ok').onclick = null;
 }
 
 async function deleteAgentUI(agentId, agentName) {
-  if (!confirm('Delete agent "' + agentName + '"?')) return;
-  try {
-    await fetch(AGENTS_API + '/' + agentId, {method: 'DELETE'});
-    toast('Agent deleted');
-    loadAgentsPanel();
-    agentSelectorDirty = true;
-  } catch (e) { toast('Delete failed: ' + e.message, true); }
+  $id('delete-confirm-msg').textContent = 'Mettre fin au contrat de ' + agentName + ' ?';
+  $id('delete-confirm').classList.add('open');
+  $id('delete-confirm-ok').onclick = async () => {
+    closeDeleteConfirm();
+    try {
+      await fetch(AGENTS_API + '/' + agentId, {method:'DELETE'});
+      toast('Contrat terminé');
+      loadAgentsPanel();
+      agentSelectorDirty = true;
+    } catch (e) { toast('Erreur: ' + e.message, true); }
+  };
 }
 
 // Agent selector in chat
@@ -3387,7 +3565,7 @@ async function loadAgentSelector() {
   // Auto button
   const autoBtn = document.createElement('button');
   autoBtn.className = 'agent-sel-btn' + (selectedAgents.has('auto') ? ' active' : '');
-  autoBtn.innerHTML = '\u{1f500} Auto';
+  autoBtn.innerHTML = '\u{1f500} Auto-sélection';
   autoBtn.onclick = () => { selectedAgents.clear(); selectedAgents.add('auto'); updateAgentSelectorUI(); };
   sel.appendChild(autoBtn);
   // Agent buttons
