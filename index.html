@@ -1391,6 +1391,7 @@ const _liveStreamContent = {}; // sessionId → latest streamed content (session
 let currentSessionId = null;
 let _abortCtrl = null;       // AbortController for current fetch
 let _pendingQueue = [];      // messages queued while streaming (injected after)
+let _interruptActive = false; // true when abort was triggered by user interrupt (not manual stop)
 
 function isStreaming() { return !!_streamingBySession[currentSessionId]; }
 function setStreaming(v) {
@@ -1475,8 +1476,9 @@ async function sessSave() {
   if (!currentSessionId) return;
   const name = (chatHistory.find(m => m.role === 'user' && !m.content.startsWith('[Contexte') && !m.content.startsWith('[System'))?.content || 'New chat').slice(0, 40);
   const mode = chatModeState?.mode || 'core';
+  const model = chatModelState?.model || 'claude-haiku-4-5-20251001';
   try { await fetch(SESS_API + '/' + currentSessionId, { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ name, mode, messages: chatHistory }) }); } catch {}
+    body: JSON.stringify({ name, mode, model, messages: chatHistory }) }); } catch {}
 }
 async function sessDelete(id, e) {
   e.stopPropagation();
@@ -1560,6 +1562,7 @@ async function sessSwitch(id) {
   });
   const savedMode = sess.mode;
   setChatMode((!savedMode || savedMode === 'agent') ? 'core' : savedMode, { compact: false });
+  if (sess.model) setChatModel(sess.model);
   updateCtxBar();
   await sessRender();
   checkPendingResponse();
@@ -2941,11 +2944,20 @@ async function sendChat() {
   if (!msg && pendingAttachments.length === 0) return;
   const _sendSessionId = currentSessionId; // capture so finally block always resets the right session
 
-  // If running: queue the message to be sent after current task finishes
+  // If running: interrupt current stream and inject message immediately
   if (isStreaming()) {
-    _pendingQueue.push(msg);
     inp.value = ''; inp.style.height = 'auto';
-    toast(`⏳ Message queued — will send after current task`, false);
+    // Show message as a dimmed preview bubble so user sees it landed
+    const userTs = Date.now();
+    const ub = addRow('user'); ub.textContent = msg; addTimestamp(ub, userTs);
+    ub.style.opacity = '0.55'; ub.dataset.interruptPreview = '1';
+    scrollChat();
+    // Put at front of queue so it fires immediately after abort
+    _pendingQueue.unshift(msg);
+    // Mark as user-interrupt so AbortError handler keeps chatHistory intact
+    _interruptActive = true;
+    // Abort the current stream now
+    if (_abortCtrl) { _abortCtrl.abort(); _abortCtrl = null; }
     return;
   }
 
@@ -2964,6 +2976,8 @@ async function sendChat() {
   }
 
   inp.value = ''; inp.style.height = 'auto';
+  // Remove interrupt preview bubble if present (replaced by real bubble below)
+  document.querySelector('[data-interrupt-preview="1"]')?.remove();
   const userTs = Date.now();
   // Date separator if this message is on a different day than the last
   const lastMsgTs = chatHistory.length ? chatHistory[chatHistory.length-1].ts : null;
@@ -3005,7 +3019,7 @@ async function sendChat() {
 
   try {
     let ep, reqBody;
-    if (isAgents) {
+    if (isAgents && !_agentsPaused) {
       ep = '/api/core/v1/chat/agents';
       const selIds = getSelectedAgentIds();
       reqBody = {model: chatModelState.model || S.cfg.model || 'default', messages: chatHistory, stream: true, session_id: currentSessionId};
@@ -3172,14 +3186,22 @@ async function sendChat() {
   } catch (err) {
     hideThinking(bb);
     if (err.name === 'AbortError') {
-      // User stopped — keep what we have so far
-      if (full) {
-        renderBotContent(bb, full + '\n\n*[Arrêté par l\'utilisateur]*');
-        chatHistory.push({role: 'assistant', content: full});
-        sessSave();
+      if (_interruptActive) {
+        // Interrupt by user sending a new message — keep chatHistory intact so context is preserved
+        // The pending message will be sent after, the AI will see the original request + new message
+        if (full) { renderBotContent(bb, full); chatHistory.push({role: 'assistant', content: full}); sessSave(); }
+        else { bb.remove(); } // no text yet — remove empty bubble but DON'T pop user message
+        _interruptActive = false;
       } else {
-        bb.remove(); // no content — remove empty bubble
-        chatHistory.pop();
+        // Manual stop — keep what we have so far
+        if (full) {
+          renderBotContent(bb, full + '\n\n*[Arrêté par l\'utilisateur]*');
+          chatHistory.push({role: 'assistant', content: full});
+          sessSave();
+        } else {
+          bb.remove(); // no content — remove empty bubble
+          chatHistory.pop();
+        }
       }
     } else {
       bb.textContent = '⚠ ' + err.message;
@@ -3336,6 +3358,7 @@ async function deleteAgentUI(agentId, agentName) {
 // Agent selector in chat
 let agentSelectorDirty = true;
 const selectedAgents = new Set(['auto']);
+let _agentsPaused = false;
 
 async function loadAgentSelector() {
   if (!agentSelectorDirty && $id('agent-selector').children.length > 0) return;
@@ -3347,6 +3370,20 @@ async function loadAgentSelector() {
   } catch { return; }
   const sel = $id('agent-selector');
   sel.innerHTML = '';
+  // Pause button
+  const pauseBtn = document.createElement('button');
+  pauseBtn.id = 'agents-pause-btn';
+  pauseBtn.className = 'agent-sel-btn' + (_agentsPaused ? ' active' : '');
+  pauseBtn.style.cssText = _agentsPaused ? 'border-color:#f59e0b;color:#f59e0b' : '';
+  pauseBtn.title = _agentsPaused ? 'Agents désactivés — cliquer pour réactiver' : 'Désactiver les agents temporairement';
+  pauseBtn.innerHTML = _agentsPaused ? '⏸ Agents off' : '⏸ Agents on';
+  pauseBtn.onclick = () => {
+    _agentsPaused = !_agentsPaused;
+    pauseBtn.innerHTML = _agentsPaused ? '⏸ Agents off' : '⏸ Agents on';
+    pauseBtn.style.cssText = _agentsPaused ? 'border-color:#f59e0b;color:#f59e0b' : '';
+    pauseBtn.title = _agentsPaused ? 'Agents désactivés — cliquer pour réactiver' : 'Désactiver les agents temporairement';
+  };
+  sel.appendChild(pauseBtn);
   // Auto button
   const autoBtn = document.createElement('button');
   autoBtn.className = 'agent-sel-btn' + (selectedAgents.has('auto') ? ' active' : '');
