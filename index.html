@@ -63,6 +63,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .sb-hbg:hover span{background:var(--ac)}
 .sb-brand{display:flex;flex-direction:column;gap:1px;overflow:hidden;white-space:nowrap;transition:opacity var(--tr)}
 .sb.col .sb-brand{opacity:0;pointer-events:none}
+.sb-nav{scrollbar-width:none;-ms-overflow-style:none}
+.sb-nav::-webkit-scrollbar{display:none}
 .sb-title{font-size:1.1rem;font-weight:800;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
 .sb-sub{font-family:var(--fmo);font-size:.58rem;color:var(--td);letter-spacing:2px;text-transform:uppercase}
 
@@ -245,6 +247,15 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .step-label{font-family:var(--fmo);font-size:.6rem;color:var(--td);margin-bottom:3px}
 .step-code{font-family:var(--fmo);font-size:.7rem;color:var(--tp);background:var(--bg-i);border-radius:5px;padding:6px 9px;white-space:pre-wrap;word-break:break-all;max-height:160px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br) transparent;line-height:1.5}
 .step-code.error{color:var(--er);background:#1a0808}
+.chat-mic{width:36px;height:36px;background:transparent;border:1px solid var(--br);border-radius:var(--r);color:var(--td);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
+.chat-mic:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-d)}
+.chat-mic svg{width:16px;height:16px}
+.chat-mic.recording{border-color:#ff4040;color:#ff4040;background:rgba(255,64,64,.12);animation:mic-pulse 1.2s ease-in-out infinite}
+.chat-mic.processing{border-color:var(--ac);color:var(--ac);animation:mic-spin 1s linear infinite}
+.chat-mic.playing{border-color:var(--ac);color:var(--ac);background:var(--ac-d);animation:mic-wave 1.5s ease-in-out infinite}
+@keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,64,64,.4)}50%{box-shadow:0 0 0 8px rgba(255,64,64,0)}}
+@keyframes mic-spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes mic-wave{0%,100%{opacity:.7}50%{opacity:1}}
 .chat-snd{width:48px;height:48px;background:var(--ac);border:none;border-radius:var(--r);color:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
 .chat-snd:hover{box-shadow:0 0 20px var(--ac-d);transform:scale(1.05)}
 .chat-snd:disabled{opacity:.4;cursor:not-allowed;transform:none}
@@ -543,6 +554,73 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .ae-cancel{padding:8px 18px;border-radius:var(--r);border:1px solid var(--br);background:transparent;color:var(--ts);font-family:var(--fmo);font-size:.75rem;cursor:pointer;transition:var(--tr)}
 .ae-cancel:hover{background:var(--bg-i)}
 
+/* ── Hire Wizard ─────────────────────────────────────── */
+.hire-wizard{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:250;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.hire-wizard.open{display:flex}
+.wizard-box{background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);width:min(500px,92vw);display:flex;flex-direction:column;animation:mIn .28s ease;overflow:hidden;max-height:90vh}
+.wizard-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0}
+.wizard-title{font-size:1.05rem;font-weight:700;color:var(--tp)}
+.wizard-close-btn{background:none;border:none;color:var(--ts);font-size:1.1rem;cursor:pointer;padding:4px;line-height:1;border-radius:6px;transition:var(--tr)}
+.wizard-close-btn:hover{background:var(--bg-i);color:var(--tp)}
+.wizard-progress{height:3px;background:var(--br);margin:12px 24px 0;border-radius:2px;overflow:hidden}
+.wizard-pbar{height:100%;background:var(--ac);width:0%;transition:width .35s cubic-bezier(.16,1,.3,1)}
+.wizard-body{padding:24px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1}
+.wizard-step{display:none;flex-direction:column;gap:14px}
+.wizard-step.active{display:flex}
+.wizard-question{font-size:.95rem;font-weight:600;color:var(--tp);line-height:1.4}
+.wizard-hint{font-size:.75rem;color:var(--ts);line-height:1.4;margin-top:-6px}
+.wizard-input{background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fm);font-size:.88rem;padding:11px 14px;width:100%;outline:none;transition:border-color var(--tr)}
+.wizard-input:focus{border-color:var(--ac)}
+.wizard-textarea{min-height:88px;resize:vertical;line-height:1.5}
+.wizard-modes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.wizard-mode-card{background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);padding:20px 14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;transition:var(--tr)}
+.wizard-mode-card:hover{border-color:var(--ac);background:var(--ac-d)}
+.wizard-mode-icon{font-size:1.8rem;line-height:1}
+.wizard-mode-title{font-size:.88rem;font-weight:700;color:var(--tp)}
+.wizard-mode-desc{font-size:.68rem;color:var(--ts);line-height:1.4}
+.wizard-preview-card{background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.wizard-preview-avatar{font-size:3rem;line-height:1}
+.wizard-preview-name{font-size:1.15rem;font-weight:700;color:var(--ac)}
+.wizard-preview-summary{font-size:.8rem;color:var(--ts);line-height:1.5}
+.wizard-preview-caps{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:4px}
+.wizard-cap-chip{font-size:.65rem;padding:3px 10px;background:var(--ac-d);border:1px solid var(--ac-m);border-radius:20px;color:var(--ac)}
+.wizard-generating{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 0;text-align:center}
+.wizard-spinner-ring{width:44px;height:44px;border:3px solid var(--br);border-top-color:var(--ac);border-radius:50%;animation:spin .8s linear infinite}
+.wizard-footer{display:flex;gap:10px;justify-content:flex-end;padding:14px 24px 20px;flex-shrink:0}
+.wiz-btn-primary{padding:9px 22px;border-radius:var(--r);border:1px solid var(--ac);background:var(--ac-d);color:var(--ac);font-family:var(--fmo);font-size:.75rem;font-weight:600;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:6px}
+.wiz-btn-primary:hover{background:var(--ac);color:var(--bg)}
+.wiz-btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.wiz-btn-back{padding:9px 16px;border-radius:var(--r);border:1px solid var(--br);background:transparent;color:var(--ts);font-family:var(--fmo);font-size:.75rem;cursor:pointer;transition:var(--tr)}
+.wiz-btn-back:hover{border-color:var(--tp);color:var(--tp)}
+.wizard-opt-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);cursor:pointer}
+.wizard-opt-row label{font-size:.78rem;color:var(--ts);cursor:pointer;flex:1}
+.wizard-opt-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--ac);flex-shrink:0;cursor:pointer}
+/* Guided — behavior chips */
+.wiz-behavior-group{display:flex;flex-direction:column;gap:7px}
+.wiz-behavior-label{font-size:.58rem;color:var(--td);text-transform:uppercase;letter-spacing:1.2px;font-family:var(--fmo)}
+.wiz-chips{display:flex;gap:7px;flex-wrap:wrap}
+.wiz-chip{padding:8px 14px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg-i);color:var(--ts);font-size:.78rem;cursor:pointer;transition:var(--tr);user-select:none}
+.wiz-chip:hover{border-color:var(--ac-m)}
+.wiz-chip.selected{border-color:var(--ac);background:var(--ac-d);color:var(--ac)}
+/* Guided — responsibilities inputs */
+.wiz-resp-row{display:flex;align-items:center;gap:10px}
+.wiz-resp-num{font-family:var(--fmo);font-size:.7rem;color:var(--ac);font-weight:700;flex-shrink:0;width:16px}
+/* Guided — access toggles */
+.wiz-access-list{display:flex;flex-direction:column;gap:7px}
+.wiz-access-item{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);cursor:pointer;transition:var(--tr)}
+.wiz-access-item:hover{border-color:var(--ac-m)}
+.wiz-access-item.on{border-color:var(--ac-m);background:var(--ac-d)}
+.wiz-access-icon{font-size:1.15rem;flex-shrink:0;width:24px;text-align:center}
+.wiz-access-info{flex:1;min-width:0}
+.wiz-access-name{font-size:.82rem;font-weight:600;color:var(--tp);line-height:1.2}
+.wiz-access-desc{font-size:.65rem;color:var(--ts);margin-top:1px}
+.wiz-toggle-pill{font-size:.6rem;font-family:var(--fmo);font-weight:700;padding:3px 9px;border-radius:10px;flex-shrink:0;background:var(--bg);border:1px solid var(--br);color:var(--td);min-width:34px;text-align:center;transition:var(--tr)}
+.wiz-access-item.on .wiz-toggle-pill{background:var(--ac);border-color:var(--ac);color:#000}
+/* Guided — constraint example tags */
+.wiz-example-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.wiz-example-tag{font-size:.64rem;padding:4px 10px;border:1px dashed var(--br);border-radius:20px;color:var(--td);cursor:pointer;transition:var(--tr)}
+.wiz-example-tag:hover{border-color:var(--ac-m);color:var(--ac)}
+
 /* Agent selector in chat */
 .agent-selector{display:none;align-items:center;gap:4px;margin-top:6px;flex-wrap:wrap}
 .agent-selector.visible{display:flex}
@@ -763,6 +841,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             </button>
             <input type="file" id="file-att-inp" style="display:none" onchange="attachFile(this)">
             <textarea class="chat-inp" id="chat-inp" rows="1" placeholder="Just ask it..." onkeydown="chatKey(event)" oninput="autoH(this)"></textarea>
+            <button class="chat-mic" id="chat-mic" onclick="voiceToggle()" title="Voice input (mic)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
             <button class="chat-snd" id="chat-snd" onclick="chatSendOrStop()" title="Send (Enter) · Stop (while running)">
               <svg id="chat-snd-ico-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               <svg id="chat-snd-ico-stop" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
@@ -773,11 +854,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <button class="chat-mode-btn active" id="mode-core" onclick="setChatMode('core')" title="ClawbotCore — outil loop + tools intégrés">ClawBot Core</button>
             <button class="chat-mode-btn" id="mode-agents" onclick="setChatMode('agents')" title="Core-Agent — multi-agents avec personas, orchestrés par ClawbotCore">Core-Agent</button>
             <div class="mode-sep" id="mode-core-sep"></div>
+            <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">KimiCode 2.5</button>
+            <div class="mode-sep"></div>
             <button class="mdl-btn haiku active" id="mdl-haiku" onclick="setChatModel('claude-haiku-4-5-20251001')" title="Haiku 4.5 — $0.25/$1.25 per M tokens · fastest · recommended for most tasks">Haiku</button>
             <button class="mdl-btn" id="mdl-sonnet" onclick="setChatModel('claude-sonnet-4-6')" title="Sonnet 4.6 — $3/$15 per M tokens · balanced">Sonnet</button>
             <button class="mdl-btn opus" id="mdl-opus" onclick="setChatModel('claude-opus-4-6')" title="Opus 4.6 — $15/$75 per M tokens · most powerful · use sparingly">Opus</button>
-            <div class="mode-sep"></div>
-            <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">KimiCode 2.5</button>
             <div class="chat-view-toggle" id="view-toggle-wrap" style="display:none">
               <span>Clean</span>
               <button class="toggle-sw" id="view-toggle" onclick="toggleVerbose()" title="Show full trace / iterations"></button>
@@ -919,7 +1000,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="pnl" id="pnl-agents">
     <div class="agents-header">
       <div class="slot-indicator" id="slot-indicator"></div>
-      <button class="hire-btn" id="hire-btn" onclick="openAgentEditor(null)">
+      <button class="hire-btn" id="hire-btn" onclick="openHireWizard()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Embaucher
       </button>
@@ -983,6 +1064,164 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="delete-confirm-actions">
         <button class="ae-cancel" onclick="closeDeleteConfirm()">Annuler</button>
         <button class="ae-save" style="border-color:var(--er);background:#ff386020;color:var(--er)" id="delete-confirm-ok">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Hire Wizard ── -->
+  <div class="hire-wizard" id="hire-wizard" onclick="if(event.target===this)closeHireWizard()">
+    <div class="wizard-box">
+      <div class="wizard-header">
+        <span class="wizard-title">Embauche d'un assistant</span>
+        <button class="wizard-close-btn" onclick="closeHireWizard()">✕</button>
+      </div>
+      <div class="wizard-progress" id="wiz-progress">
+        <div class="wizard-pbar" id="wiz-pbar"></div>
+      </div>
+      <div class="wizard-body">
+        <!-- Step 0 : Choix de durée -->
+        <div class="wizard-step active" id="wz-mode">
+          <p class="wizard-question">Combien de temps as-tu ?</p>
+          <div class="wizard-modes">
+            <div class="wizard-mode-card" onclick="wizardSelectMode('quick')">
+              <span class="wizard-mode-icon">⚡</span>
+              <span class="wizard-mode-title">5 minutes</span>
+              <span class="wizard-mode-desc">L'IA génère tout automatiquement depuis ta description</span>
+            </div>
+            <div class="wizard-mode-card" onclick="wizardSelectMode('guided')">
+              <span class="wizard-mode-icon">🎯</span>
+              <span class="wizard-mode-title">20 minutes</span>
+              <span class="wizard-mode-desc">Questions guidées pour un profil précis et personnalisé</span>
+            </div>
+          </div>
+        </div>
+        <!-- Step 1 : Description -->
+        <div class="wizard-step" id="wz-desc">
+          <p class="wizard-question">Décris l'assistant que tu veux embaucher.</p>
+          <p class="wizard-hint">Son rôle, ce qu'il fait au quotidien — en quelques phrases naturelles.</p>
+          <textarea class="wizard-input wizard-textarea" id="wz-desc-input"
+            placeholder="Ex: Ma comptable. Elle gère mes devis, ma TVA et mes factures clients. Elle doit pouvoir lire des fichiers PDF et envoyer des emails de récap."
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();wizardDescNext()}"></textarea>
+        </div>
+        <!-- Step 2 (guidé) : 3 missions précises -->
+        <div class="wizard-step" id="wz-responsibilities">
+          <p class="wizard-question">Quelles sont ses 3 missions précises ?</p>
+          <p class="wizard-hint">Décris exactement ce qu'il fera — pas juste son domaine général.</p>
+          <div class="wiz-resp-row"><span class="wiz-resp-num">1</span><input class="wizard-input" id="wz-resp-1" placeholder="Ex: Créer des devis depuis mes templates Word"></div>
+          <div class="wiz-resp-row"><span class="wiz-resp-num">2</span><input class="wizard-input" id="wz-resp-2" placeholder="Ex: Envoyer un récap TVA mensuel par email"></div>
+          <div class="wiz-resp-row"><span class="wiz-resp-num">3</span><input class="wizard-input" id="wz-resp-3" placeholder="Ex: Analyser mes relevés bancaires PDF"></div>
+        </div>
+        <!-- Step 3 (guidé) : Personnalité -->
+        <div class="wizard-step" id="wz-behavior">
+          <p class="wizard-question">Quel type de personnalité ?</p>
+          <p class="wizard-hint">Ces choix influencent sa façon de communiquer et de prendre des décisions.</p>
+          <div class="wiz-behavior-group">
+            <div class="wiz-behavior-label">Ton</div>
+            <div class="wiz-chips" id="wiz-chips-ton">
+              <div class="wiz-chip selected" onclick="wizToggleChip(this,'ton')">Professionnel</div>
+              <div class="wiz-chip" onclick="wizToggleChip(this,'ton')">Décontracté</div>
+              <div class="wiz-chip" onclick="wizToggleChip(this,'ton')">Direct</div>
+            </div>
+          </div>
+          <div class="wiz-behavior-group">
+            <div class="wiz-behavior-label">Autonomie</div>
+            <div class="wiz-chips" id="wiz-chips-autonomy">
+              <div class="wiz-chip selected" onclick="wizToggleChip(this,'autonomy')">Confirme avant d'agir</div>
+              <div class="wiz-chip" onclick="wizToggleChip(this,'autonomy')">Autonome</div>
+            </div>
+          </div>
+          <div class="wiz-behavior-group">
+            <div class="wiz-behavior-label">Style de réponse</div>
+            <div class="wiz-chips" id="wiz-chips-style">
+              <div class="wiz-chip selected" onclick="wizToggleChip(this,'style')">Concis</div>
+              <div class="wiz-chip" onclick="wizToggleChip(this,'style')">Détaillé</div>
+            </div>
+          </div>
+        </div>
+        <!-- Step 4 (guidé) : Accès aux modules -->
+        <div class="wizard-step" id="wz-access">
+          <p class="wizard-question">À quoi a-t-il accès ?</p>
+          <p class="wizard-hint">Active uniquement ce dont il a besoin. Tu pourras modifier ça depuis sa fiche.</p>
+          <div class="wiz-access-list">
+            <div class="wiz-access-item on" onclick="wizToggleAccess(this)" data-module="files">
+              <div class="wiz-access-icon">📁</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Fichiers</div><div class="wiz-access-desc">Lire, écrire, déplacer des fichiers</div></div>
+              <div class="wiz-toggle-pill">ON</div>
+            </div>
+            <div class="wiz-access-item" onclick="wizToggleAccess(this)" data-module="documents">
+              <div class="wiz-access-icon">📄</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Documents</div><div class="wiz-access-desc">Lire des PDFs et fichiers CSV</div></div>
+              <div class="wiz-toggle-pill">OFF</div>
+            </div>
+            <div class="wiz-access-item" onclick="wizToggleAccess(this)" data-module="web">
+              <div class="wiz-access-icon">🌐</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Web</div><div class="wiz-access-desc">Rechercher sur internet, faire des requêtes HTTP</div></div>
+              <div class="wiz-toggle-pill">OFF</div>
+            </div>
+            <div class="wiz-access-item" onclick="wizToggleAccess(this)" data-module="email">
+              <div class="wiz-access-icon">📧</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Email</div><div class="wiz-access-desc">Envoyer des emails (config SMTP requise)</div></div>
+              <div class="wiz-toggle-pill">OFF</div>
+            </div>
+            <div class="wiz-access-item" onclick="wizToggleAccess(this)" data-module="exec">
+              <div class="wiz-access-icon">⚙️</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Exécution</div><div class="wiz-access-desc">Lancer des scripts Python et Bash</div></div>
+              <div class="wiz-toggle-pill">OFF</div>
+            </div>
+            <div class="wiz-access-item" onclick="wizToggleAccess(this)" data-module="git">
+              <div class="wiz-access-icon">🔀</div>
+              <div class="wiz-access-info"><div class="wiz-access-name">Git</div><div class="wiz-access-desc">Gérer les dépôts git (commit, push, pull)</div></div>
+              <div class="wiz-toggle-pill">OFF</div>
+            </div>
+          </div>
+        </div>
+        <!-- Step 5 (guidé) : Contraintes -->
+        <div class="wizard-step" id="wz-constraints">
+          <p class="wizard-question">Y a-t-il des choses qu'il ne doit jamais faire ?</p>
+          <p class="wizard-hint">Optionnel — laisse vide si tu n'as pas de restriction particulière.</p>
+          <textarea class="wizard-input wizard-textarea" id="wz-constraints-input"
+            placeholder="Ex: Ne jamais envoyer d'email sans me le montrer d'abord. Ne jamais supprimer de fichier."
+            style="min-height:72px"></textarea>
+          <div>
+            <div style="font-size:.62rem;color:var(--td);margin-bottom:6px">Exemples rapides :</div>
+            <div class="wiz-example-tags">
+              <div class="wiz-example-tag" onclick="wizAddConstraint('Ne jamais supprimer de fichiers')">🗑 Pas de suppression</div>
+              <div class="wiz-example-tag" onclick="wizAddConstraint('Toujours montrer le résultat avant envoi')">👁 Confirmer avant envoi</div>
+              <div class="wiz-example-tag" onclick="wizAddConstraint('Ne jamais partager de données sensibles')">🔒 Pas de données sensibles</div>
+              <div class="wiz-example-tag" onclick="wizAddConstraint('Demander confirmation avant toute action irréversible')">⚠️ Confirmer irréversible</div>
+            </div>
+          </div>
+        </div>
+        <!-- Step 2 : Prénom -->
+        <div class="wizard-step" id="wz-name">
+          <p class="wizard-question">Comment veux-tu l'appeler ?</p>
+          <input class="wizard-input" id="wz-name-input" type="text" placeholder="Sophie, Max, Alex…" maxlength="32"
+            onkeydown="if(event.key==='Enter')wizardGenerate()">
+          <div class="wizard-opt-row" onclick="document.getElementById('wz-twins-input').click()">
+            <input type="checkbox" id="wz-twins-input">
+            <label for="wz-twins-input">Vérification qualité <span style="color:#f59e0b;font-size:.68rem">+tokens</span> — un relecteur IA vérifie chaque réponse avant envoi</label>
+          </div>
+        </div>
+        <!-- Step 3 : Génération -->
+        <div class="wizard-step" id="wz-generating">
+          <div class="wizard-generating">
+            <div class="wizard-spinner-ring"></div>
+            <p style="color:var(--ts);font-size:.82rem">Génération de l'assistant en cours…</p>
+          </div>
+        </div>
+        <!-- Step 4 : Preview -->
+        <div class="wizard-step" id="wz-preview">
+          <div class="wizard-preview-card">
+            <div class="wizard-preview-avatar" id="wz-preview-avatar">🤖</div>
+            <div class="wizard-preview-name" id="wz-preview-name"></div>
+            <div class="wizard-preview-summary" id="wz-preview-summary"></div>
+            <div class="wizard-preview-caps" id="wz-preview-caps"></div>
+          </div>
+          <p style="font-size:.7rem;color:var(--td);text-align:center">Tu pourras modifier les détails (avatar, capacités) depuis la fiche assistant.</p>
+        </div>
+      </div>
+      <div class="wizard-footer" id="wizard-footer">
+        <!-- Mis à jour dynamiquement par JS -->
       </div>
     </div>
   </div>
@@ -1172,15 +1411,44 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
       <div class="card">
         <div class="sec-t">Search Engine</div>
         <div class="cfg-form">
-          <div class="fg"><label class="fl" for="cfg-se">Web Search Provider</label>
+          <div class="fg"><label class="fl">Search Mode <span style="font-size:.55rem;color:var(--td)">Qui fait la recherche en premier</span></label>
+            <div style="display:flex;gap:0;border:1px solid var(--br);border-radius:6px;overflow:hidden;width:fit-content">
+              <button id="sm-pi"  onclick="setSearchMode('pi')"  style="padding:6px 14px;font-size:.72rem;border:none;cursor:pointer;transition:all .2s">🖥 Pi Only</button>
+              <button id="sm-auto" onclick="setSearchMode('auto')" style="padding:6px 14px;font-size:.72rem;border:none;border-left:1px solid var(--br);border-right:1px solid var(--br);cursor:pointer;transition:all .2s">⚡ Auto</button>
+              <button id="sm-llm" onclick="setSearchMode('llm')"  style="padding:6px 14px;font-size:.72rem;border:none;cursor:pointer;transition:all .2s">🤖 LLM First</button>
+            </div>
+            <div style="font-size:.65rem;color:var(--td);margin-top:4px" id="sm-desc"></div>
+          </div>
+          <div class="fg"><label class="fl" for="cfg-se">Moteur de scraping (mode Pi)</label>
             <select class="fs" id="cfg-se">
-              <option value="auto">Auto (Bing → DuckDuckGo fallback)</option>
-              <option value="bing">Bing only</option>
-              <option value="duckduckgo">DuckDuckGo only</option>
+              <option value="auto">Auto (sélection par région + fiabilité)</option>
+              <option value="bing">Bing (international)</option>
+              <option value="bing_cn">Bing China (cn.bing.com)</option>
+              <option value="duckduckgo">DuckDuckGo</option>
+              <option value="baidu">Baidu (百度)</option>
+              <option value="sogou">Sogou (搜狗)</option>
             </select>
           </div>
-          <div class="info-box">Bing is recommended if DuckDuckGo is blocked on your network.</div>
-          <button class="btn-save" onclick="saveSearchEngine()">Save</button>
+          <div class="info-box" id="cfg-se-info">Use <strong>Bing China</strong> or <strong>Baidu</strong> if you are in China. DuckDuckGo is blocked in China.</div>
+          <div class="fg" style="margin-top:4px">
+            <label class="fl">Brave Search API <span style="font-size:.55rem;color:var(--td)">optionnel — vraie API JSON, zéro scraping, prioritaire si configurée</span></label>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="fi" type="password" id="cfg-brave-key" placeholder="BSA...votre clé API Brave" style="flex:1">
+              <a href="https://brave.com/search/api/" target="_blank" style="background:rgba(251,146,60,.15);border:1px solid #fb923c;color:#fb923c;border-radius:6px;padding:5px 10px;font-size:.7rem;text-decoration:none;white-space:nowrap">🔑 Obtenir une clé</a>
+            </div>
+          </div>
+          <div class="fg" style="margin-top:4px">
+            <label class="fl" for="cfg-scan-model">Modèle IA pour la réparation</label>
+            <select class="fs" id="cfg-scan-model">
+              <option value="">Chargement...</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="btn-save" onclick="saveSearchEngine()">Save</button>
+            <button class="btn-save" id="btn-detect-region" onclick="detectRegion()" style="background:transparent;border:1px solid var(--br);color:var(--ts)">⊕ Détecter ma position</button>
+            <button class="btn-save" id="btn-scan-engines" onclick="scanSearchEngines()" style="background:transparent;border:1px solid #f59e0b;color:#f59e0b">⟳ Scan & Réparer</button>
+          </div>
+          <div id="se-scan-results" style="display:none;margin-top:12px"></div>
         </div>
       </div>
 
@@ -1449,6 +1717,7 @@ let chatHistory = [];
 const _streamingBySession = {};
 const _liveStreamContent = {}; // sessionId → latest streamed content (session-switch recovery)
 let currentSessionId = null;
+let _lastRoutedAgentId = null; // sticky agent: last agent that responded in auto-route mode
 let _abortCtrl = null;       // AbortController for current fetch
 let _pendingQueue = [];      // messages queued while streaming (injected after)
 let _interruptActive = false; // true when abort was triggered by user interrupt (not manual stop)
@@ -1622,7 +1891,7 @@ async function sessSwitch(id) {
   });
   const savedMode = sess.mode;
   setChatMode((!savedMode || savedMode === 'agent') ? 'core' : savedMode, { compact: false });
-  if (sess.model) setChatModel(sess.model);
+  if (sess.model) setChatModel(sess.model, {persist: false});
   updateCtxBar();
   await sessRender();
   checkPendingResponse();
@@ -1761,6 +2030,8 @@ async function sessRender() {
 async function sessInit() {
   let sessions = [];
   try { const r = await fetch(SESS_API); if (r.ok) { const d = await r.json(); sessions = d.sessions || []; } } catch {}
+  // Load default model from server config (persisted across sessions)
+  try { const d = await fetch('/api/core/prompts').then(r => r.json()); if (d.chat_model) setChatModel(d.chat_model, {persist: false}); } catch {}
   const urlSession = new URLSearchParams(window.location.search).get('session');
   if (urlSession && sessions.find(s => s.id === urlSession)) {
     await sessSwitch(urlSession);
@@ -2753,7 +3024,7 @@ const CHAT_MODELS = {
 };
 const chatModelState = { model: 'claude-haiku-4-5-20251001' };
 
-function setChatModel(modelId) {
+function setChatModel(modelId, {persist = true} = {}) {
   chatModelState.model = modelId;
   Object.entries(CHAT_MODELS).forEach(([id, key]) => {
     const btn = $id('mdl-' + key);
@@ -2765,6 +3036,13 @@ function setChatModel(modelId) {
   // Update status bar label
   const key = CHAT_MODELS[modelId] || modelId;
   $('chat-mb').textContent = (chatModeState.mode === 'agent' ? 'picoclaw agent' : 'clawbot-core') + ' · ' + key;
+  if (persist) {
+    sessSave();
+    fetch('/api/core/prompts').then(r => r.json()).then(d => {
+      d.chat_model = modelId;
+      return fetch('/api/core/prompts', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(d)});
+    }).catch(() => {});
+  }
 }
 
 function updateCtxBar() {
@@ -2816,6 +3094,160 @@ function renderAgentSteps(container, steps) {
   wrap.appendChild(hdr); wrap.appendChild(body);
   // Insert steps panel before the bot bubble
   container.parentNode.insertBefore(wrap, container.parentNode.querySelector('.chat-bub:last-child') || container);
+}
+
+// ─── Voice input ─────────────────────────────────────────────────────────────
+let _voiceState = 'idle';   // idle | recording | processing | playing
+let _voiceRecorder = null;
+let _voiceChunks = [];
+let _voiceAudio = null;
+let _voiceVadTimer = null;
+let _voiceAnalyser = null;
+let _voiceStream = null;
+
+function _voiceSetState(state) {
+  _voiceState = state;
+  const btn = $id('chat-mic');
+  if (!btn) return;
+  btn.classList.remove('recording', 'processing', 'playing');
+  if (state !== 'idle') btn.classList.add(state);
+  // Update SVG: mic → stop (recording), spinner (processing), wave (playing)
+  const title = {idle:'Voice input (mic)', recording:'Click to stop recording', processing:'Processing…', playing:'Click to stop playback'};
+  btn.title = title[state] || 'Voice input';
+}
+
+function voiceToggle() {
+  if (_voiceState === 'idle') { _voiceStartRecording(); }
+  else if (_voiceState === 'recording') { _voiceStopRecording(); }
+  else if (_voiceState === 'playing') { _voiceStopPlayback(); }
+  // processing: ignore clicks
+}
+
+async function _voiceStartRecording() {
+  try {
+    _voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch(e) {
+    toast('Microphone access denied: ' + e.message, true);
+    return;
+  }
+
+  _voiceChunks = [];
+  const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+    ? 'audio/webm;codecs=opus' : 'audio/webm';
+  _voiceRecorder = new MediaRecorder(_voiceStream, { mimeType });
+  _voiceRecorder.ondataavailable = e => { if (e.data.size > 0) _voiceChunks.push(e.data); };
+  _voiceRecorder.onstop = _voiceOnRecordingStop;
+  _voiceRecorder.start(100); // collect chunks every 100ms
+  _voiceSetState('recording');
+
+  // VAD: auto-stop after 1.5s silence
+  const ctx = new AudioContext();
+  _voiceAnalyser = ctx.createAnalyser();
+  _voiceAnalyser.fftSize = 256;
+  const src = ctx.createMediaStreamSource(_voiceStream);
+  src.connect(_voiceAnalyser);
+  const buf = new Uint8Array(_voiceAnalyser.frequencyBinCount);
+  let silenceStart = null;
+
+  function checkVad() {
+    if (_voiceState !== 'recording') return;
+    _voiceAnalyser.getByteFrequencyData(buf);
+    const avg = buf.reduce((s, v) => s + v, 0) / buf.length;
+    if (avg < 15) {
+      if (!silenceStart) silenceStart = Date.now();
+      else if (Date.now() - silenceStart > 1500) { _voiceStopRecording(); return; }
+    } else {
+      silenceStart = null;
+    }
+    _voiceVadTimer = requestAnimationFrame(checkVad);
+  }
+  _voiceVadTimer = requestAnimationFrame(checkVad);
+}
+
+function _voiceStopRecording() {
+  if (_voiceVadTimer) { cancelAnimationFrame(_voiceVadTimer); _voiceVadTimer = null; }
+  if (_voiceRecorder && _voiceRecorder.state !== 'inactive') _voiceRecorder.stop();
+  if (_voiceStream) { _voiceStream.getTracks().forEach(t => t.stop()); _voiceStream = null; }
+}
+
+async function _voiceOnRecordingStop() {
+  if (_voiceChunks.length === 0) { _voiceSetState('idle'); return; }
+  _voiceSetState('processing');
+
+  const blob = new Blob(_voiceChunks, { type: _voiceRecorder.mimeType || 'audio/webm' });
+  _voiceChunks = [];
+
+  // Determine cloud URL
+  const cloudBase = (S.cfg.provider === 'clawbot' || (S.cfg.apikey || '').startsWith('clb-'))
+    ? 'https://clawbot-api.yumi-lab.com'
+    : 'https://clawbot-api.yumi-lab.com'; // always cloud for voice
+
+  const form = new FormData();
+  form.append('audio', blob, 'recording.webm');
+  form.append('session_id', currentSessionId || '');
+  form.append('language', 'fr');
+
+  // JWT token required for voice endpoint
+  const token = S.cfg.jwt || S.cfg.apikey || '';
+
+  try {
+    const resp = await fetch(cloudBase + '/v1/voice', {
+      method: 'POST',
+      headers: token ? { 'Authorization': 'Bearer ' + token } : {},
+      body: form,
+      signal: AbortSignal.timeout(90000),
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      throw new Error('HTTP ' + resp.status + ': ' + errText.slice(0, 200));
+    }
+
+    const transcript = resp.headers.get('X-Transcript') || '';
+    const responseText = resp.headers.get('X-Response-Text') || '';
+    const audioBlob = await resp.blob();
+
+    // Display transcript as user message
+    if (transcript) {
+      const userTs = Date.now();
+      const ub = addRow('user');
+      ub.textContent = transcript;
+      addTimestamp(ub, userTs);
+      chatHistory.push({ role: 'user', content: transcript, ts: userTs });
+    }
+
+    // Display response as assistant message
+    if (responseText) {
+      const botTs = Date.now();
+      const bb = addRow('bot');
+      renderBotContent(bb, responseText);
+      addTimestamp(bb, botTs);
+      chatHistory.push({ role: 'assistant', content: responseText, ts: botTs });
+      sessSave();
+    }
+
+    scrollChat();
+
+    // Play audio response
+    if (audioBlob.size > 0) {
+      _voiceSetState('playing');
+      const url = URL.createObjectURL(audioBlob);
+      _voiceAudio = new Audio(url);
+      _voiceAudio.onended = () => { URL.revokeObjectURL(url); _voiceSetState('idle'); };
+      _voiceAudio.onerror = () => { URL.revokeObjectURL(url); _voiceSetState('idle'); };
+      await _voiceAudio.play();
+    } else {
+      _voiceSetState('idle');
+    }
+  } catch(e) {
+    _voiceSetState('idle');
+    toast('Voice error: ' + e.message, true);
+  }
+}
+
+function _voiceStopPlayback() {
+  if (_voiceAudio) { _voiceAudio.pause(); _voiceAudio = null; }
+  _voiceSetState('idle');
 }
 
 // ─── File attachment ──────────────────────────────────────────────────────────
@@ -3038,6 +3470,10 @@ async function sendChat() {
   inp.value = ''; inp.style.height = 'auto';
   // Remove interrupt preview bubble if present (replaced by real bubble below)
   document.querySelector('[data-interrupt-preview="1"]')?.remove();
+  // Auto-compact if context too large before sending (~25k tokens = 100k chars)
+  // 80% of Kimi 32k window (most restrictive model) — compact late to preserve context quality
+  const _ctxChars = chatHistory.reduce((s, m) => s + (m.content || '').length, 0);
+  if (_ctxChars > 100000) await manualCompact();
   const userTs = Date.now();
   // Date separator if this message is on a different day than the last
   const lastMsgTs = chatHistory.length ? chatHistory[chatHistory.length-1].ts : null;
@@ -3084,7 +3520,7 @@ async function sendChat() {
       const selIds = getSelectedAgentIds();
       reqBody = {model: chatModelState.model || S.cfg.model || 'default', messages: chatHistory, stream: true, session_id: currentSessionId};
       if (selIds.length > 0 && selIds[0] !== 'auto') { reqBody.agent_ids = selIds; reqBody.auto_route = false; }
-      else { reqBody.auto_route = true; }
+      else { reqBody.auto_route = true; if (_lastRoutedAgentId) reqBody.last_agent_id = _lastRoutedAgentId; }
     } else if (isAgent) {
       ep = '/api/core/v1/picoclaw-agent';
       reqBody = {model: chatModelState.model || S.cfg.model || 'default', messages: chatHistory, stream: true, session_id: currentSessionId};
@@ -3132,6 +3568,7 @@ async function sendChat() {
             agentsMeta = parsed.agents || [];
             bb.textContent = '';
             for (const ag of agentsMeta) {
+              _lastRoutedAgentId = ag.id; // sticky: remember last routed agent
               const hdr = document.createElement('div');
               hdr.className = 'agent-resp-header';
               hdr.innerHTML = `<span class="agent-resp-avatar">${ag.avatar||'\u{1f916}'}</span><span class="agent-resp-name" style="color:${ag.color||'var(--ac)'}">${ag.name||ag.id}</span>`;
@@ -3301,33 +3738,51 @@ async function sendChat() {
 const AGENTS_API = '/api/core/agents';
 const MAX_SLOTS = 5;
 const ALL_SKILLS = [
-  {id:'files__read',           label:'Lire fichier',     group:'Fichiers'},
-  {id:'files__write',          label:'Écrire fichier',   group:'Fichiers'},
-  {id:'files__list',           label:'Lister dossier',   group:'Fichiers'},
-  {id:'files__move',           label:'Déplacer',         group:'Fichiers'},
-  {id:'files__delete',         label:'Supprimer',        group:'Fichiers'},
-  {id:'files__dir_create',     label:'Créer dossier',    group:'Fichiers'},
-  {id:'documents__pdf_to_text',label:'PDF → texte',      group:'Documents'},
-  {id:'documents__csv_parse',  label:'Lire CSV',         group:'Documents'},
-  {id:'web__search',           label:'Recherche web',    group:'Web'},
-  {id:'web__http_get',         label:'HTTP GET',         group:'Web'},
-  {id:'web__http_post',        label:'HTTP POST',        group:'Web'},
-  {id:'web__file_download',    label:'Télécharger URL',  group:'Web'},
-  {id:'exec__run_python',      label:'Python',           group:'Exécution'},
-  {id:'exec__run_bash',        label:'Bash',             group:'Exécution'},
-  {id:'email__send',           label:'Envoyer email',    group:'Email'},
-  {id:'git__status',           label:'Git status',       group:'Git'},
-  {id:'git__commit',           label:'Git commit',       group:'Git'},
-  {id:'git__push',             label:'Git push',         group:'Git'},
-  {id:'system__get_system_info',label:'Info système',    group:'Système'},
-  {id:'system__ssh_execute',   label:'SSH',              group:'Système'},
-  {id:'system__handoff',       label:'Handoff agents',  group:'Système'},
-  {id:'system__bash',          label:'Bash (legacy)',    group:'Système'},
-  {id:'system__python',        label:'Python (legacy)',  group:'Système'},
-  {id:'system__read_file',     label:'Read (legacy)',    group:'Système'},
-  {id:'system__write_file',    label:'Write (legacy)',   group:'Système'},
-  {id:'system__ssh',           label:'SSH (legacy)',     group:'Système'},
-  {id:'system__web_search',    label:'Search (legacy)',  group:'Web'},
+  // Fichiers
+  {id:'files__read',            label:'Lire fichier',       group:'Fichiers'},
+  {id:'files__write',           label:'Écrire fichier',     group:'Fichiers'},
+  {id:'files__list',            label:'Lister dossier',     group:'Fichiers'},
+  {id:'files__move',            label:'Déplacer',           group:'Fichiers'},
+  {id:'files__delete',          label:'Supprimer fichier',  group:'Fichiers'},
+  {id:'files__dir_create',      label:'Créer dossier',      group:'Fichiers'},
+  {id:'files__mkdir',           label:'Créer dossier (alias)',group:'Fichiers'},
+  // Documents
+  {id:'documents__pdf_to_text', label:'PDF → texte',        group:'Documents'},
+  {id:'documents__csv_parse',   label:'Lire CSV',           group:'Documents'},
+  {id:'documents__csv_write',   label:'Écrire CSV',         group:'Documents'},
+  // Web
+  {id:'web__search',            label:'Recherche web',      group:'Web'},
+  {id:'web__http_get',          label:'HTTP GET',           group:'Web'},
+  {id:'web__http_post',         label:'HTTP POST',          group:'Web'},
+  {id:'web__file_download',     label:'Télécharger URL',    group:'Web'},
+  // Exécution
+  {id:'exec__run_python',       label:'Python',             group:'Exécution'},
+  {id:'exec__run_bash',         label:'Bash',               group:'Exécution'},
+  // Email
+  {id:'email__send',            label:'Envoyer email',      group:'Email'},
+  // Git
+  {id:'git__status',            label:'Git status',         group:'Git'},
+  {id:'git__commit',            label:'Git commit',         group:'Git'},
+  {id:'git__push',              label:'Git push',           group:'Git'},
+  {id:'git__pull',              label:'Git pull',           group:'Git'},
+  {id:'git__log',               label:'Git log',            group:'Git'},
+  // Système
+  {id:'system__get_system_info',label:'Info système',       group:'Système'},
+  {id:'system__ssh_execute',    label:'SSH',                group:'Système'},
+  {id:'system__disk',           label:'Espace disque',      group:'Système'},
+  // Agents & Planification
+  {id:'agents__delegate',       label:'Déléguer à un agent',group:'Agents'},
+  {id:'scheduler__create',      label:'Planifier une tâche',group:'Planification'},
+  {id:'scheduler__list',        label:'Lister les tâches',  group:'Planification'},
+  {id:'scheduler__cancel',      label:'Annuler une tâche',  group:'Planification'},
+  // Legacy (rétrocompat)
+  {id:'system__handoff',        label:'Handoff (legacy)',   group:'Système'},
+  {id:'system__bash',           label:'Bash (legacy)',      group:'Système'},
+  {id:'system__python',         label:'Python (legacy)',    group:'Système'},
+  {id:'system__read_file',      label:'Read (legacy)',      group:'Système'},
+  {id:'system__write_file',     label:'Write (legacy)',     group:'Système'},
+  {id:'system__ssh',            label:'SSH (legacy)',       group:'Système'},
+  {id:'system__web_search',     label:'Search (legacy)',    group:'Web'},
 ];
 let agentsCache = [];
 let editingAgentId = null;
@@ -3353,7 +3808,7 @@ function renderSlotIndicator() {
   const hireBtn = $id('hire-btn');
   if (hireBtn) hireBtn.onclick = used >= MAX_SLOTS
     ? () => toast(used + ' assistants actifs. Upgrade sur openjarvis.io pour ajouter des slots.')
-    : () => openAgentEditor(null);
+    : () => openHireWizard();
 }
 
 function renderAgentsGrid() {
@@ -3387,6 +3842,236 @@ function renderAgentsGrid() {
         </div>
       </div>`;
     grid.appendChild(card);
+  }
+}
+
+// ── Hire Wizard ─────────────────────────────────────────────────────────────
+let _wizMode = null, _wizData = {};
+
+function openHireWizard() {
+  if (agentsCache.length >= MAX_SLOTS) {
+    toast(agentsCache.length + ' assistants actifs. Upgrade sur openjarvis.io pour ajouter des slots.');
+    return;
+  }
+  _wizData = {}; _wizMode = null;
+  _wizShowStep('wz-mode');
+  _wizSetProgress(0, 1);
+  $id('hire-wizard').classList.add('open');
+  $id('wizard-footer').innerHTML = '';
+}
+function closeHireWizard() { $id('hire-wizard').classList.remove('open'); }
+
+function _wizShowStep(id) {
+  document.querySelectorAll('#hire-wizard .wizard-step').forEach(s => s.classList.remove('active'));
+  const s = $id(id); if (s) s.classList.add('active');
+}
+function _wizSetProgress(n, total) {
+  const pct = total ? Math.round(n / total * 100) : 0;
+  const bar = $id('wiz-pbar');
+  if (bar) bar.style.width = pct + '%';
+}
+function _wizFooter(html) { $id('wizard-footer').innerHTML = html; }
+
+function wizardSelectMode(mode) {
+  _wizMode = mode;
+  const tot = mode === 'guided' ? 8 : 4;
+  _wizShowStep('wz-desc');
+  _wizSetProgress(1, tot);
+  _wizFooter(`<button class="wiz-btn-back" onclick="_wizShowStep('wz-mode');_wizSetProgress(0,1);_wizFooter('')">← Retour</button>
+    <button class="wiz-btn-primary" onclick="wizardDescNext()">Suivant →</button>`);
+  setTimeout(() => $id('wz-desc-input')?.focus(), 60);
+}
+
+function wizardDescNext() {
+  const desc = $id('wz-desc-input').value.trim();
+  if (!desc) { toast('Décris d\'abord le rôle de ton assistant', true); return; }
+  _wizData.description = desc;
+  if (_wizMode === 'guided') {
+    _wizShowStep('wz-responsibilities');
+    _wizSetProgress(2, 8);
+    _wizFooter(`<button class="wiz-btn-back" onclick="_wizShowStep('wz-desc');_wizSetProgress(1,8)">← Retour</button>
+      <button class="wiz-btn-primary" onclick="wizardRespNext()">Suivant →</button>`);
+    setTimeout(() => $id('wz-resp-1')?.focus(), 60);
+  } else {
+    _wizGotoName();
+  }
+}
+
+function wizardRespNext() {
+  const r1 = ($id('wz-resp-1').value || '').trim();
+  const r2 = ($id('wz-resp-2').value || '').trim();
+  const r3 = ($id('wz-resp-3').value || '').trim();
+  if (!r1) { toast('Décris au moins la première mission', true); return; }
+  _wizData.responsibilities = [r1, r2, r3].filter(Boolean);
+  _wizShowStep('wz-behavior');
+  _wizSetProgress(3, 8);
+  _wizFooter(`<button class="wiz-btn-back" onclick="_wizShowStep('wz-responsibilities');_wizSetProgress(2,8)">← Retour</button>
+    <button class="wiz-btn-primary" onclick="wizardBehaviorNext()">Suivant →</button>`);
+}
+
+function wizToggleChip(el, group) {
+  el.closest('.wiz-chips').querySelectorAll('.wiz-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function wizardBehaviorNext() {
+  const getChip = id => ($id('wiz-chips-' + id)?.querySelector('.wiz-chip.selected')?.textContent || '').trim();
+  _wizData.behavior = { ton: getChip('ton'), autonomy: getChip('autonomy'), style: getChip('style') };
+  _wizShowStep('wz-access');
+  _wizSetProgress(4, 8);
+  _wizFooter(`<button class="wiz-btn-back" onclick="_wizShowStep('wz-behavior');_wizSetProgress(3,8)">← Retour</button>
+    <button class="wiz-btn-primary" onclick="wizardAccessNext()">Suivant →</button>`);
+}
+
+function wizToggleAccess(el) {
+  el.classList.toggle('on');
+  el.querySelector('.wiz-toggle-pill').textContent = el.classList.contains('on') ? 'ON' : 'OFF';
+}
+
+function wizardAccessNext() {
+  _wizData.enabledModules = Array.from(document.querySelectorAll('#wz-access .wiz-access-item.on')).map(el => el.dataset.module);
+  _wizShowStep('wz-constraints');
+  _wizSetProgress(5, 8);
+  _wizFooter(`<button class="wiz-btn-back" onclick="_wizShowStep('wz-access');_wizSetProgress(4,8)">← Retour</button>
+    <button class="wiz-btn-primary" onclick="wizardConstraintsNext()">Suivant →</button>`);
+  setTimeout(() => $id('wz-constraints-input')?.focus(), 60);
+}
+
+function wizAddConstraint(text) {
+  const ta = $id('wz-constraints-input');
+  ta.value = ta.value ? ta.value.trimEnd() + '\n' + text : text;
+}
+
+function wizardConstraintsNext() {
+  _wizData.constraints = ($id('wz-constraints-input').value || '').trim();
+  _wizGotoName();
+}
+
+function _wizGotoName() {
+  const isGuided = _wizMode === 'guided';
+  const tot = isGuided ? 8 : 4;
+  const step = isGuided ? 6 : 2;
+  _wizShowStep('wz-name');
+  _wizSetProgress(step, tot);
+  const backFn = isGuided
+    ? `_wizShowStep('wz-constraints');_wizSetProgress(5,8)`
+    : `_wizShowStep('wz-desc');_wizSetProgress(1,4)`;
+  _wizFooter(`<button class="wiz-btn-back" onclick="${backFn}">← Retour</button>
+    <button class="wiz-btn-primary" onclick="wizardGenerate()">✦ Générer</button>`);
+  setTimeout(() => $id('wz-name-input')?.focus(), 60);
+}
+
+async function wizardGenerate() {
+  const name = $id('wz-name-input').value.trim();
+  if (!name) { toast('Donne un prénom à ton assistant', true); return; }
+  _wizData.name = name;
+  _wizData.twinsPartner = $id('wz-twins-input').checked;
+  const isGuided = _wizMode === 'guided';
+  _wizShowStep('wz-generating');
+  _wizSetProgress(isGuided ? 7 : 3, isGuided ? 8 : 4);
+  _wizFooter('');
+  try {
+    // Filter available tools based on module access (guided mode)
+    let availableSkills = ALL_SKILLS.filter(s => !s.label.includes('legacy') && s.id !== 'system__handoff');
+    if (isGuided && _wizData.enabledModules && _wizData.enabledModules.length > 0) {
+      availableSkills = availableSkills.filter(s => {
+        const mod = s.id.split('__')[0];
+        return _wizData.enabledModules.includes(mod) || mod === 'system';
+      });
+    }
+    const toolIds = availableSkills.map(s => s.id).join(', ');
+
+    // Build context block from all collected data
+    let contextBlock = `Nom: ${name}\nRôle: ${_wizData.description}`;
+    if (isGuided) {
+      if (_wizData.responsibilities?.length)
+        contextBlock += '\n\nMissions précises:\n' + _wizData.responsibilities.map((r, i) => `${i+1}. ${r}`).join('\n');
+      if (_wizData.behavior)
+        contextBlock += `\n\nPersonnalité: Ton "${_wizData.behavior.ton}", Autonomie "${_wizData.behavior.autonomy}", Style "${_wizData.behavior.style}"`;
+      if (_wizData.constraints)
+        contextBlock += '\n\nContraintes absolues (à intégrer dans le prompt):\n' + _wizData.constraints;
+    }
+
+    const instruction = `Tu es un configurateur d'assistant IA. Retourne UNIQUEMENT un JSON valide, rien d'autre.
+
+${contextBlock}
+
+JSON à retourner (exactement ce format, rien avant, rien après):
+{"prompt":"Tu es ${name}, [3-5 phrases selon le rôle et la personnalité ci-dessus. Intègre EXACTEMENT le ton, l'autonomie et les contraintes spécifiés]","tools":["tool1","tool2"],"summary":"[une phrase naturelle décrivant ce que cet assistant apporte à l'utilisateur]","keywords":["${name.toLowerCase()}","mot2","mot3","mot4"],"avatar":"[un seul emoji représentatif du rôle]","color":"[couleur hex: #22c55e comptable, #3776ab dev, #6366f1 recherche, #f59e0b organisation, #ec4899 assistante perso]"}
+
+Règles:
+- "prompt" : commence par "Tu es ${name}, " — respecte TOUTES les données fournies
+- "tools" : tous les tools nécessaires parmi: ${toolIds}
+- "keywords" : 4-6 mots EN MINUSCULES dont obligatoirement le prénom "${name.toLowerCase()}"
+- "summary" : bénéfice concret en français, commence par le prénom`;
+
+    const body = { model:'claude-haiku-4-5-20251001', max_tokens:900, stream:false, tool_choice:'none',
+      messages:[{role:'user', content:instruction}] };
+    const r = await fetch('/api/core/v1/chat/completions', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    const d = await r.json();
+    const raw = (d.choices?.[0]?.message?.content || d.content?.[0]?.text || '').trim();
+    const m = raw.match(/\{[\s\S]*"prompt"[\s\S]*"tools"[\s\S]*\}/);
+    if (!m) throw new Error('Format invalide');
+    const p = JSON.parse(m[0]);
+    _wizData.system_prompt = (p.prompt || '').trim();
+    _wizData.tools = Array.isArray(p.tools) ? p.tools : [];
+    _wizData.summary = p.summary || name + ' est prêt à vous aider';
+    _wizData.keywords = Array.isArray(p.keywords) ? p.keywords : [];
+    _wizData.avatar = p.avatar || '🤖';
+    _wizData.color = p.color || '#00ffe0';
+    // Ensure agent name is always in keywords for routing
+    const nameLow = name.toLowerCase();
+    if (!_wizData.keywords.includes(nameLow)) _wizData.keywords.unshift(nameLow);
+    // Preview
+    $id('wz-preview-avatar').textContent = _wizData.avatar;
+    $id('wz-preview-name').textContent = _wizData.name;
+    $id('wz-preview-summary').textContent = _wizData.summary;
+    const moduleLabels = {files:'Fichiers',documents:'Documents',web:'Web',exec:'Exécution',
+      email:'Email',git:'Git',system:'Système',agents:'Délégation',scheduler:'Tâches planifiées'};
+    const mods = [...new Set(_wizData.tools.map(t => t.split('__')[0]))];
+    $id('wz-preview-caps').innerHTML = mods.map(mod => `<span class="wizard-cap-chip">${moduleLabels[mod]||mod}</span>`).join('');
+    _wizShowStep('wz-preview');
+    _wizSetProgress(isGuided ? 8 : 4, isGuided ? 8 : 4);
+    _wizFooter(`<button class="wiz-btn-back" onclick="_wizGotoName()">← Modifier</button>
+      <button class="wiz-btn-primary" id="wiz-confirm-btn" onclick="wizardConfirm()">✓ Confirmer l'embauche</button>`);
+  } catch(e) {
+    toast('Génération échouée : ' + e.message, true);
+    _wizGotoName();
+  }
+}
+
+async function wizardConfirm() {
+  const btn = $id('wiz-confirm-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span style="display:inline-block;width:12px;height:12px;border:2px solid #0005;border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px"></span>Embauche…';
+  const id = _wizData.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '-' + Date.now().toString(36).slice(-4);
+  // Always ensure name is in keywords
+  const keywords = _wizData.keywords || [];
+  const nameLow = _wizData.name.toLowerCase();
+  if (!keywords.includes(nameLow)) keywords.unshift(nameLow);
+  const agent = {
+    id, name: _wizData.name,
+    description: _wizData.description,
+    avatar: _wizData.avatar, color: _wizData.color,
+    system_prompt: _wizData.system_prompt,
+    skills: _wizData.tools,
+    keywords,
+    twins_partner: _wizData.twinsPartner || false,
+    enabled: true, type: 'user', memory_enabled: true,
+    modules_enabled: [...new Set(_wizData.tools.map(t => t.split('__')[0]))],
+    created_at: new Date().toISOString(),
+  };
+  try {
+    await fetch(AGENTS_API + '/' + id, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(agent)});
+    closeHireWizard();
+    toast(_wizData.name + ' a été embauché(e) !');
+    loadAgentsPanel();
+    agentSelectorDirty = true;
+  } catch(e) {
+    toast('Erreur : ' + e.message, true);
+    btn.disabled = false;
+    btn.textContent = '✓ Confirmer l\'embauche';
   }
 }
 
@@ -3520,7 +4205,7 @@ async function saveAgentFromEditor() {
     if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = '⏳'; }
     try {
       const body = {
-        model: 'claude-haiku-4-5-20251001', max_tokens: 400, stream: false,
+        model: 'claude-haiku-4-5-20251001', max_tokens: 400, stream: false, tool_choice: 'none',
         messages: [{role:'user', content: `Tu dois générer un system prompt pour un assistant IA. Réponds UNIQUEMENT avec le system prompt, sans introduction.\nCommence par: "Tu es ${name}, "\n3-5 phrases. Nom: ${name}\nDescription: ${desc}`}]
       };
       const r = await fetch('/api/core/v1/chat/completions', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
@@ -3858,7 +4543,167 @@ async function loadCorePrompts() {
     $id('cp-extra').value = d.extra_rules || '';
     $id('cp-twins').value = d.twins_reviewer_prompt || '';
     if (d.search_engine) $id('cfg-se').value = d.search_engine;
+    if (d.brave_api_key && $id('cfg-brave-key')) $id('cfg-brave-key').value = d.brave_api_key;
+    _applySearchMode(d.search_mode || 'auto');
   } catch (e) { /* silently ignore if not available */ }
+  // Show detected region in info box
+  try {
+    const rr = await fetch('/api/core/region');
+    const rd = await rr.json();
+    const code = rd.country_code || '?';
+    const inCN = code === 'CN';
+    const box = $id('cfg-se-info');
+    if (box) box.innerHTML = `Région détectée : <strong>${code}</strong>${inCN
+      ? ' 🇨🇳 — <strong>Bing China</strong> ou <strong>Baidu</strong> recommandé (DuckDuckGo bloqué)'
+      : ' — <strong>Auto</strong> utilise Bing + DuckDuckGo'}. Le mode Auto bascule automatiquement selon votre position.`;
+  } catch {}
+  // Load available AI models for scan
+  try {
+    const rm = await fetch('/api/core/search-engines/models');
+    const dm = await rm.json();
+    const sel = $id('cfg-scan-model');
+    if (sel) {
+      const list = dm && dm.models && dm.models.length ? dm.models : [];
+      if (list.length) {
+        sel.innerHTML = list.map(m => '<option value="' + m.model + '">' + (m.group ? '[' + m.group + '] ' : '') + m.model + '</option>').join('');
+        sel.value = list[0].model;
+      } else {
+        sel.innerHTML = '<option value="">Aucun modèle disponible</option>';
+      }
+    }
+  } catch(e) { console.warn('models load error', e); }
+  // Restore last scan results
+  try {
+    const rs = await fetch('/api/core/search-engines/scan');
+    const ds = await rs.json();
+    if (ds.results && ds.results.length) _renderScanResults(ds);
+  } catch {}
+}
+
+async function detectRegion() {
+  const btn = $id('btn-detect-region');
+  const box = $id('cfg-se-info');
+  if (btn) { btn.textContent = '⏳ Détection...'; btn.disabled = true; }
+  try {
+    // Force cache reset via query param
+    const r = await fetch('/api/core/region?force=1');
+    const d = await r.json();
+    const code = d.country_code || '?';
+    const inCN = code === 'CN';
+    if (box) box.innerHTML = `Région détectée : <strong>${code}</strong>${inCN
+      ? ' 🇨🇳 — <strong>Bing China</strong> ou <strong>Baidu</strong> recommandé (DuckDuckGo bloqué)'
+      : ' — <strong>Auto</strong> utilise Bing + DuckDuckGo'}. Le mode Auto bascule automatiquement selon votre position.`;
+    toast(`Position détectée : ${code}`);
+  } catch (e) { toast('Détection échouée', true); }
+  finally {
+    if (btn) { btn.textContent = '⊕ Détecter ma position'; btn.disabled = false; }
+  }
+}
+
+function _renderScanResults(d) {
+  const box = $id('se-scan-results');
+  if (!box) return;
+  const model = d.model || 'unknown';
+  const modelColor = model === 'unavailable' ? '#ef4444' : '#00ffe0';
+  const scanDate = d.scanned_at || null;
+  const repairDate = d.last_repair || null;
+  let html = `<div style="display:flex;align-items:center;gap:10px;font-size:.68rem;color:var(--td);margin-bottom:8px;font-family:var(--fmo);flex-wrap:wrap">
+    <span>Modèle : <span style="color:${modelColor}">${model}</span></span>
+    ${scanDate ? `<span style="color:rgba(255,255,255,.2)">|</span><span>Scan : <span style="color:var(--ts)">${scanDate}</span></span>` : ''}
+    ${repairDate ? `<span style="color:rgba(255,255,255,.2)">|</span><span>Réparation : <span style="color:#f59e0b">${repairDate}</span></span>` : ''}
+  </div>`;
+  for (const e of (d.results || [])) {
+    const icon = e.status === 'ok' ? (e.adapted ? '🔧' : '✅') : (e.status === 'error' ? '❌' : '⚠️');
+    const rel = Math.round((e.reliability || 0) * 100);
+    const barColor = rel >= 70 ? '#22c55e' : rel >= 40 ? '#f59e0b' : '#ef4444';
+    const statusLabel = e.status === 'ok'
+      ? (e.adapted ? `adapted by AI — ${e.results_count} results` : `${e.results_count} results`)
+      : (e.error || e.status);
+    // Console log lines
+    const logLines = (e.logs || []).map(l => {
+      const c = l.startsWith('  ✓') ? '#22c55e' : l.startsWith('  ✗') ? '#ef4444' : l.startsWith('  →') || l.startsWith('→') ? '#f59e0b' : 'rgba(255,255,255,.45)';
+      return `<div style="color:${c}">${l.replace(/</g,'&lt;')}</div>`;
+    }).join('');
+    html += `<div style="margin-bottom:10px;border:1px solid rgba(255,255,255,.08);border-radius:6px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,255,255,.04)">
+        <span>${icon}</span>
+        <span style="font-weight:600;color:var(--tc);font-family:var(--fmo);font-size:.75rem">${e.engine}</span>
+        <div style="flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:2px;margin:0 6px">
+          <div style="width:${rel}%;height:100%;background:${barColor};border-radius:2px"></div>
+        </div>
+        <span style="color:${barColor};font-size:.7rem;font-family:var(--fmo)">${rel}%</span>
+        <span style="color:var(--td);font-size:.68rem;flex:2">${statusLabel}</span>
+        <button onclick="scanOneEngine('${e.engine}')" title="Réparer ce moteur" style="background:rgba(245,158,11,.15);border:1px solid #f59e0b;color:#f59e0b;border-radius:4px;padding:2px 7px;font-size:.65rem;cursor:pointer;white-space:nowrap">⟳ Réparer</button>
+      </div>
+      ${logLines ? `<div style="padding:6px 10px;font-size:.67rem;font-family:var(--fmo);line-height:1.6;background:rgba(0,0,0,.3)">${logLines}</div>` : ''}
+    </div>`;
+  }
+  box.style.display = 'block';
+  box.innerHTML = html;
+}
+
+let _currentSearchMode = 'auto';
+const _smDesc = {
+  'pi':   '🖥 Scraping local uniquement (DuckDuckGo/Bing en EU-USA, Baidu/Sogou/Bing CN en Chine). Gratuit, zéro token API. Recommandé pour tester les moteurs.',
+  'auto': '⚡ Scraping en premier (gratuit, index occidental en EU-USA / index chinois en CN), API LLM en fallback seulement si le scraping échoue totalement.',
+  'llm':  '🤖 LLM natif en premier — Kimi uniquement en CN (index chinois), Claude en EU-USA (index occidental). Consomme des tokens. Ne jamais utiliser Kimi pour des requêtes EU-USA (index biaisé Chine).',
+};
+function _applySearchMode(mode) {
+  _currentSearchMode = mode;
+  ['pi','auto','llm'].forEach(m => {
+    const btn = $id('sm-' + m);
+    if (!btn) return;
+    const active = m === mode;
+    btn.style.background = active ? 'var(--acc)' : 'transparent';
+    btn.style.color = active ? '#000' : 'var(--ts)';
+    btn.style.fontWeight = active ? '600' : '400';
+  });
+  const desc = $id('sm-desc');
+  if (desc) desc.textContent = _smDesc[mode] || '';
+}
+function setSearchMode(mode) {
+  _applySearchMode(mode);
+  // Auto-save immediately so the Pi uses the new mode right away
+  fetch('/api/core/prompts').then(r => r.json()).then(d => {
+    d.search_mode = mode;
+    return fetch('/api/core/prompts', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(d) });
+  }).then(() => toast('Search mode: ' + mode)).catch(() => {});
+}
+
+async function scanSearchEngines() {
+  const btn = $id('btn-scan-engines');
+  const box = $id('se-scan-results');
+  if (btn) { btn.textContent = '⏳ Scan...'; btn.disabled = true; }
+  if (box) { box.style.display = 'block'; box.innerHTML = '<div style="color:var(--td);font-size:.72rem;font-family:var(--fmo);padding:8px 0">⏳ Test de tous les moteurs en cours...</div>'; }
+  try {
+    const scanModel = ($id('cfg-scan-model') || {}).value || '';
+    const r = await fetch('/api/core/search-engines/scan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: scanModel }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.statusText);
+    _renderScanResults(d);
+    toast('Scan terminé');
+  } catch (e) { toast('Scan échoué : ' + e.message, true); if (box) box.innerHTML = `<span style="color:#ef4444;font-size:.72rem">${e.message}</span>`; }
+  finally { if (btn) { btn.textContent = '⟳ Scan & Réparer'; btn.disabled = false; } }
+}
+
+async function scanOneEngine(engineName) {
+  const box = $id('se-scan-results');
+  // Find the engine's row and show spinner inline
+  const allBtns = box ? box.querySelectorAll('button') : [];
+  let targetBtn = null;
+  allBtns.forEach(b => { if (b.getAttribute('onclick') === `scanOneEngine('${engineName}')`) targetBtn = b; });
+  if (targetBtn) { targetBtn.textContent = '⏳'; targetBtn.disabled = true; }
+  try {
+    const r = await fetch('/api/core/search-engines/scan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ engine: engineName, model: ($id('cfg-scan-model') || {}).value || '' })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || r.statusText);
+    _renderScanResults(d);
+    toast(`${engineName} scanné`);
+  } catch (e) { toast('Erreur : ' + e.message, true); if (targetBtn) { targetBtn.textContent = '⟳ Réparer'; targetBtn.disabled = false; } }
 }
 
 async function saveSearchEngine() {
@@ -3866,6 +4711,9 @@ async function saveSearchEngine() {
     const r = await fetch('/api/core/prompts');
     const d = await r.json();
     d.search_engine = $id('cfg-se').value;
+    d.search_mode = _currentSearchMode || 'auto';
+    const braveKey = ($id('cfg-brave-key') || {}).value || '';
+    if (braveKey) d.brave_api_key = braveKey;
     const r2 = await fetch('/api/core/prompts', {
       method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(d)
     });
