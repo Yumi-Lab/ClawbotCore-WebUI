@@ -628,6 +628,22 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .agent-sel-btn.active{border-color:var(--ac-m);color:var(--ac);background:var(--ac-d)}
 .agent-sel-btn:hover{border-color:var(--ac);background:var(--ac-d)}
 
+/* Active assistant picker (Core mode) */
+.asst-bar{align-items:center;gap:6px;margin-top:5px;position:relative}
+.asst-picker-btn{padding:2px 10px;border-radius:16px;border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.58rem;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:5px}
+.asst-picker-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-d)}
+.asst-picker-btn.active{border-color:var(--ac-m);color:var(--ac);background:var(--ac-d)}
+.asst-popover{position:absolute;bottom:calc(100% + 8px);left:0;background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);padding:12px;width:340px;max-height:320px;overflow-y:auto;z-index:100;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:mIn .2s ease}
+.asst-popover.open{display:block}
+.asst-popover-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.asst-popover-card{background:var(--bg-i);border:1px solid var(--br);border-radius:10px;padding:10px 12px;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden}
+.asst-popover-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--asst-color,var(--ac));opacity:.5;transition:opacity var(--tr)}
+.asst-popover-card:hover,.asst-popover-card.active{border-color:var(--ac);background:var(--ac-d)}
+.asst-popover-card.active::before,.asst-popover-card:hover::before{opacity:1}
+.asst-card-avatar{font-size:1.1rem;margin-bottom:4px}
+.asst-card-name{font-family:var(--fm);font-size:.72rem;font-weight:700;color:var(--tp);margin-bottom:2px}
+.asst-card-desc{font-family:var(--fmo);font-size:.57rem;color:var(--td);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
 /* Agent response card in chat */
 .agent-resp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--br)}
 .agent-resp-avatar{font-size:1rem}
@@ -868,6 +884,16 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <button onclick="manualCompact()" title="Compacter le contexte maintenant" style="padding:1px 7px;border-radius:10px;border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.55rem;cursor:pointer;transition:var(--tr)" onmouseover="this.style.borderColor='var(--ac)';this.style.color='var(--ac)'" onmouseout="this.style.borderColor='var(--br)';this.style.color='var(--td)'">compact</button>
               <span id="ctx-pct">ctx 0%</span>
               <div class="ctx-track"><div class="ctx-fill" id="ctx-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+          <div class="asst-bar" id="asst-bar" style="display:none">
+            <button class="asst-picker-btn" id="asst-picker-btn" onclick="toggleAssistantPicker(event)">
+              <span id="asst-active-avatar">✦</span>
+              <span id="asst-active-name">Généraliste</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="10" height="10"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="asst-popover" id="asst-popover">
+              <div class="asst-popover-grid" id="asst-popover-grid"></div>
             </div>
           </div>
           <div class="agent-selector" id="agent-selector"></div>
@@ -1618,7 +1644,44 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
       </div>
 
-      <!-- ─ STEP 3 / Quick Ref ─ -->
+      <!-- ─ STEP 3: WhatsApp ─ -->
+      <div class="sec-t" style="margin-top:6px">Step 3 — WhatsApp <span style="color:var(--td);font-size:.55rem;letter-spacing:1px">(optional · receive &amp; reply from WhatsApp)</span></div>
+      <div class="setup-grid">
+
+        <div class="setup-card" id="sc-wa" style="grid-column:1/-1">
+          <div class="setup-h">
+            <div class="setup-ico">💬</div>
+            <div class="setup-badge opt" id="sb-wa">Checking…</div>
+          </div>
+          <div class="setup-title">WhatsApp — chat with your AI via WhatsApp</div>
+          <div class="setup-desc">Start the <strong>whatsapp-bridge</strong> service in the Services panel, then scan the QR code below with the WhatsApp app on your phone.</div>
+
+          <!-- QR / connected state -->
+          <div id="wa-qr-block" style="display:none;flex-direction:column;align-items:flex-start;gap:10px;margin-top:10px">
+            <img id="wa-qr-img" src="" alt="WhatsApp QR" style="width:200px;height:200px;border-radius:8px;border:1px solid var(--br);image-rendering:pixelated">
+            <div class="setup-desc" style="color:var(--wn)">Open WhatsApp → Linked Devices → Link a Device → scan this QR</div>
+          </div>
+
+          <div id="wa-connected-block" style="display:none;flex-direction:column;gap:6px;margin-top:10px">
+            <div class="setup-badge ok" style="width:fit-content">Connected</div>
+            <div class="setup-key-val" id="wa-phone">+33…</div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+            <button class="setup-go" id="btn-wa-allow" onclick="saveWaAllowFrom()" style="display:none">Save allowed numbers →</button>
+            <button class="setup-go" id="btn-wa-logout" onclick="waLogout()" style="display:none;border-color:#ff386033;color:var(--er);background:#ff386011">Disconnect</button>
+          </div>
+          <div style="margin-top:8px">
+            <label class="fl">Allowed numbers <span style="font-size:.5rem;color:var(--td)">(E.164 format, comma-separated — empty = anyone)</span></label>
+            <input class="fi" type="text" id="setup-wa-allow" placeholder="+33612345678,+1987654321" style="margin-top:4px">
+            <button class="setup-go" onclick="saveWaAllowFrom()" style="margin-top:6px">Save</button>
+          </div>
+          <div class="setup-desc" id="msg-wa" style="color:var(--ok);margin-top:4px;display:none"></div>
+        </div>
+
+      </div>
+
+      <!-- ─ STEP 4 / Quick Ref ─ -->
       <div class="sec-t" style="margin-top:6px">Quick reference</div>
       <div class="setup-grid">
 
@@ -2295,6 +2358,97 @@ async function saveLLM() {
 }
 
 // ═══ TELEGRAM CONFIG ═══
+// ─── WhatsApp ─────────────────────────────────────────────────────────────────
+let _waStatusInterval = null;
+
+async function waRefreshStatus() {
+  try {
+    const r = await fetch('/api/core/v1/whatsapp/status', { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) { _waSetBadge('err', 'bridge offline'); return; }
+    const d = await r.json();
+    _waApplyStatus(d);
+  } catch {
+    _waSetBadge('opt', 'unreachable');
+    const qb = $id('wa-qr-block');
+    if (qb) qb.style.display = 'none';
+  }
+}
+
+function _waApplyStatus(d) {
+  const connected = d.connected;
+  const status = d.status || 'disconnected';
+  const qrBlock = $id('wa-qr-block');
+  const connBlock = $id('wa-connected-block');
+  const logoutBtn = $id('btn-wa-logout');
+
+  if (connected) {
+    _waSetBadge('ok', 'Connected');
+    if (qrBlock) qrBlock.style.display = 'none';
+    if (connBlock) { connBlock.style.display = 'flex'; }
+    const ph = $id('wa-phone');
+    if (ph) ph.textContent = d.phone || 'unknown';
+    if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+    clearInterval(_waStatusInterval); _waStatusInterval = null;
+  } else if (status === 'qr_pending' && d.qr) {
+    _waSetBadge('warn', 'Scan QR');
+    if (qrBlock) { qrBlock.style.display = 'flex'; }
+    if (connBlock) connBlock.style.display = 'none';
+    const img = $id('wa-qr-img');
+    if (img) img.src = d.qr;
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    if (!_waStatusInterval) {
+      _waStatusInterval = setInterval(waRefreshStatus, 3000);
+    }
+  } else {
+    _waSetBadge('opt', status === 'error' ? 'Error' : 'Not connected');
+    if (qrBlock) qrBlock.style.display = 'none';
+    if (connBlock) connBlock.style.display = 'none';
+    if (logoutBtn) logoutBtn.style.display = 'none';
+    if (!_waStatusInterval) {
+      _waStatusInterval = setInterval(waRefreshStatus, 5000);
+    }
+  }
+}
+
+function _waSetBadge(cls, label) {
+  const badge = $id('sb-wa');
+  if (!badge) return;
+  badge.textContent = label;
+  badge.className = 'setup-badge ' + cls;
+}
+
+async function waLogout() {
+  if (!confirm('Disconnect WhatsApp? You will need to scan QR again.')) return;
+  try {
+    await fetch('/api/core/v1/whatsapp/logout', { method: 'POST', signal: AbortSignal.timeout(8000) });
+    _waApplyStatus({ connected: false, status: 'disconnected', phone: null, qr: null });
+    toast('WhatsApp disconnected — rescan QR to reconnect');
+    setTimeout(waRefreshStatus, 2000);
+  } catch(e) {
+    toast('Disconnect error: ' + e.message, true);
+  }
+}
+
+async function saveWaAllowFrom() {
+  const allow = ($id('setup-wa-allow').value || '*').trim();
+  try {
+    const r = await fetch('/api/core/core/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ whatsapp_allow_from: allow }),
+      signal: AbortSignal.timeout(5000),
+    });
+    const msg = $id('msg-wa');
+    if (r.ok) {
+      if (msg) { msg.textContent = '✓ Saved'; msg.style.display = 'block'; setTimeout(() => { msg.style.display = 'none'; }, 3000); }
+    } else {
+      if (msg) { msg.textContent = '✗ Save failed'; msg.style.display = 'block'; msg.style.color = 'var(--er)'; }
+    }
+  } catch(e) {
+    toast('Error: ' + e.message, true);
+  }
+}
+
 async function saveTelegram() {
   const token = $id('tg-token').value;
   const users = $id('tg-users').value;
@@ -2461,6 +2615,9 @@ function updateSetupStatus() {
   // Update SSH hint with real IP
   const ip = $('sb-ip').textContent;
   if (ip && ip !== '---.---') $id('sv-ssh').innerHTML = `ssh pi@${ip}<br>Password: yumi`;
+
+  // WhatsApp status
+  waRefreshStatus();
 }
 
 // ═══ CLAWBOT CLOUD STATUS ═══
@@ -2912,6 +3069,9 @@ function setChatMode(m, { compact = true } = {}) {
   // Show agent selector only in agents mode
   const sel = $id('agent-selector');
   if (m === 'agents') { sel.classList.add('visible'); loadAgentSelector(); } else { sel.classList.remove('visible'); }
+  // Show assistant picker only in core mode
+  const asstBar = $id('asst-bar');
+  if (asstBar) asstBar.style.display = m === 'core' ? 'flex' : 'none';
   // Context compaction only when switching to/from PicoClaw (agent mode).
   // Core ↔ Core-Agent: both use ClawbotCore — no compaction needed.
   const needsCompact = prev === 'agent' || m === 'agent';
@@ -3527,6 +3687,7 @@ async function sendChat() {
     } else {
       ep = `/api/${S.agent}/v1/chat/completions`;
       reqBody = {model: chatModelState.model || S.cfg.model || 'default', messages: chatHistory, stream: true, session_id: currentSessionId};
+      if (currentCoreAssistant?.system_prompt) reqBody.system = currentCoreAssistant.system_prompt;
     }
     const hdrs = {'Content-Type': 'application/json'};
     if (S.cfg.apikey) hdrs['Authorization'] = 'Bearer ' + S.cfg.apikey;
@@ -4315,6 +4476,52 @@ function updateAgentSelectorUI() {
 function getSelectedAgentIds() {
   if (selectedAgents.has('auto')) return ['auto'];
   return Array.from(selectedAgents);
+}
+
+// ═══ ASSISTANT PICKER (Core mode) ═══
+let currentCoreAssistant = null;
+
+function toggleAssistantPicker(e) {
+  e.stopPropagation();
+  const pop = $id('asst-popover');
+  if (pop.classList.contains('open')) { pop.classList.remove('open'); return; }
+  renderAssistantPickerPop();
+  pop.classList.add('open');
+  document.addEventListener('click', function closeOnOut(ev) {
+    if (!pop.contains(ev.target) && ev.target !== $id('asst-picker-btn')) pop.classList.remove('open');
+    document.removeEventListener('click', closeOnOut);
+  });
+}
+
+async function renderAssistantPickerPop() {
+  if (agentsCache.length === 0) {
+    try { const d = await fetch(AGENTS_API).then(r => r.json()); agentsCache = d.agents || []; } catch {}
+  }
+  const grid = $id('asst-popover-grid');
+  grid.innerHTML = '';
+  // Default card
+  const defCard = document.createElement('div');
+  defCard.className = 'asst-popover-card' + (!currentCoreAssistant ? ' active' : '');
+  defCard.innerHTML = '<div class="asst-card-avatar">✦</div><div class="asst-card-name">Généraliste</div><div class="asst-card-desc">ClawbotOS Core — assistant général</div>';
+  defCard.onclick = () => setActiveAssistant(null);
+  grid.appendChild(defCard);
+  for (const ag of agentsCache) {
+    if (ag.enabled === false) continue;
+    const card = document.createElement('div');
+    card.className = 'asst-popover-card' + (currentCoreAssistant?.id === ag.id ? ' active' : '');
+    card.style.setProperty('--asst-color', ag.color || 'var(--ac)');
+    card.innerHTML = `<div class="asst-card-avatar">${ag.avatar || '🤖'}</div><div class="asst-card-name">${ag.name}</div><div class="asst-card-desc">${ag.description || ''}</div>`;
+    card.onclick = () => setActiveAssistant(ag);
+    grid.appendChild(card);
+  }
+}
+
+function setActiveAssistant(ag) {
+  currentCoreAssistant = ag;
+  $id('asst-popover').classList.remove('open');
+  $id('asst-active-avatar').textContent = ag ? (ag.avatar || '🤖') : '✦';
+  $id('asst-active-name').textContent = ag ? ag.name : 'Généraliste';
+  $id('asst-picker-btn').classList.toggle('active', !!ag);
 }
 
 // ═══ SKILLS ═══
