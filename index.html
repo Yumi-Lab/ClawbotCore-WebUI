@@ -281,6 +281,20 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .tl-out.expanded{max-height:none}
 .tl-out.err{border-left-color:var(--er);color:#ff8080;background:var(--bg-c)}
 .tl-think{color:var(--ts);font-style:italic;font-size:.68rem}
+/* ─── Tool approval UI ─── */
+.tl-row.tl-approval{border-left:2px solid #f59e0b;padding-left:8px;margin:2px 0}
+.tl-row.tl-approval .tl-icon{color:#f59e0b}
+.tl-approval-reason{color:var(--td);font-size:.65rem;margin:2px 0 4px}
+.tl-approval-btns{display:flex;gap:6px;margin:4px 0 2px;flex-wrap:wrap}
+.tl-approval-btns button{border:none;border-radius:4px;padding:4px 10px;font-family:var(--ff);font-size:.65rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s}
+.tl-approval-btns button:hover{opacity:.85}
+.tl-approval-btns button:active{transform:scale(.96)}
+.tl-approve-btn{background:#22c55e;color:#000}
+.tl-deny-btn{background:var(--er);color:#fff}
+.tl-always-btn{background:var(--ac);color:#000}
+.tl-row.tl-resolved .tl-approval-btns{display:none}
+.tl-row.tl-resolved .tl-approval-reason{display:none}
+.tl-row.tl-denied{border-left-color:var(--er)}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* ─── File attachment ─── */
 .chat-att-btn{width:36px;height:36px;background:transparent;border:1px solid var(--br);border-radius:var(--r);color:var(--td);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr);flex-shrink:0}
@@ -733,7 +747,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .task-modal.open{display:flex}
 .task-modal-box{background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);padding:28px 24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
 @media(max-width:768px){.tasks-pscr{padding:14px 14px}.task-item{padding:14px 14px 12px}}
-@media(max-width:768px){.sb{position:fixed;left:0;top:0;bottom:0;z-index:100}.sb.col{width:0;border:none}.gg{grid-template-columns:repeat(2,1fr)}.files-tree{width:160px}.agents-grid{grid-template-columns:1fr}.skills-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.sb{position:fixed;left:0;top:0;bottom:0;z-index:100}.sb.col{width:0;border:none}.gg{grid-template-columns:repeat(2,1fr)}.files-tree{width:160px}.agents-grid{grid-template-columns:1fr}.skills-grid{grid-template-columns:1fr}.tl-approval-btns button{padding:6px 14px;font-size:.72rem}}
 </style>
 </head>
 <body>
@@ -871,8 +885,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <button class="chat-mode-btn active" id="mode-core" onclick="setChatMode('core')" title="ClawbotCore — outil loop + tools intégrés">ClawBot Core</button>
             <button class="chat-mode-btn" id="mode-agents" onclick="setChatMode('agents')" title="Core-Agent — multi-agents avec personas, orchestrés par ClawbotCore">Core-Agent</button>
             <div class="mode-sep" id="mode-core-sep"></div>
-            <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">KimiCode 2.5</button>
-            <button class="mdl-btn qwen" id="mdl-qwen" onclick="setChatModel('qwen3.5-flash')" title="Qwen 3.5 Flash — $0.05/$0.40 per M tokens · 1M context · ultra-budget">Qwen Flash</button>
+            <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">Kimi</button>
+            <button class="mdl-btn qwen" id="mdl-qwen-flash" onclick="setChatModel('qwen3.5-flash')" title="Qwen 3.5 Flash — $0.05/$0.40 · 1M context · ultra-budget">Q.Flash</button>
+            <button class="mdl-btn qwen" id="mdl-qwen-max" onclick="setChatModel('qwen3-max')" title="Qwen3 Max — $1.20/$6.00 · 262K context · alt. Sonnet">Q.Max</button>
+            <button class="mdl-btn qwen" id="mdl-qwen-coder" onclick="setChatModel('qwen3-coder-plus')" title="Qwen3 Coder — $1.14/$2.28 · 1M context · agentic coding SWE-bench 70.6%">Q.Coder</button>
             <div class="mode-sep"></div>
             <button class="mdl-btn haiku active" id="mdl-haiku" onclick="setChatModel('claude-haiku-4-5-20251001')" title="Haiku 4.5 — $0.25/$1.25 per M tokens · fastest · recommended for most tasks">Haiku</button>
             <button class="mdl-btn" id="mdl-sonnet" onclick="setChatModel('claude-sonnet-4-6')" title="Sonnet 4.6 — $3/$15 per M tokens · balanced">Sonnet</button>
@@ -3228,10 +3244,9 @@ const CHAT_MODELS = {
   'claude-sonnet-4-6': 'sonnet',
   'claude-opus-4-6': 'opus',
   'kimi-for-coding': 'kimi',
-  'qwen3.5-flash': 'qwen',
-  'qwen3.5-plus': 'qwen',
-  'qwen3-max': 'qwen',
-  'qwen3-coder-plus': 'qwen',
+  'qwen3.5-flash': 'qwen-flash',
+  'qwen3-max': 'qwen-max',
+  'qwen3-coder-plus': 'qwen-coder',
 };
 const chatModelState = { model: 'claude-haiku-4-5-20251001' };
 
@@ -3587,6 +3602,96 @@ function addToolResultsToTrace(wrap, event) {
   });
 }
 
+function showToolApproval(wrap, data) {
+  const callId = data.call_id || '';
+  const toolName = data.tool || 'tool';
+  const reason = data.reason || 'Permission requise';
+  const args = data.args || {};
+  const humanLabel = TOOL_LABELS[toolName] || toolName;
+  const argsText = formatToolArgs(toolName, args);
+
+  const row = document.createElement('div');
+  row.className = 'tl-row tl-approval';
+  row.dataset.callId = callId;
+
+  const labelHtml = `<div class="tl-label"><span class="tl-label-human">${humanLabel}</span><span class="tl-label-tech">${toolName}</span></div>`;
+  const argsHtml = argsText ? `<pre class="tl-cmd">${argsText.replace(/</g,'&lt;')}</pre>` : '';
+  const reasonHtml = `<div class="tl-approval-reason">${reason.replace(/</g,'&lt;')}</div>`;
+  const btnsHtml = `<div class="tl-approval-btns">` +
+    `<button class="tl-approve-btn" data-decision="allow" data-remember="session">Autoriser</button>` +
+    `<button class="tl-always-btn" data-decision="allow" data-remember="always">Toujours autoriser</button>` +
+    `<button class="tl-deny-btn" data-decision="deny" data-remember="never">Refuser</button>` +
+    `</div>`;
+
+  row.innerHTML = `<span class="tl-icon" style="color:#f59e0b">⊙</span><div class="tl-body">${labelHtml}${argsHtml}${reasonHtml}${btnsHtml}</div>`;
+
+  const cmd = row.querySelector('.tl-cmd');
+  if (cmd) cmd.onclick = () => cmd.classList.toggle('expanded');
+
+  row.querySelectorAll('.tl-approval-btns button').forEach(btn => {
+    btn.onclick = async () => {
+      const decision = btn.dataset.decision;
+      const remember = btn.dataset.remember;
+      try {
+        await fetch('/api/core/v1/tool-approval', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({call_id: callId, decision, remember})
+        });
+      } catch (e) { console.error('Approval POST failed:', e); }
+      resolveApprovalRow(row, decision);
+    };
+  });
+
+  wrap.appendChild(row);
+  wrap._callRows.push(row);
+  scrollChat();
+}
+
+function showToolDenied(wrap, data) {
+  const callId = data.call_id || '';
+  const toolName = data.tool || 'tool';
+  const reason = data.reason || 'Accès refusé';
+  const humanLabel = TOOL_LABELS[toolName] || toolName;
+
+  // Check if there's a pending approval row for this call_id → resolve it as denied
+  const existing = wrap.querySelector(`.tl-approval[data-call-id="${callId}"]`);
+  if (existing) { resolveApprovalRow(existing, 'deny'); return; }
+
+  const row = document.createElement('div');
+  row.className = 'tl-row tl-denied tl-resolved';
+  row.dataset.callId = callId;
+  row.dataset.resolved = '1';
+  row.innerHTML = `<span class="tl-icon" style="color:var(--er)">✗</span>` +
+    `<div class="tl-body"><div class="tl-label"><span class="tl-label-human" style="color:var(--er)">${humanLabel}</span></div>` +
+    `<pre class="tl-out err">${reason.replace(/</g,'&lt;')}</pre></div>`;
+  wrap.appendChild(row);
+  wrap._callRows.push(row);
+  scrollChat();
+}
+
+function resolveApprovalRow(row, decision) {
+  row.classList.add('tl-resolved');
+  row.dataset.resolved = '1';
+  const icon = row.querySelector('.tl-icon');
+  if (decision === 'allow') {
+    row.classList.remove('tl-approval');
+    if (icon) { icon.textContent = '◉'; icon.style.color = 'var(--ac)'; icon.classList.add('running'); }
+  } else {
+    row.classList.add('tl-denied');
+    if (icon) { icon.textContent = '✗'; icon.style.color = 'var(--er)'; }
+    const body = row.querySelector('.tl-body');
+    if (body) {
+      const out = document.createElement('pre');
+      out.className = 'tl-out err';
+      out.textContent = 'Tool refused by user';
+      body.appendChild(out);
+    }
+    const humanLabel = row.querySelector('.tl-label-human');
+    if (humanLabel) humanLabel.style.color = 'var(--er)';
+  }
+}
+
 function finalizeTracePanel(wrap, totalCount) {
   // Timeline stays open — nothing to finalize
 }
@@ -3844,6 +3949,22 @@ async function sendChat() {
               if (pending[i]) pending[i].result = String(res.result ?? '');
             });
             scrollChat();
+            curEvent = null;
+          } else if (curEvent === 'tool_approval_request') {
+            hideThinking(bb);
+            if (!traceWrap) {
+              traceWrap = createTracePanel();
+              chatMsgs.insertBefore(traceWrap, botRow);
+            }
+            showToolApproval(traceWrap, parsed);
+            curEvent = null;
+          } else if (curEvent === 'tool_denied') {
+            hideThinking(bb);
+            if (!traceWrap) {
+              traceWrap = createTracePanel();
+              chatMsgs.insertBefore(traceWrap, botRow);
+            }
+            showToolDenied(traceWrap, parsed);
             curEvent = null;
           } else if (curEvent === 'content_delta' && !isAgent && !isAgents) {
             // Core mode: streaming token from Anthropic direct
