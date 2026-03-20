@@ -1763,10 +1763,10 @@ const S = {
   agent: 'core',
   sbCol: false,
   cfg: {
-    provider: localStorage.getItem('cfg_p') || 'anthropic',
-    model:    localStorage.getItem('cfg_m') || 'claude-sonnet-4-6',
-    apikey:   localStorage.getItem('cfg_k') || '',
-    baseurl:  localStorage.getItem('cfg_u') || ''
+    provider: 'anthropic',
+    model:    'claude-sonnet-4-6',
+    apikey:   '',
+    baseurl:  ''
   },
   mac: null,
   device_code: null,
@@ -2344,8 +2344,7 @@ function loadCfg() {
 async function saveLLM() {
   const p = $id('cfg-p').value, m = $id('cfg-m').value, k = $id('cfg-k').value, u = $id('cfg-u').value;
   S.cfg = {provider:p, model:m, apikey:k, baseurl:u};
-  localStorage.setItem('cfg_p',p); localStorage.setItem('cfg_m',m);
-  localStorage.setItem('cfg_k',k); localStorage.setItem('cfg_u',u);
+  // Config persisted server-side via /api/system/config POST below
   try {
     const r = await fetch('/api/system/config', {
       method:'POST', headers:{'Content-Type':'application/json'},
@@ -2432,10 +2431,10 @@ async function waLogout() {
 async function saveWaAllowFrom() {
   const allow = ($id('setup-wa-allow').value || '*').trim();
   try {
-    const r = await fetch('/api/core/core/config', {
+    const r = await fetch('/api/core/v1/whatsapp/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ whatsapp_allow_from: allow }),
+      body: JSON.stringify({ allow_from: allow }),
       signal: AbortSignal.timeout(5000),
     });
     const msg = $id('msg-wa');
@@ -2485,10 +2484,6 @@ function liveApplyCheck() {
 
 async function _applyProviderConfig(provider, model, apiKey, baseUrl) {
   S.cfg = {provider, model, apikey: apiKey, baseurl: baseUrl || ''};
-  localStorage.setItem('cfg_p', provider);
-  localStorage.setItem('cfg_m', model);
-  localStorage.setItem('cfg_k', apiKey);
-  localStorage.setItem('cfg_u', baseUrl || '');
   // Sync Settings panel
   $id('cfg-p').value = provider; onProv();
   $id('cfg-m').value = model;
@@ -5242,17 +5237,13 @@ const hn = window.location.hostname;
 if (hn && hn !== 'localhost') $('sb-ip').textContent = hn;
 
 async function initFromServer() {
-  // Try to load current config from server (overrides stale localStorage after reflash/activation)
+  // Load current config from server (authoritative source)
   try {
     const r = await fetch('/api/system/config', {signal: AbortSignal.timeout(3000)});
     if (r.ok) {
       const d = await r.json();
       if (d.apikey && d.apikey.length > 6) {
         S.cfg = {provider: d.provider || 'custom', model: d.model || '', apikey: d.apikey, baseurl: d.baseurl || ''};
-        localStorage.setItem('cfg_p', S.cfg.provider);
-        localStorage.setItem('cfg_m', S.cfg.model);
-        localStorage.setItem('cfg_k', S.cfg.apikey);
-        localStorage.setItem('cfg_u', S.cfg.baseurl);
       }
       if (d.mac && d.mac !== 'unknown') S.mac = d.mac;
       if (d.device_code) S.device_code = d.device_code;
