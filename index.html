@@ -218,6 +218,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .mdl-btn.active.haiku{background:#1a2a1a;border-color:#2a5a2a;color:var(--ok)}
 .mdl-btn.active.opus{background:#2a1a2a;border-color:#5a2a5a;color:#d088ff}
 .mdl-btn.active.kimi{background:#2a1e10;border-color:#6a3e10;color:#ff9a3c}
+.mdl-btn.active.qwen{background:#0f1e2e;border-color:#1a4a7a;color:#74b9ff}
 .mode-sep{width:1px;height:14px;background:var(--br);flex-shrink:0;margin:0 2px}
 .chat-view-toggle{margin-left:auto;display:flex;align-items:center;gap:5px;font-family:var(--fmo);font-size:.58rem;color:var(--td)}
 .chat-view-toggle span{user-select:none}
@@ -871,6 +872,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <button class="chat-mode-btn" id="mode-agents" onclick="setChatMode('agents')" title="Core-Agent — multi-agents avec personas, orchestrés par ClawbotCore">Core-Agent</button>
             <div class="mode-sep" id="mode-core-sep"></div>
             <button class="mdl-btn kimi" id="mdl-kimi" onclick="setChatModel('kimi-for-coding')" title="Kimi K2.5 — coding model, 262K context">KimiCode 2.5</button>
+            <button class="mdl-btn qwen" id="mdl-qwen" onclick="setChatModel('qwen3.5-flash')" title="Qwen 3.5 Flash — $0.05/$0.40 per M tokens · 1M context · ultra-budget">Qwen Flash</button>
             <div class="mode-sep"></div>
             <button class="mdl-btn haiku active" id="mdl-haiku" onclick="setChatModel('claude-haiku-4-5-20251001')" title="Haiku 4.5 — $0.25/$1.25 per M tokens · fastest · recommended for most tasks">Haiku</button>
             <button class="mdl-btn" id="mdl-sonnet" onclick="setChatModel('claude-sonnet-4-6')" title="Sonnet 4.6 — $3/$15 per M tokens · balanced">Sonnet</button>
@@ -1415,6 +1417,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <option value="clawbot">Clawbot Cloud ✦ — Subscription</option>
               <option value="anthropic">Anthropic (Claude) — Recommended</option>
               <option value="kimi">Kimi (Moonshot AI) — Budget</option>
+              <option value="dashscope">Qwen (Alibaba) — Budget</option>
               <option value="openai">OpenAI (GPT-4o)</option>
               <option value="deepseek">DeepSeek — Budget</option>
               <option value="openrouter">OpenRouter — Multi-provider</option>
@@ -2199,6 +2202,7 @@ const MODELS = {
   openai:     ['gpt-4o','gpt-4o-mini','gpt-4-turbo','gpt-3.5-turbo'],
   anthropic:  ['claude-opus-4-6','claude-sonnet-4-6','claude-haiku-4-5-20251001'],
   kimi:       ['kimi-for-coding'],
+  dashscope:  ['qwen3.5-flash','qwen3.5-plus','qwen3-max','qwen3-coder-plus','qwen3-coder-flash','qwq-plus','qwen-turbo'],
   openrouter: ['anthropic/claude-sonnet-4-6','openai/gpt-4o','google/gemini-flash-1.5'],
   deepseek:   ['deepseek-chat','deepseek-reasoner','deepseek-coder'],
   ollama:     ['llama3','mistral','phi3','gemma3','qwen2'],
@@ -2208,6 +2212,7 @@ const PROV_DEFAULTS = {
   clawbot:    {model:'clawbot-smart', url:'https://clawbot-api.yumi-lab.com/v1', placeholder:'clb-...'},
   anthropic:  {model:'claude-sonnet-4-6', url:'', placeholder:'sk-ant-api03-...'},
   kimi:       {model:'kimi-for-coding', url:'https://api.kimi.com/coding/v1', placeholder:'sk-kimi-...'},
+  dashscope:  {model:'qwen3.5-flash', url:'https://dashscope-intl.aliyuncs.com/compatible-mode/v1', placeholder:'sk-...'},
   openai:     {model:'gpt-4o',     url:'', placeholder:'sk-proj-...'},
   deepseek:   {model:'deepseek-chat', url:'', placeholder:'sk-...'},
   openrouter: {model:'anthropic/claude-sonnet-4-6', url:'', placeholder:'sk-or-v1-...'},
@@ -3223,6 +3228,10 @@ const CHAT_MODELS = {
   'claude-sonnet-4-6': 'sonnet',
   'claude-opus-4-6': 'opus',
   'kimi-for-coding': 'kimi',
+  'qwen3.5-flash': 'qwen',
+  'qwen3.5-plus': 'qwen',
+  'qwen3-max': 'qwen',
+  'qwen3-coder-plus': 'qwen',
 };
 const chatModelState = { model: 'claude-haiku-4-5-20251001' };
 
