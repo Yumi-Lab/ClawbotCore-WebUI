@@ -4,13 +4,13 @@
 
 ![Version](https://img.shields.io/github/v/release/Yumi-Lab/ClawbotCore-WebUI?label=version&color=00ffe0)
 ![License](https://img.shields.io/badge/license-BUSL--1.1-orange)
-![Size](https://img.shields.io/badge/size-%3C100KB-green)
+![Size](https://img.shields.io/badge/size-%3C350KB-green)
 
 ---
 
 ## What is this?
 
-`**ClawbotCore WebUI** is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the ClawbotCore AI orchestrator (port 8090) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
+**ClawbotCore WebUI** is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the ClawbotCore AI orchestrator (port 8090) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
 
 Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to control your AI assistant running on low-resource ARM hardware.
 
@@ -20,26 +20,45 @@ Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to
 
 | Panel | Description |
 |-------|-------------|
-| **Setup** | Step-by-step onboarding wizard — configure Anthropic, OpenAI, DeepSeek or Telegram in one click |
-| **Chat** | Streaming chat via SSE — real-time responses from ClawbotCore |
+| **Setup** | Onboarding wizard — configure Kimi, Anthropic, Qwen, DeepSeek, OpenAI, Ollama in one click |
+| **Chat** | Streaming chat via SSE — 3 modes (Core, Agent, Core-Agent) with tool traces |
 | **Files** | Edit config files directly in the browser (no SSH needed) |
+| **Workspace** | File manager for the AI workspace |
+| **Agents** | Agent mode with extended tool access and autonomous operation |
+| **Skills** | Manage AI skills and capabilities |
+| **Tasks** | Scheduled tasks (cron-like) — once, daily, weekly, hourly |
 | **Logs** | Live service logs via journalctl |
-| **System** | Real-time CPU, RAM, disk, temperature gauges |
+| **Monitor** | Real-time CPU, RAM, disk, temperature gauges |
 | **Services** | Start/stop/restart systemd services |
-| **Settings** | LLM provider, model, API key, Telegram bot config |
+| **WhatsApp** | WhatsApp inbox — conversation list, thread view, send messages |
+| **Settings** | LLM config, search engine, Telegram, vault, WhatsApp channel config |
 
 ---
 
-## Supported AI providers
+## Supported AI Providers
 
-| Provider | Recommended model |
-|----------|------------------|
-| **Anthropic Claude** ⭐ | `claude-sonnet-4-6` |
-| OpenAI | `gpt-4o` |
-| DeepSeek | `deepseek-chat` |
-| OpenRouter | `anthropic/claude-sonnet-4-6` |
-| Ollama | `llama3`, `mistral`, `phi3`… |
-| Custom OpenAI-compatible | any |
+| Provider | Default Model | Badge |
+|----------|--------------|-------|
+| **Moonshot (Kimi)** | `kimi-for-coding` | Default |
+| **Alibaba (Qwen)** | `qwen3.5-flash` | Budget |
+| **Anthropic (Claude)** | `claude-sonnet-4-6` | Premium |
+| **DeepSeek** | `deepseek-chat` | Budget |
+| **OpenAI** | `gpt-4o` | Optional |
+| **OpenRouter** | any | Optional |
+| **Ollama** | `llama3`, `mistral`... | Optional |
+| **Custom** | any OpenAI-compatible | Advanced |
+
+---
+
+## Design
+
+- Dark theme with cyan accent (`#00ffe0`)
+- Fonts: Outfit (UI) + JetBrains Mono (code)
+- Responsive layout (breakpoint 768px)
+- Collapsible sidebar with icon-only mode
+- Tool execution traces: dots (call/ok/err) + expandable args/results
+- Thinking animation: star + 8 rotating status texts
+- Prompt history: ArrowUp/Down navigation with draft save
 
 ---
 
@@ -51,7 +70,7 @@ Browser → nginx (port 80) → /              → index.html  (this repo)
                           → /api/system/   → clawbot-status-api :8089
 ```
 
-The dashboard is a single HTML file served as a static asset by nginx. All API calls are proxied through nginx — the browser never connects directly to the AI agent ports.
+The dashboard is a single HTML file served as a static asset by nginx. All API calls are proxied through nginx — the browser never connects directly to backend ports.
 
 ---
 
@@ -77,11 +96,8 @@ This interface is pre-installed on **ClawbotOS** images. Flash an image and open
 To manually install on any Armbian/Debian device running ClawbotCore + nginx:
 
 ```bash
-# Download latest dashboard
 curl -fsSL https://github.com/Yumi-Lab/ClawbotCore-WebUI/releases/latest/download/index.html \
   -o /home/pi/clawbot-dashboard/index.html
-
-# Configure nginx to serve it (see ClawbotOS for nginx config)
 ```
 
 ---
@@ -123,17 +139,17 @@ Works on any Armbian/Debian device running nginx + ClawbotCore.
 
 ---
 
-## Related repositories
+## Related Repositories
 
 | Repo | Description |
 |------|-------------|
-| [Yumi-Lab/ClawBot-OS](https://github.com/Yumi-Lab/ClawBot-OS) | ClawbotOS — the full OS build (CustomPiOS) |
-| [Yumi-Lab/clawbot-core](https://github.com/Yumi-Lab/clawbot-core) | ClawbotCore — AI orchestrator & module registry |
+| [Yumi-Lab/ClawBot-OS](https://github.com/Yumi-Lab/ClawBot-OS) | ClawbotOS — full OS image build |
+| [Yumi-Lab/clawbot-core](https://github.com/Yumi-Lab/clawbot-core) | ClawbotCore — AI orchestrator |
+| [Yumi-Lab/clawbot-cloud](https://github.com/Yumi-Lab/clawbot-cloud) | Cloud API — LLM proxy, device management |
 
 ---
 
 ## License
 
-BUSL-1.1 — Non-commercial use free. Commercial use requires a license from Yumi Lab. See [LICENSE](LICENSE)
-
-© Yumi Lab
+BUSL-1.1 — See [LICENSE](LICENSE)
+Change date 2036-03-02 → Apache 2.0
