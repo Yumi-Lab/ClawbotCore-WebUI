@@ -1,6 +1,6 @@
 # ClawbotCore WebUI
 
-> Ultra-lightweight web dashboard for [PicoClaw](https://github.com/Sipeed/PicoClaw) and OpenClaw AI agents — part of the [ClawbotOS](https://github.com/Yumi-Lab/ClawBot-OS) project by [Yumi Lab](https://yumi-lab.com).
+> Ultra-lightweight web dashboard for [ClawbotCore](https://github.com/Yumi-Lab/clawbot-core) AI orchestrator — part of the [ClawbotOS](https://github.com/Yumi-Lab/ClawBot-OS) project by [Yumi Lab](https://yumi-lab.com).
 
 ![Version](https://img.shields.io/github/v/release/Yumi-Lab/ClawbotCore-WebUI?label=version&color=00ffe0)
 ![License](https://img.shields.io/badge/license-BUSL--1.1-orange)
@@ -10,7 +10,7 @@
 
 ## What is this?
 
-`**ClawbotCore WebUI** is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the PicoClaw AI agent (OpenAI-compatible API on port 8080) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
+`**ClawbotCore WebUI** is the web interface served by **ClawbotOS** on Yumi Lab Smart Pi One and SmartPad boards. It connects to the ClawbotCore AI orchestrator (port 8090) and provides a full-featured management dashboard — with no Node.js, no React, no build step. Just one `index.html`.
 
 Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to control your AI assistant running on low-resource ARM hardware.
 
@@ -21,7 +21,7 @@ Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to
 | Panel | Description |
 |-------|-------------|
 | **Setup** | Step-by-step onboarding wizard — configure Anthropic, OpenAI, DeepSeek or Telegram in one click |
-| **Chat** | Streaming chat via SSE — real-time responses from PicoClaw or OpenClaw |
+| **Chat** | Streaming chat via SSE — real-time responses from ClawbotCore |
 | **Files** | Edit config files directly in the browser (no SSH needed) |
 | **Logs** | Live service logs via journalctl |
 | **System** | Real-time CPU, RAM, disk, temperature gauges |
@@ -47,8 +47,7 @@ Think of it as **Mainsail for AI** — a clean, fast, browser-based interface to
 
 ```
 Browser → nginx (port 80) → /              → index.html  (this repo)
-                          → /api/picoclaw/ → PicoClaw :8080
-                          → /api/openclaw/ → OpenClaw  :8081
+                          → /api/core/     → ClawbotCore :8090
                           → /api/system/   → clawbot-status-api :8089
 ```
 
@@ -75,7 +74,7 @@ sudo clawbot-update-dashboard
 
 This interface is pre-installed on **ClawbotOS** images. Flash an image and open `http://clawbot.local` in your browser.
 
-To manually install on any Armbian/Debian device running PicoClaw + nginx:
+To manually install on any Armbian/Debian device running ClawbotCore + nginx:
 
 ```bash
 # Download latest dashboard
@@ -120,7 +119,7 @@ Designed for Yumi Lab boards:
 | **Smart Pi One** | 1GB | Headless |
 | **SmartPad** | 1GB | Touchscreen |
 
-Works on any Armbian/Debian device running nginx + PicoClaw.
+Works on any Armbian/Debian device running nginx + ClawbotCore.
 
 ---
 
@@ -129,7 +128,7 @@ Works on any Armbian/Debian device running nginx + PicoClaw.
 | Repo | Description |
 |------|-------------|
 | [Yumi-Lab/ClawBot-OS](https://github.com/Yumi-Lab/ClawBot-OS) | ClawbotOS — the full OS build (CustomPiOS) |
-| [Sipeed/PicoClaw](https://github.com/Sipeed/PicoClaw) | PicoClaw — lightweight Go AI agent |
+| [Yumi-Lab/clawbot-core](https://github.com/Yumi-Lab/clawbot-core) | ClawbotCore — AI orchestrator & module registry |
 
 ---
 
