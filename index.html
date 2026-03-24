@@ -19,7 +19,7 @@
   --ac:#00ffe0;--ac-d:#00ffe033;--ac-m:#00ffe066;--ac2:#00b8ff;
   --ok:#00ff88;--wn:#ffaa00;--er:#ff3860;
   --fm:'Outfit',sans-serif;--fmo:'JetBrains Mono',monospace;
-  --r:12px;--rl:16px;--sbw:250px;--sbwc:56px;--tbh:52px;
+  --r:12px;--rl:16px;--sbw:200px;--sbwc:56px;--tbh:52px;
   --tr:.25s cubic-bezier(.4,0,.2,1);
 }
 html,body{height:100%}
@@ -92,6 +92,83 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .ws-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
   .ws-list-hdr,.ws-list-row{grid-template-columns:30px 1fr 70px 30px}
   .ws-list-hdr span:nth-child(3),.ws-list-hdr span:nth-child(4),.ws-list-row>span:nth-child(3),.ws-list-row>span:nth-child(4){display:none}
+}
+
+/* ── WHATSAPP PANEL ── */
+.wa-panel-wrap{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.wa-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--br);flex-shrink:0}
+.wa-panel-hdr-left{display:flex;align-items:center;gap:10px}
+.wa-panel-hdr-right{display:flex;align-items:center;gap:12px}
+.wa-panel-mode-badge{font-family:var(--fmo);font-size:.6rem;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--ac-d);color:var(--ac);letter-spacing:.5px;text-transform:uppercase}
+.wa-panel-body{display:flex;flex:1;overflow:hidden}
+.wa-panel-col-list{width:320px;flex-shrink:0;border-right:1px solid var(--br);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.wa-panel-col-thread{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.wa-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:var(--td);font-family:var(--fmo);font-size:.75rem}
+.wa-conv{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--br);transition:var(--tr)}
+.wa-conv:hover{background:var(--bg-ch)}
+.wa-conv.active{background:linear-gradient(135deg,#00ffe008,#00b8ff08);border-left:2px solid var(--ac)}
+.wa-conv-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.wa-conv-name{font-family:var(--fmo);font-size:.78rem;font-weight:500;color:var(--tp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.wa-conv-time{font-family:var(--fmo);font-size:.55rem;color:var(--td);flex-shrink:0}
+.wa-conv-preview{font-family:var(--fmo);font-size:.7rem;color:var(--ts);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:280px}
+.wa-conv-meta{display:flex;align-items:center;gap:6px;margin-top:4px;font-family:var(--fmo);font-size:.6rem;color:var(--td)}
+.wa-conv-meta .wa-proc{color:var(--ac);display:inline-flex;align-items:center;gap:4px}
+.wa-conv-meta .wa-proc-dots{display:inline-flex;gap:2px}
+.wa-conv-meta .wa-proc-dots span{width:4px;height:4px;border-radius:50%;background:var(--ac);animation:wa-blink 1.4s infinite both}
+.wa-conv-meta .wa-proc-dots span:nth-child(2){animation-delay:.2s}
+.wa-conv-meta .wa-proc-dots span:nth-child(3){animation-delay:.4s}
+@keyframes wa-blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.wa-role-tag{display:inline-block;font-size:.5rem;font-weight:600;padding:1px 6px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px}
+.wa-role-admin{background:#ff986015;border:1px solid #ff9860;color:#ff9860}
+.wa-role-user{background:#00b8ff15;border:1px solid var(--ac2);color:var(--ac2)}
+.wa-thread-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--br);flex-shrink:0}
+.wa-thread-hdr-name{font-family:var(--fmo);font-size:.82rem;font-weight:500;color:var(--tp);display:flex;align-items:center;gap:8px}
+.wa-thread-hdr-badges{display:flex;gap:6px}
+.wa-thread-hdr-badge{font-family:var(--fmo);font-size:.58rem;padding:2px 8px;border-radius:10px}
+.wa-thread-hdr-badge.mode{background:#00b8ff15;color:var(--ac2);border:1px solid #00b8ff30}
+.wa-thread-hdr-badge.status{background:#00ff8815;color:var(--ok);border:1px solid #00ff8830}
+.wa-thread-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.wa-msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:.78rem;line-height:1.55;word-break:break-word}
+.wa-msg-user{align-self:flex-end;background:#1a3050;color:var(--tp);border-bottom-right-radius:4px}
+.wa-msg-bot{align-self:flex-start;background:var(--bg-c);border:1px solid var(--br);color:var(--ts);border-bottom-left-radius:4px}
+.wa-msg-bot p{margin:0 0 .4em}
+.wa-msg-bot p:last-child{margin:0}
+.wa-msg-bot code{font-size:.72rem;background:var(--bg-i);padding:1px 4px;border-radius:3px;color:var(--ac)}
+.wa-msg-bot pre{margin:6px 0;padding:8px 10px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);font-size:.68rem;overflow-x:auto;white-space:pre-wrap}
+.wa-msg-sys{align-self:center;background:#ff386010;border:1px dashed var(--er);color:var(--er);font-family:var(--fmo);font-size:.68rem;padding:6px 14px;border-radius:8px;max-width:90%;text-align:center}
+.wa-msg-time{font-size:.52rem;color:var(--td);margin-top:4px}
+.wa-msg-tools{margin-top:6px;padding:0;font-family:var(--fmo);font-size:.62rem}
+.wa-msg-tools .wa-tl-row{display:flex;align-items:center;gap:6px;padding:2px 0}
+.wa-msg-tools .wa-tl-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.wa-msg-tools .wa-tl-dot.ok{background:var(--ok)}
+.wa-msg-tools .wa-tl-dot.err{background:var(--er)}
+.wa-msg-tools .wa-tl-name{color:var(--ts)}
+.wa-thread-ro{padding:10px 16px;border-top:1px solid var(--br);text-align:center;font-family:var(--fmo);font-size:.65rem;color:var(--td);font-style:italic;flex-shrink:0}
+.wa-disconnected{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:var(--td);font-family:var(--fmo);font-size:.78rem;text-align:center;padding:20px}
+.wa-disconnected svg{opacity:.4}
+@media(max-width:768px){
+  .wa-panel-body{flex-direction:column}
+  .wa-panel-col-list{width:100%;max-height:40%;border-right:none;border-bottom:1px solid var(--br)}
+  .wa-conv-preview{max-width:70vw}
+  .wa-msg{max-width:90%}
+}
+
+/* ── WHATSAPP SETUP CONFIG ── */
+.wa-cfg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;border-top:1px solid var(--br);padding-top:14px}
+.wa-cfg-section{display:flex;flex-direction:column;gap:6px}
+.wa-cfg-section .fl{margin-bottom:2px}
+.wa-cfg-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.wa-cfg-toggle input[type="checkbox"]{display:none}
+.wa-cfg-toggle .toggle-track{width:36px;height:20px;background:var(--br);border-radius:10px;position:relative;transition:var(--tr)}
+.wa-cfg-toggle input:checked + .toggle-track{background:var(--ac)}
+.wa-cfg-toggle .toggle-track::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--tp);border-radius:50%;transition:var(--tr)}
+.wa-cfg-toggle input:checked + .toggle-track::after{left:18px}
+.wa-cfg-toggle-label{font-family:var(--fmo);font-size:.72rem;color:var(--ts)}
+.wa-cfg-select{padding:6px 10px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fmo);font-size:.72rem;outline:none;cursor:pointer;width:100%;max-width:220px}
+.wa-cfg-select option{background:var(--bg-c);color:var(--tp)}
+.wa-cfg-select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-d)}
+@media(max-width:768px){
+  .wa-cfg-grid{grid-template-columns:1fr}
 }
 
 /* ── TASKS PANEL ── */
@@ -192,6 +269,72 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 @media(max-width:768px){
   .cfg-row{grid-template-columns:1fr}
 }
+
+/* ── VAULT & PRIVACY SHIELD ── */
+.vault-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.vault-count{font-family:var(--fmo);font-size:.6rem;color:var(--td);display:flex;align-items:center;gap:5px}
+.vault-count svg{width:14px;height:14px}
+.vault-list{display:flex;flex-direction:column;gap:6px}
+.vault-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);transition:var(--tr)}
+.vault-item:hover{border-color:var(--ac-m)}
+.vault-item-icon{flex-shrink:0;width:16px;height:16px;color:var(--ac)}
+.vault-item-name{font-family:var(--fmo);font-size:.75rem;color:var(--tp);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vault-item-badge{padding:2px 8px;font-family:var(--fmo);font-size:.5rem;background:var(--ac-d);border:1px solid var(--ac-m);border-radius:8px;color:var(--ac);text-transform:uppercase;letter-spacing:1px;flex-shrink:0}
+.vault-item-masked{font-family:var(--fmo);font-size:.68rem;color:var(--td);flex-shrink:0;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vault-item-alias{font-family:var(--fmo);font-size:.58rem;color:var(--td);opacity:.6;flex-shrink:0;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vault-item-actions{display:flex;gap:4px;flex-shrink:0}
+.vault-item-btn{padding:3px 8px;font-family:var(--fmo);font-size:.52rem;background:transparent;border:1px solid var(--br);border-radius:4px;color:var(--td);cursor:pointer;transition:var(--tr);text-transform:uppercase;letter-spacing:.5px}
+.vault-item-btn:hover{border-color:var(--ac);color:var(--ac)}
+.vault-item-btn.del:hover{border-color:#f44;color:#f44}
+.vault-add-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:transparent;border:1px dashed var(--br);border-radius:var(--r);color:var(--td);font-family:var(--fmo);font-size:.65rem;cursor:pointer;transition:var(--tr);text-transform:uppercase;letter-spacing:1px}
+.vault-add-btn:hover{border-color:var(--ac);color:var(--ac)}
+.vault-add-btn svg{width:14px;height:14px}
+.vault-tabs{display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid var(--br)}
+.vault-tab{padding:6px 16px;font-family:var(--fmo);font-size:.6rem;color:var(--td);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:var(--tr);text-transform:uppercase;letter-spacing:1px}
+.vault-tab:hover{color:var(--ac)}
+.vault-tab.active{color:var(--ac);border-bottom-color:var(--ac)}
+.vault-info{font-family:var(--fmo);font-size:.55rem;color:var(--td);opacity:.6;margin-top:10px;padding:6px 10px;border-left:2px solid var(--ac-m)}
+.vault-empty{padding:20px;text-align:center;font-family:var(--fmo);font-size:.7rem;color:var(--td);opacity:.5}
+/* ── TOTP ── */
+.totp-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);transition:var(--tr)}
+.totp-item:hover{border-color:var(--ac-m)}
+.totp-meta{flex:1;min-width:0}
+.totp-name{font-family:var(--fmo);font-size:.75rem;color:var(--tp);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.totp-name-input{font-family:var(--fmo);font-size:.75rem;color:var(--tp);background:var(--bg-i);border:1px solid var(--ac);border-radius:4px;padding:1px 6px;outline:none;width:160px}
+.totp-issuer{font-family:var(--fmo);font-size:.52rem;color:var(--td);opacity:.7;margin-top:1px}
+.totp-code{font-family:var(--fmo);font-size:1.6em;letter-spacing:4px;color:var(--ac);cursor:pointer;flex-shrink:0;transition:color .3s;user-select:all;position:relative}
+.totp-code:hover{color:#fff}
+.totp-code .totp-copied{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:.5rem;color:var(--ok);letter-spacing:0;opacity:0;transition:opacity .3s}
+.totp-code .totp-copied.show{opacity:1}
+.totp-timer{display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:48px}
+.totp-secs{font-family:var(--fmo);font-size:.65rem;color:var(--ts);min-width:20px;text-align:right}
+.totp-secs.urgent{color:var(--er)}
+.totp-bar{width:40px;height:3px;background:var(--br);border-radius:2px;overflow:hidden;flex-shrink:0}
+.totp-bar-fill{height:100%;background:var(--ac);border-radius:2px;transition:width 1s linear,background .5s}
+.totp-bar-fill.urgent{background:var(--er)}
+.totp-actions{display:flex;gap:4px;flex-shrink:0}
+@media(max-width:768px){.totp-code{font-size:1.2em;letter-spacing:2px}.totp-item{flex-wrap:wrap;gap:6px}.totp-timer{order:3;width:100%}.totp-bar{flex:1}}
+
+/* Vault modal */
+.vault-modal{position:fixed;inset:0;background:#000a;z-index:9500;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.vault-modal.open{display:flex}
+.vault-modal-box{background:var(--bg-c);border:1px solid var(--br);border-radius:var(--rl);padding:24px;width:90%;max-width:420px;animation:mIn .3s ease}
+.vault-modal-title{font-family:var(--fm);font-weight:700;font-size:1rem;color:var(--ac);margin-bottom:16px}
+.vault-modal-field{margin-bottom:12px}
+.vault-modal-field label{display:block;font-family:var(--fmo);font-size:.6rem;color:var(--td);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.vault-modal-field input,.vault-modal-field select{width:100%;padding:8px 12px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fmo);font-size:.78rem;outline:none;transition:var(--tr)}
+.vault-modal-field input:focus,.vault-modal-field select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-d)}
+.vault-modal-field select{cursor:pointer}
+.vault-modal-pw{position:relative}
+.vault-modal-pw input{padding-right:36px}
+.vault-modal-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--td);cursor:pointer;padding:4px}
+.vault-modal-eye:hover{color:var(--ac)}
+.vault-modal-eye svg{width:16px;height:16px}
+.vault-modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.vault-modal-save{padding:8px 22px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--ac),var(--ac2));color:var(--bg);font-family:var(--fmo);font-size:.68rem;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:1.5px;transition:var(--tr)}
+.vault-modal-save:hover{box-shadow:0 0 20px var(--ac-d)}
+.vault-modal-cancel{padding:8px 18px;border-radius:var(--r);border:1px solid var(--br);background:transparent;color:var(--td);font-family:var(--fmo);font-size:.68rem;cursor:pointer;transition:var(--tr)}
+.vault-modal-cancel:hover{border-color:var(--ac);color:var(--ac)}
 
 /* ── APP SHELL ── */
 .app{position:relative;z-index:1;display:flex;height:100vh;overflow:hidden}
@@ -812,12 +955,28 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="setup-step-t"><span class="step-num">1</span> AI Engine</div>
         <div class="setup-grid">
 
+          <!-- Kimi -->
+          <div class="setup-card" id="sc-kimi">
+            <div class="setup-hdr">
+              <div class="setup-ico">&#x1f680;</div>
+              <div class="setup-info"><div class="setup-title">Moonshot &mdash; Kimi</div><div class="setup-desc">api.kimi.com &middot; Coding specialist</div></div>
+              <span class="badge badge-ok setup-badge">Default</span>
+            </div>
+            <div class="setup-fg"><label class="fl">API Key</label><input class="fi" type="password" id="setup-kimi-key" placeholder="sk-kimi-..."></div>
+            <div class="setup-chips" id="chips-kimi">
+              <button class="chip active" data-m="kimi-for-coding">Kimi Coding ★</button>
+            </div>
+            <div class="setup-fg"><label class="fl">Model</label><input class="fi" type="text" id="setup-kimi-model" value="kimi-for-coding"></div>
+            <button class="setup-apply" id="apply-kimi">Apply</button>
+            <div class="setup-msg" id="msg-kimi">&#x2713; Applied</div>
+          </div>
+
           <!-- Anthropic -->
           <div class="setup-card" id="sc-anthropic">
             <div class="setup-hdr">
               <div class="setup-ico">&#x1f9e0;</div>
               <div class="setup-info"><div class="setup-title">Anthropic &mdash; Claude</div><div class="setup-desc">console.anthropic.com/settings/keys</div></div>
-              <span class="badge badge-ok setup-badge">Recommended</span>
+              <span class="badge badge-ok setup-badge">Premium</span>
             </div>
             <div class="setup-fg"><label class="fl">API Key</label><input class="fi" type="password" id="setup-ant-key" placeholder="sk-ant-api03-..."></div>
             <div class="setup-chips" id="chips-ant">
@@ -828,22 +987,6 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             <div class="setup-fg"><label class="fl">Model</label><input class="fi" type="text" id="setup-ant-model" value="claude-sonnet-4-6"></div>
             <button class="setup-apply" id="apply-ant">Apply</button>
             <div class="setup-msg" id="msg-ant">&#x2713; Applied</div>
-          </div>
-
-          <!-- Kimi -->
-          <div class="setup-card" id="sc-kimi">
-            <div class="setup-hdr">
-              <div class="setup-ico">&#x1f680;</div>
-              <div class="setup-info"><div class="setup-title">Moonshot &mdash; Kimi</div><div class="setup-desc">api.kimi.com &middot; Coding specialist</div></div>
-              <span class="badge badge-ok setup-badge">Recommended</span>
-            </div>
-            <div class="setup-fg"><label class="fl">API Key</label><input class="fi" type="password" id="setup-kimi-key" placeholder="sk-kimi-..."></div>
-            <div class="setup-chips" id="chips-kimi">
-              <button class="chip active" data-m="kimi-for-coding">Kimi Coding ★</button>
-            </div>
-            <div class="setup-fg"><label class="fl">Model</label><input class="fi" type="text" id="setup-kimi-model" value="kimi-for-coding"></div>
-            <button class="setup-apply" id="apply-kimi">Apply</button>
-            <div class="setup-msg" id="msg-kimi">&#x2713; Applied</div>
           </div>
 
           <!-- Qwen / DashScope -->
@@ -946,8 +1089,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         </div>
       </div>
 
-      <!-- ── STEP 2: Telegram ── -->
-      <div class="setup-step">
+      <!-- ── Messaging: Telegram + WhatsApp side by side ── -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;margin-bottom:16px">
+      <div class="setup-step" style="margin-bottom:0">
         <div class="setup-step-t"><span class="step-num">2</span> Telegram Bot <span style="font-weight:400;color:var(--td);letter-spacing:0">(optional)</span></div>
         <div class="setup-card full" id="sc-telegram">
           <div class="setup-hdr">
@@ -969,10 +1113,17 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <div class="setup-card full" id="sc-whatsapp">
           <div class="setup-hdr">
             <div class="setup-ico">&#x1f4ac;</div>
-            <div class="setup-info"><div class="setup-title">WhatsApp Bridge</div><div class="setup-desc">Scan QR to link your WhatsApp account</div></div>
+            <div class="setup-info">
+              <div class="setup-title">WhatsApp Bridge <span id="wa-phone" style="font-weight:400;font-size:.75rem;color:var(--td)"></span>
+                <button class="btn-o" id="wa-logout" style="display:none;font-size:.55rem;padding:2px 10px;margin-left:8px;color:var(--er);border-color:var(--er);vertical-align:middle">Disconnect</button>
+                <button class="btn-o" id="wa-reconnect" onclick="waReconnect()" style="display:none;font-size:.55rem;padding:2px 10px;margin-left:8px;color:var(--ac);border-color:var(--ac);vertical-align:middle">Reconnect</button>
+              </div>
+              <div class="setup-desc" id="wa-desc">Scan QR to link your WhatsApp account</div>
+            </div>
             <span class="wa-status" id="wa-status"><span class="dot wait"></span><span>Checking...</span></span>
           </div>
 
+          <!-- QR zone (visible only when needing QR scan) -->
           <div class="wa-qr-zone" id="wa-qr-zone" style="display:none">
             <div class="wa-qr-img" id="wa-qr-img"><span style="color:var(--td);font-family:var(--fmo);font-size:.65rem">Waiting for QR...</span></div>
             <div class="wa-qr-info">
@@ -981,27 +1132,86 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
             </div>
           </div>
 
-          <div id="wa-connected" style="display:none;margin:10px 0">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-              <span class="badge badge-ok">Connected</span>
-              <span style="font-family:var(--fmo);font-size:.7rem;color:var(--ts)" id="wa-phone"></span>
-            </div>
-            <button class="btn-o" id="wa-logout" style="color:var(--er);border-color:var(--er)">Disconnect</button>
-          </div>
+          <!-- Error detail zone -->
+          <div id="wa-error-zone" style="display:none;margin:8px 0;padding:8px 12px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;font-family:var(--fmo);font-size:.65rem;color:var(--er);line-height:1.4"></div>
 
-          <div style="margin-top:14px;border-top:1px solid var(--br);padding-top:14px">
-            <label class="fl">Allowed Numbers</label>
-            <div style="display:flex;gap:8px;margin-top:4px">
-              <input class="fi" type="text" id="wa-allow-input" placeholder="+33612345678" style="max-width:220px">
-              <button class="btn-o" id="wa-add-num">Add</button>
+          <!-- WhatsApp config grid -->
+          <div class="wa-cfg-grid">
+            <!-- Left column: mode + admins -->
+            <div class="wa-cfg-section">
+              <label class="fl">Bot Mode</label>
+              <select class="wa-cfg-select" id="wa-cfg-mode">
+                <option value="personal">Personal — your own WhatsApp</option>
+                <option value="autonomous">Autonomous — dedicated number</option>
+              </select>
+
+              <label class="fl" style="margin-top:10px">AI Mode</label>
+              <select class="wa-cfg-select" id="wa-cfg-ai-mode">
+                <option value="core">Core — single model</option>
+                <option value="core-agent">Core-Agent — Haiku routing</option>
+              </select>
+
+              <label class="fl" style="margin-top:10px">Admins</label>
+              <div style="display:flex;gap:8px">
+                <input class="fi" type="text" id="wa-admin-input" placeholder="+33612345678" style="max-width:180px">
+                <button class="btn-o" id="wa-add-admin">Add</button>
+              </div>
+              <div class="tag-list" id="wa-admin-tags"></div>
             </div>
-            <div class="tag-list" id="wa-allow-tags"></div>
-            <div style="margin-top:8px">
-              <button class="btn-o" id="wa-save-allow" style="display:none">Save allowed numbers</button>
+
+            <!-- Right column: allowed + blacklist + toggles -->
+            <div class="wa-cfg-section">
+              <label class="fl">Allowed Numbers</label>
+              <div style="display:flex;gap:8px">
+                <input class="fi" type="text" id="wa-allow-input" placeholder="+33612345678 or *" style="max-width:180px">
+                <button class="btn-o" id="wa-add-num">Add</button>
+              </div>
+              <div class="tag-list" id="wa-allow-tags"></div>
+
+              <label class="fl" style="margin-top:10px">Blacklist</label>
+              <div style="display:flex;gap:8px">
+                <input class="fi" type="text" id="wa-blacklist-input" placeholder="+33612345678" style="max-width:180px">
+                <button class="btn-o" id="wa-add-blacklist">Add</button>
+              </div>
+              <div class="tag-list" id="wa-blacklist-tags"></div>
+
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+                <label class="wa-cfg-toggle">
+                  <input type="checkbox" id="wa-cfg-vault2fa">
+                  <span class="toggle-track"></span>
+                  <span class="wa-cfg-toggle-label">Vault 2FA via WhatsApp</span>
+                </label>
+              </div>
             </div>
+          </div>
+          <div style="margin-top:12px;text-align:right">
+            <button class="btn-o" id="wa-save-config" style="display:none;color:var(--ac);border-color:var(--ac)">Save WhatsApp config</button>
           </div>
         </div>
       </div>
+      <!-- ── STEP 4: WeCom ── -->
+      <div class="setup-step">
+        <div class="setup-step-t"><span class="step-num">4</span> WeCom <span style="font-weight:400;color:var(--td);letter-spacing:0">(optional)</span></div>
+        <div class="setup-card full" id="sc-wecom">
+          <div class="setup-hdr">
+            <div class="setup-ico">&#x1f4bc;</div>
+            <div class="setup-info">
+              <div class="setup-title">WeCom Bridge (企业微信)
+                <button class="btn-o" id="wc-reconnect" onclick="wcReconnect()" style="display:none;font-size:.55rem;padding:2px 10px;margin-left:8px;color:var(--ac);border-color:var(--ac);vertical-align:middle">Reconnect</button>
+              </div>
+              <div class="setup-desc" id="wc-desc">Enterprise WeChat — <a href="https://work.weixin.qq.com/wework_admin/register_wx" target="_blank" style="color:var(--ac)">Create a free account</a> then add your bot credentials</div>
+            </div>
+            <span class="wa-status" id="wc-status"><span class="dot off"></span><span>Not configured</span></span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="setup-fg"><label class="fl">Bot ID</label><input class="fi" type="text" id="setup-wc-botid" placeholder="bot_xxxxx"></div>
+            <div class="setup-fg"><label class="fl">Secret</label><input class="fi" type="password" id="setup-wc-secret" placeholder="your-bot-secret"></div>
+          </div>
+          <button class="setup-apply" id="apply-wc" style="max-width:200px">Save &amp; Start</button>
+          <div class="setup-msg" id="msg-wc">&#x2713; Saved &amp; service restarted</div>
+        </div>
+      </div>
+      </div><!-- end messaging grid -->
 
       <!-- ── Quick Reference ── -->
       <div class="setup-step">
@@ -1074,14 +1284,14 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
           <button class="compact-btn" id="compact-btn" title="Compact context">&#x27f3; Compact</button>
         </div>
         <div class="mdl-bar" id="mdl-bar">
-          <button class="mdl-chip active" id="mdl-haiku" data-model="claude-haiku-4-5">Haiku</button>
-          <button class="mdl-chip" id="mdl-sonnet" data-model="claude-sonnet-4-6">Sonnet</button>
-          <button class="mdl-chip" id="mdl-opus" data-model="claude-opus-4-6">Opus</button>
-          <span class="mdl-sep"></span>
-          <button class="mdl-chip" id="mdl-kimi" data-model="kimi-for-coding">Kimi</button>
+          <button class="mdl-chip active" id="mdl-kimi" data-model="kimi-for-coding">Kimi</button>
           <button class="mdl-chip" id="mdl-qflash" data-model="qwen3.5-flash">Qwen Flash</button>
           <button class="mdl-chip" id="mdl-qmax" data-model="qwen3-max">Qwen Max</button>
           <button class="mdl-chip" id="mdl-qcoder" data-model="qwen3-coder-plus">Qwen Coder</button>
+          <span class="mdl-sep"></span>
+          <button class="mdl-chip" id="mdl-haiku" data-model="claude-haiku-4-5">Haiku</button>
+          <button class="mdl-chip" id="mdl-sonnet" data-model="claude-sonnet-4-6">Sonnet</button>
+          <button class="mdl-chip" id="mdl-opus" data-model="claude-opus-4-6">Opus</button>
         </div>
         <div class="chat-msgs" id="chat-msgs"></div>
         <div class="ctx-bar">
@@ -1231,6 +1441,8 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
         <button class="logs-svc-btn active" data-svc="clawbot-core">Core</button>
         <button class="logs-svc-btn" data-svc="nginx">Nginx</button>
         <button class="logs-svc-btn" data-svc="clawbot-telegram">Telegram</button>
+        <button class="logs-svc-btn" data-svc="wa-bridge">WA Bridge</button>
+        <button class="logs-svc-btn" data-svc="wecom-bridge">WeCom</button>
         <button class="logs-svc-btn" data-svc="clawbot-status-api">Status API</button>
         <button class="logs-svc-btn" data-svc="clawbot-cloud">Cloud</button>
         <div class="logs-auto">
@@ -1298,17 +1510,71 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 
+  <!-- ═══ WHATSAPP PANEL ═══ -->
+  <div class="pnl" id="pnl-whatsapp">
+    <div class="wa-panel-wrap">
+      <div class="wa-panel-hdr">
+        <div class="wa-panel-hdr-left">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span style="font-family:var(--fm);font-weight:600;font-size:.95rem">WhatsApp</span>
+          <span class="wa-panel-mode-badge" id="wa-panel-mode">--</span>
+        </div>
+        <div class="wa-panel-hdr-right">
+          <span class="wa-status" id="wa-panel-status"><span class="dot off"></span><span>--</span></span>
+        </div>
+      </div>
+      <div class="wa-panel-body">
+        <div class="wa-panel-col wa-panel-col-list" id="wa-conv-list"></div>
+        <div class="wa-panel-col wa-panel-col-thread" id="wa-thread-view">
+          <div class="wa-empty-state" id="wa-thread-empty">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--td)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>Select a conversation to view</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ CONFIG PANEL ═══ -->
   <div class="pnl" id="pnl-config">
     <div class="cfg-wrap">
+      <!-- Vault Entry -->
+      <div class="cfg-card" style="cursor:pointer" onclick="openVaultOverlay()">
+        <div style="display:flex;align-items:center;gap:16px;padding:8px 0">
+          <svg viewBox="0 0 64 64" width="48" height="48" fill="none" stroke="var(--ac)" stroke-width="2">
+            <rect x="8" y="16" width="48" height="40" rx="4" stroke-width="2.5"/>
+            <circle cx="32" cy="38" r="8" stroke-width="2"/>
+            <circle cx="32" cy="38" r="2" fill="var(--ac)"/>
+            <line x1="32" y1="30" x2="32" y2="26" stroke-width="2"/>
+            <line x1="24" y1="38" x2="20" y2="38" stroke-width="1.5"/>
+            <line x1="44" y1="38" x2="40" y2="38" stroke-width="1.5"/>
+            <rect x="14" y="18" width="36" height="4" rx="1" fill="var(--ac)" opacity=".15"/>
+            <path d="M26 16V12a6 6 0 0 1 12 0v4" stroke-width="2.5"/>
+          </svg>
+          <div style="flex:1">
+            <div class="sec-t" style="font-size:1rem;margin-bottom:4px">Credential Vault</div>
+            <div style="font-family:var(--fmo);font-size:.65rem;color:var(--td)">
+              <span id="vault-count"><span>0 secrets</span></span> stored &bull; AES-256 encrypted &bull; <span id="master-pw-status" style="color:var(--ac)">checking...</span>
+            </div>
+          </div>
+          <label class="wa-cfg-toggle" onclick="event.stopPropagation()" style="margin-left:auto">
+            <input type="checkbox" id="vault-enabled-toggle" checked onchange="toggleVaultEnabled(this.checked)">
+            <span class="toggle-track"></span>
+          </label>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--td)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+
+      <!-- Privacy Shield moved to vault overlay -->
+
       <!-- LLM Configuration -->
       <div class="cfg-card">
         <div class="sec-t">LLM Configuration</div>
         <div class="cfg-row">
           <div><label class="fl">Provider</label>
             <select class="fi" id="cfg-provider" style="cursor:pointer">
-              <option value="anthropic">Anthropic (Claude)</option>
               <option value="kimi">Kimi (Moonshot)</option>
+              <option value="anthropic">Anthropic (Claude)</option>
               <option value="dashscope">DashScope (Qwen)</option>
               <option value="openai">OpenAI</option>
               <option value="deepseek">DeepSeek</option>
@@ -1317,11 +1583,11 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
               <option value="custom">Custom</option>
             </select>
           </div>
-          <div><label class="fl">Model</label><input class="fi" id="cfg-model" placeholder="claude-haiku-4-5"></div>
+          <div><label class="fl">Model</label><input class="fi" id="cfg-model" placeholder="kimi-for-coding"></div>
         </div>
         <div class="cfg-row">
           <div><label class="fl">API Key</label><input class="fi" id="cfg-apikey" type="password" placeholder="sk-..."></div>
-          <div><label class="fl">Base URL (optional)</label><input class="fi" id="cfg-baseurl" placeholder="https://api.anthropic.com"></div>
+          <div><label class="fl">Base URL (optional)</label><input class="fi" id="cfg-baseurl" placeholder="https://api.kimi.com/coding/v1"></div>
         </div>
         <div class="fl" style="margin-bottom:4px">Quick Models</div>
         <div class="cfg-model-chips" id="cfg-model-chips"></div>
@@ -1365,6 +1631,389 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </div>
 </div>
+</div>
+
+<!-- ═══ VAULT OVERLAY (fullscreen safe) ═══ -->
+<div id="vault-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:#0a0f14;overflow-y:auto">
+  <!-- Lock screen -->
+  <div id="vault-lock-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px">
+    <svg viewBox="0 0 96 96" width="120" height="120" fill="none" stroke="var(--ac)" stroke-width="1.5" style="margin-bottom:24px;filter:drop-shadow(0 0 20px rgba(0,255,224,.2))">
+      <rect x="12" y="32" width="72" height="56" rx="6"/>
+      <circle cx="48" cy="62" r="10"/>
+      <circle cx="48" cy="62" r="3" fill="var(--ac)"/>
+      <line x1="48" y1="52" x2="48" y2="46" stroke-width="2"/>
+      <line x1="38" y1="62" x2="32" y2="62" stroke-width="1.5"/>
+      <line x1="64" y1="62" x2="58" y2="62" stroke-width="1.5"/>
+      <line x1="42" y1="56" x2="38" y2="52" stroke-width="1.5"/>
+      <line x1="54" y1="56" x2="58" y2="52" stroke-width="1.5"/>
+      <line x1="42" y1="68" x2="38" y2="72" stroke-width="1.5"/>
+      <line x1="54" y1="68" x2="58" y2="72" stroke-width="1.5"/>
+      <rect x="18" y="34" width="60" height="6" rx="2" fill="var(--ac)" opacity=".12"/>
+      <path d="M34 32V22a14 14 0 0 1 28 0v10" stroke-width="2.5"/>
+    </svg>
+    <div style="font-family:var(--f);font-size:1.4rem;color:var(--tp);letter-spacing:2px;margin-bottom:6px">CREDENTIAL VAULT</div>
+    <div style="font-family:var(--fmo);font-size:.7rem;color:var(--td);margin-bottom:24px">Enter master password to access your secrets</div>
+    <div style="display:flex;gap:8px;width:100%;max-width:340px">
+      <div class="vault-modal-pw" style="flex:1">
+        <input type="password" id="vault-overlay-pw" placeholder="Master password" autocomplete="off" style="width:100%;padding:10px 14px;background:var(--bg-i);border:1px solid var(--br);border-radius:var(--r);color:var(--tp);font-family:var(--fmo);font-size:.8rem;outline:none">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('vault-overlay-pw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+      <button class="vault-modal-save" onclick="unlockVaultOverlay()" style="padding:10px 20px;white-space:nowrap">Unlock</button>
+    </div>
+    <div id="vault-overlay-error" style="display:none;margin-top:10px;font-family:var(--fmo);font-size:.68rem;color:#f44"></div>
+    <button onclick="closeVaultOverlay()" style="margin-top:32px;background:none;border:1px solid var(--br);padding:8px 20px;border-radius:var(--r);color:var(--td);font-family:var(--fmo);font-size:.7rem;cursor:pointer">Back to Settings</button>
+  </div>
+  <!-- Unlocked content -->
+  <div id="vault-unlocked" style="display:none;max-width:800px;margin:0 auto;padding:24px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--ac)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <div style="font-family:var(--f);font-size:1.1rem;color:var(--tp);letter-spacing:1px">VAULT OPEN</div>
+      </div>
+      <button onclick="closeVaultOverlay()" style="background:none;border:1px solid var(--br);padding:6px 16px;border-radius:var(--r);color:var(--td);font-family:var(--fmo);font-size:.68rem;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Lock & Close
+      </button>
+    </div>
+    <!-- Secrets Section -->
+    <div class="cfg-card" style="margin-bottom:16px">
+      <div class="vault-header">
+        <div class="sec-t">Secrets</div>
+        <div class="vault-count" id="vault-count-inner"><span>0 secrets</span></div>
+      </div>
+      <div class="vault-list" id="vault-list">
+        <div class="vault-empty">No secrets stored yet</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="vault-add-btn" onclick="openVaultModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Secret</button>
+        <button class="vault-add-btn" onclick="showImportModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Import</button>
+      </div>
+    </div>
+    <!-- Privacy Shield Section -->
+    <div class="cfg-card" style="margin-bottom:16px">
+      <div class="vault-header">
+        <div class="sec-t">Privacy Shield</div>
+        <div class="vault-count" id="privacy-count"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> <span>0 protected</span></div>
+      </div>
+      <div class="vault-tabs">
+        <button class="vault-tab active" data-tab="blacklist" onclick="switchPrivacyTab('blacklist')">Blacklist</button>
+        <button class="vault-tab" data-tab="autodetected" onclick="switchPrivacyTab('autodetected')">Auto-detected</button>
+        <button class="vault-tab" data-tab="totp" onclick="switchPrivacyTab('totp')">TOTP (2FA)</button>
+      </div>
+      <div class="vault-list" id="privacy-list">
+        <div class="vault-empty">No protected words yet</div>
+      </div>
+      <button class="vault-add-btn" id="privacy-add-btn" onclick="openProtectedModal()" style="margin-top:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Protected Word</button>
+      <div class="vault-info" id="privacy-info">These words will NEVER be sent to the AI. The AI sees aliases like __vault_my_name__ instead.</div>
+      <!-- TOTP panel (hidden by default) -->
+      <div id="totp-panel" style="display:none">
+        <div class="vault-list" id="totp-list">
+          <div class="vault-empty">No TOTP entries — add your first 2FA code</div>
+        </div>
+        <button class="vault-add-btn" onclick="openTOTPModal()" style="margin-top:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add TOTP Entry</button>
+        <div class="vault-info">TOTP codes rotate every 30s. Secrets are AES-256 encrypted on device.</div>
+      </div>
+    </div>
+    <!-- Master Password & Backup -->
+    <div class="cfg-card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div class="sec-t" style="font-size:.85rem">Master Password</div>
+        <span id="master-pw-status-inner" style="font-size:.72rem;padding:2px 8px;border-radius:6px;background:rgba(0,255,224,.08);color:var(--ac)">Active</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button class="vault-add-btn" id="btn-set-master" onclick="openMasterPwModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Change Master Password</button>
+      </div>
+      <div style="border-top:1px solid rgba(0,255,224,.12);padding-top:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="sec-t" style="font-size:.85rem">Backup & Restore</div>
+          <span id="usb-status-badge" style="font-size:.72rem;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,.06);color:#888">No USB</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="vault-add-btn" id="btn-backup-download" onclick="openBackupDownloadModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button>
+          <button class="vault-add-btn" id="btn-restore-file" onclick="openRestoreFileModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="12 18 12 12"/><polyline points="9 15 12 12 15 15"/></svg> Restore File</button>
+          <button class="vault-add-btn" id="btn-restore-usb" onclick="openRestoreUsbModal()" style="flex:1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Restore USB</button>
+        </div>
+      </div>
+    </div>
+    <div class="vault-info" style="text-align:center;margin-top:8px">Secrets are encrypted with AES-256-CBC and stored locally on device. The AI can access values via vault tools.</div>
+  </div>
+</div>
+
+<!-- ═══ VAULT MODAL ═══ -->
+<div class="vault-modal" id="vault-modal">
+  <div class="vault-modal-box">
+    <div class="vault-modal-title" id="vm-title">Add Secret</div>
+    <div class="vault-modal-field">
+      <label>Name</label>
+      <input id="vm-name" placeholder="e.g. anthropic_api_key">
+    </div>
+    <div class="vault-modal-field">
+      <label>Username <span style="opacity:.5">(optional)</span></label>
+      <input id="vm-username" placeholder="e.g. nicolas@3d-expert.fr">
+    </div>
+    <div class="vault-modal-field">
+      <label>Password / Value</label>
+      <div class="vault-modal-pw">
+        <input id="vm-value" type="password" placeholder="Secret value">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('vm-value')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="vault-modal-field">
+      <label>Category</label>
+      <select id="vm-category">
+        <option value="LLM">LLM</option>
+        <option value="EMAIL">EMAIL</option>
+        <option value="SSH">SSH</option>
+        <option value="API">API</option>
+        <option value="OAUTH">OAUTH</option>
+        <option value="OTHER">OTHER</option>
+      </select>
+    </div>
+    <div class="vault-modal-field">
+      <label>Note <span style="opacity:.5">(optional)</span></label>
+      <textarea id="vm-note" rows="6" placeholder="e.g. IONOS SMTP for nicolas@3d-expert.fr" style="width:100%;resize:vertical;font-family:var(--fmo);font-size:.78rem;padding:8px 12px;border-radius:var(--r);border:1px solid var(--br);background:var(--bg-i);color:var(--tp);outline:none;transition:var(--tr);box-sizing:border-box"></textarea>
+    </div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeVaultModal()">Cancel</button>
+      <button class="vault-modal-save" onclick="saveVaultSecret()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PROTECTED WORD MODAL ═══ -->
+<div class="vault-modal" id="protected-modal">
+  <div class="vault-modal-box">
+    <div class="vault-modal-title">Add Protected Word</div>
+    <div class="vault-modal-field">
+      <label>Name</label>
+      <input id="pm-name" placeholder="e.g. my_name, company_name">
+    </div>
+    <div class="vault-modal-field">
+      <label>Value (exact text to protect)</label>
+      <div class="vault-modal-pw">
+        <input id="pm-value" type="password" placeholder="Text that must never reach the AI">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('pm-value')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="vault-modal-field">
+      <label>Type</label>
+      <select id="pm-category">
+        <option value="NAME">NAME</option>
+        <option value="ADDRESS">ADDRESS</option>
+        <option value="PHONE">PHONE</option>
+        <option value="EMAIL">EMAIL</option>
+        <option value="COMPANY">COMPANY</option>
+        <option value="FINANCIAL">FINANCIAL</option>
+        <option value="CUSTOM">CUSTOM</option>
+      </select>
+    </div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeProtectedModal()">Cancel</button>
+      <button class="vault-modal-save" onclick="saveProtectedWord()">Protect</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VAULT IMPORT MODAL ═══ -->
+<div class="vault-modal" id="import-modal">
+  <div class="vault-modal-box" style="max-width:480px">
+    <div class="vault-modal-title">Import from Password Manager</div>
+    <div class="vault-modal-field">
+      <label>Source</label>
+      <select id="import-source">
+        <option value="auto">Auto-detect</option>
+        <option value="1password">1Password</option>
+        <option value="lastpass">LastPass</option>
+        <option value="bitwarden">Bitwarden</option>
+        <option value="keepass">KeePass / KeePassXC</option>
+        <option value="chrome">Chrome</option>
+        <option value="firefox">Firefox</option>
+        <option value="apple">Apple Keychain / Safari</option>
+      </select>
+    </div>
+    <div class="vault-modal-field">
+      <label>File (.csv or .json)</label>
+      <input type="file" id="import-file" accept=".csv,.json" style="padding:6px;font-size:.72rem">
+    </div>
+    <div style="font-family:var(--fmo);font-size:.55rem;color:var(--td);opacity:.7;padding:8px 0;line-height:1.5">
+      The file will be deleted from the device after import.<br>
+      All passwords will be encrypted in the vault.
+    </div>
+    <div id="import-result" style="display:none;padding:10px;border-radius:var(--r);font-family:var(--fmo);font-size:.65rem;margin-bottom:10px;line-height:1.6"></div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeImportModal()">Cancel</button>
+      <button class="vault-modal-save" id="import-btn" onclick="doImport()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MASTER PASSWORD MODAL ═══ -->
+<div class="vault-modal" id="master-pw-modal">
+  <div class="vault-modal-box" style="max-width:420px">
+    <div class="vault-modal-title" id="master-pw-modal-title">Set Master Password</div>
+    <div class="vault-modal-field">
+      <label>Password (min 8 chars)</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="master-pw-input" placeholder="Enter master password" autocomplete="new-password">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('master-pw-input')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div class="vault-modal-field" id="master-pw-confirm-row">
+      <label>Confirm password</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="master-pw-confirm" placeholder="Confirm password" autocomplete="new-password">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('master-pw-confirm')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div id="master-pw-strength" style="font-size:.65rem;padding:4px 0;color:#888"></div>
+    <div style="font-family:var(--fmo);font-size:.55rem;color:var(--td);opacity:.7;padding:4px 0;line-height:1.5">
+      Your master password is NEVER stored. Only a PBKDF2 hash is saved for verification.<br>
+      All secrets will be re-encrypted with the new key.
+    </div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeMasterPwModal()">Cancel</button>
+      <button class="vault-modal-save" id="master-pw-save-btn" onclick="saveMasterPassword()">Set Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VAULT UNLOCK MODAL ═══ -->
+<div class="vault-modal" id="unlock-modal">
+  <div class="vault-modal-box" style="max-width:400px">
+    <div class="vault-modal-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;vertical-align:middle;margin-right:6px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Vault Locked</div>
+    <div class="vault-modal-field">
+      <label>Enter your master password to unlock</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="unlock-pw-input" placeholder="Master password" autocomplete="current-password">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('unlock-pw-input')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div id="unlock-error" style="display:none;font-size:.65rem;color:#ff4444;padding:4px 0"></div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-save" onclick="doUnlockVault()" style="width:100%">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BACKUP DOWNLOAD MODAL ═══ -->
+<div class="vault-modal" id="backup-download-modal">
+  <div class="vault-modal-box" style="max-width:460px">
+    <div class="vault-modal-title">Backup Vault</div>
+    <div class="vault-modal-field">
+      <label>Password (to encrypt the backup file)</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="backup-dl-pw" placeholder="Enter password" autocomplete="off">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('backup-dl-pw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div id="backup-dl-result" style="display:none;padding:10px;border-radius:var(--r);font-family:var(--fmo);font-size:.65rem;margin-top:8px;line-height:1.6"></div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeBackupDownloadModal()">Cancel</button>
+      <button class="vault-modal-save" id="backup-dl-btn" onclick="doBackupDownload()">Download Backup</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESTORE USB MODAL ═══ -->
+<div class="vault-modal" id="restore-usb-modal">
+  <div class="vault-modal-box" style="max-width:460px">
+    <div class="vault-modal-title">Restore Vault from USB</div>
+    <div class="vault-modal-field">
+      <label>USB Drive</label>
+      <select id="restore-usb-drive" onchange="onRestoreDriveChange()" style="width:100%;padding:8px;border-radius:var(--r);border:1px solid rgba(0,255,224,.15);background:var(--b2);color:var(--t);font-size:.72rem">
+        <option value="">No USB drive detected</option>
+      </select>
+    </div>
+    <div class="vault-modal-field">
+      <label>Backup File</label>
+      <select id="restore-usb-file" style="width:100%;padding:8px;border-radius:var(--r);border:1px solid rgba(0,255,224,.15);background:var(--b2);color:var(--t);font-size:.72rem">
+        <option value="">Select a backup file</option>
+      </select>
+    </div>
+    <div class="vault-modal-field">
+      <label>Password (used when backup was created)</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="restore-usb-pw" placeholder="Enter password" autocomplete="off">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('restore-usb-pw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div id="restore-usb-result" style="display:none;padding:10px;border-radius:var(--r);font-family:var(--fmo);font-size:.65rem;margin-top:8px;line-height:1.6"></div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeRestoreUsbModal()">Cancel</button>
+      <button class="vault-modal-save" id="restore-usb-btn" onclick="doRestoreUsb()">Restore</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VAULT RESTORE FILE MODAL ═══ -->
+<div class="vault-modal" id="restore-file-modal">
+  <div class="vault-modal-box" style="max-width:480px">
+    <div class="vault-modal-title">Restore Vault from Backup File</div>
+    <div class="vault-modal-field">
+      <label>Backup file (.enc)</label>
+      <input type="file" id="restore-file-input" accept=".enc" style="padding:6px;font-size:.72rem">
+    </div>
+    <div class="vault-modal-field">
+      <label>Password (used when backup was created)</label>
+      <div class="vault-modal-pw">
+        <input type="password" id="restore-file-pw" placeholder="Enter password" autocomplete="off">
+        <button class="vault-modal-eye" onclick="toggleVaultPw('restore-file-pw')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      </div>
+    </div>
+    <div style="font-family:var(--fmo);font-size:.55rem;color:var(--td);opacity:.7;padding:8px 0;line-height:1.5">
+      Secrets from the backup will be merged into the current vault.<br>
+      Existing secrets with the same name will be overwritten.
+    </div>
+    <div id="restore-file-result" style="display:none;padding:10px;border-radius:var(--r);font-family:var(--fmo);font-size:.65rem;margin-top:8px;line-height:1.6"></div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeRestoreFileModal()">Cancel</button>
+      <button class="vault-modal-save" id="restore-file-btn" onclick="doRestoreFile()">Restore</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TOTP ADD MODAL ═══ -->
+<div class="vault-modal" id="totp-modal">
+  <div class="vault-modal-box">
+    <div class="vault-modal-title" id="totp-modal-title">Add TOTP Entry</div>
+    <div style="display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid var(--br)">
+      <button class="vault-tab active" id="totp-mode-manual" onclick="switchTOTPMode('manual')" data-tab="manual">Manual</button>
+      <button class="vault-tab" id="totp-mode-uri" onclick="switchTOTPMode('uri')" data-tab="uri">Paste URI</button>
+    </div>
+    <div id="totp-form-manual">
+      <div class="vault-modal-field">
+        <label>Name</label>
+        <input id="totp-name" placeholder="e.g. GitHub, AWS, Google">
+      </div>
+      <div class="vault-modal-field">
+        <label>Secret (Base32)</label>
+        <div class="vault-modal-pw">
+          <input id="totp-secret" type="password" placeholder="e.g. JBSWY3DPEHPK3PXP" style="text-transform:uppercase">
+          <button class="vault-modal-eye" onclick="toggleVaultPw('totp-secret')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <div class="vault-modal-field">
+        <label>Issuer <span style="opacity:.5">(optional)</span></label>
+        <input id="totp-issuer" placeholder="e.g. GitHub Inc.">
+      </div>
+    </div>
+    <div id="totp-form-uri" style="display:none">
+      <div class="vault-modal-field">
+        <label>OTPAuth URI</label>
+        <div class="vault-modal-pw">
+          <input id="totp-uri" type="password" placeholder="otpauth://totp/Label?secret=...&issuer=...">
+          <button class="vault-modal-eye" onclick="toggleVaultPw('totp-uri')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
+      </div>
+      <div class="vault-modal-field">
+        <label>Name override <span style="opacity:.5">(optional — uses URI label if empty)</span></label>
+        <input id="totp-uri-name" placeholder="Leave empty to use URI label">
+      </div>
+    </div>
+    <div class="vault-modal-footer">
+      <button class="vault-modal-cancel" onclick="closeTOTPModal()">Cancel</button>
+      <button class="vault-modal-save" onclick="saveTOTPEntry()">Save</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ AGENT EDITOR MODAL ═══ -->
@@ -1585,20 +2234,20 @@ const S = {
   session: null,
   sessions: [],
   chatMode: 'core',
-  chatModel: 'claude-haiku-4-5',
+  chatModel: 'kimi-for-coding',
   verbose: false,
   streaming: false
 };
 
 const SESS_API = '/api/core/sessions';
 const CHAT_MODELS = {
-  'claude-haiku-4-5': {key:'haiku', label:'Haiku'},
-  'claude-sonnet-4-6': {key:'sonnet', label:'Sonnet'},
-  'claude-opus-4-6': {key:'opus', label:'Opus'},
   'kimi-for-coding': {key:'kimi', label:'Kimi'},
   'qwen3.5-flash': {key:'qflash', label:'Qwen Flash'},
   'qwen3-max': {key:'qmax', label:'Qwen Max'},
-  'qwen3-coder-plus': {key:'qcoder', label:'Qwen Coder'}
+  'qwen3-coder-plus': {key:'qcoder', label:'Qwen Coder'},
+  'claude-haiku-4-5': {key:'haiku', label:'Haiku'},
+  'claude-sonnet-4-6': {key:'sonnet', label:'Sonnet'},
+  'claude-opus-4-6': {key:'opus', label:'Opus'}
 };
 let _trashOpen = false;
 let _trashSessions = [];
@@ -1607,6 +2256,7 @@ const _streamingBySession = {};
 
 // ═══ HELPERS ═══
 const $ = id => document.getElementById(id);
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
 // ═══ NAV DATA ═══
 const NAV = [
@@ -1623,7 +2273,7 @@ const NAV = [
   {id:'config',lbl:'Settings',ico:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>'}
 ];
 
-const TITLES = {setup:'Setup',chat:'Chat',files:'Files',workspace:'Workspace',agents:'Agents',skills:'Skills',tasks:'Tasks',logs:'Logs',monitor:'System Monitor',services:'Services',config:'Settings'};
+const TITLES = {setup:'Setup',chat:'Chat',files:'Files',workspace:'Workspace',agents:'Agents',skills:'Skills',tasks:'Tasks',logs:'Logs',monitor:'System Monitor',services:'Services',whatsapp:'WhatsApp',config:'Settings'};
 
 // ═══ BUILD NAV ═══
 (function buildNav(){
@@ -1660,6 +2310,7 @@ function show(name) {
   if (name !== 'monitor' && typeof stopMonitorPolling === 'function') stopMonitorPolling();
   if (name === 'services' && typeof loadServices === 'function') loadServices();
   if (name === 'config' && typeof loadConfig === 'function') loadConfig();
+  if (name === 'whatsapp' && typeof loadWhatsAppPanel === 'function') loadWhatsAppPanel();
   // mobile: close sidebar
   if (window.innerWidth <= 768) { $('sb').classList.add('col'); $('sb-overlay').classList.remove('show'); }
 }
@@ -1708,6 +2359,7 @@ let chatAutoScroll = true;
 let chatPromptHist = [];
 let chatHistIdx = -1;
 let chatDraft = '';
+// chatQueue removed — replaced by mid-stream injection via /v1/chat/inject
 const THINKING_TEXTS = [
   'Analyzing request...', 'Processing data...', 'Reasoning through options...',
   'Connecting the dots...', 'Formulating response...', 'Evaluating approach...',
@@ -1757,31 +2409,6 @@ function cpCode(btn) {
   });
 }
 
-// ═══ ADD USER BUBBLE (DOM-only, no chatMsgs push — used for mid-stream inject) ═══
-function appendUserBubble(text) {
-  const el = chatEl();
-  maybeDateSep();
-  const wrap = document.createElement('div');
-  wrap.className = 'msg msg-user';
-  const avatar = document.createElement('div');
-  avatar.className = 'msg-avatar';
-  avatar.textContent = '▹';
-  const body = document.createElement('div');
-  body.className = 'msg-body';
-  const bubble = document.createElement('div');
-  bubble.className = 'msg-bubble';
-  bubble.textContent = text;
-  const time = document.createElement('div');
-  time.className = 'msg-time';
-  time.textContent = timeStr();
-  body.appendChild(bubble);
-  body.appendChild(time);
-  wrap.appendChild(body);
-  wrap.appendChild(avatar);
-  el.appendChild(wrap);
-  scrollChat(true);
-}
-
 // ═══ ADD MESSAGE ═══
 function addMsg(role, content, opts = {}) {
   const el = chatEl();
@@ -1823,6 +2450,31 @@ function addMsg(role, content, opts = {}) {
   chatMsgs.push({role, content, ts: opts.time || timeStr()});
   scrollChat(true);
   return {wrap, bubble, body};
+}
+
+// DOM-only user bubble (no chatMsgs push — synced via SSE user_injected)
+function _appendUserBubbleOnly(text) {
+  const el = chatEl();
+  maybeDateSep();
+  const wrap = document.createElement('div');
+  wrap.className = 'msg msg-user';
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = '▹';
+  const body = document.createElement('div');
+  body.className = 'msg-body';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.textContent = text;
+  const time = document.createElement('div');
+  time.className = 'msg-time';
+  time.textContent = timeStr();
+  body.appendChild(bubble);
+  body.appendChild(time);
+  wrap.appendChild(body);
+  wrap.appendChild(avatar);
+  el.appendChild(wrap);
+  scrollChat(true);
 }
 
 // ═══ THINKING ═══
@@ -2068,28 +2720,28 @@ async function sendChat() {
   const text = ta.value.trim();
   if (!text) return;
 
-  // ── Mid-stream inject: if streaming, POST to /inject instead of normal send ──
+  // If streaming, try to inject into active stream (mid-stream injection)
   if (chatStreaming) {
+    chatPromptHist.push(text);
+    chatHistIdx = chatPromptHist.length;
+    ta.value = '';
+    ta.style.height = 'auto';
     try {
       const resp = await fetch('/api/core/v1/chat/inject', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({session_id: S.session || '', content: text})
+        body: JSON.stringify({session_id: S.session, content: text})
       });
       const result = await resp.json();
       if (result.ok) {
-        appendUserBubble(text);
-        chatPromptHist.push(text);
-        chatHistIdx = chatPromptHist.length;
-        ta.value = '';
-        ta.style.height = 'auto';
+        // Show message in DOM only — chatMsgs synced via SSE user_injected event
+        _appendUserBubbleOnly(text);
         return;
       }
     } catch (e) {
       console.warn('Inject failed, falling back to normal send:', e);
     }
-    // Inject failed (no active session) — fall through to normal send after stream ends
-    return;
+    // Injection failed (no active session) — fall through to normal send
   }
 
   // Save to prompt history
@@ -2101,6 +2753,12 @@ async function sendChat() {
   addMsg('user', text);
   ta.value = '';
   ta.style.height = 'auto';
+
+  await _sendChatDirect(text);
+}
+
+// Internal: run the streaming call (message already displayed)
+async function _sendChatDirect(text) {
   setStreamUI(true);
 
   // Build messages array for API
@@ -2206,8 +2864,16 @@ async function sendChat() {
         }
         else if (curEvent === 'user_injected' || parsed.type === 'user_injected') {
           // Server confirms inject was applied — sync chatMsgs for persistence
-          chatMsgs.push({role: 'user', content: parsed.content, ts: timeStr()});
+          chatMsgs.push({role: 'user', content: parsed.content});
           sessSave();
+          // Start new bot bubble for the continued response
+          if (botRef && fullContent) {
+            botRef.bubble.classList.remove('streaming');
+            botRef.bubble.innerHTML = marked.parse(fullContent, {renderer: mdRender});
+            if (chatMsgs.length > 1) chatMsgs[chatMsgs.length - 2].content = fullContent;
+          }
+          botRef = null;
+          fullContent = '';
         }
         else if (curEvent === 'context_usage' || parsed.type === 'context_usage') {
           // Store for future context bar display
@@ -2243,31 +2909,31 @@ async function sendChat() {
   removeThinking();
   // Remove streaming cursor from any bubble
   document.querySelectorAll('.msg-bubble.streaming').forEach(b => b.classList.remove('streaming'));
-  setStreamUI(false);
   chatStreaming = false;
   chatAC = null;
   scrollChat(true);
   // Save session after response
   sessSave();
   updateCtxBar();
+
+  setStreamUI(false);
 }
 
 function stopStream() {
   if (chatAC) { chatAC.abort(); chatAC = null; }
   removeThinking();
-  setStreamUI(false);
   chatStreaming = false;
+  setStreamUI(false);
 }
 
 function setStreamUI(streaming) {
   const send = $('chat-send');
   const stop = $('chat-stop');
   if (streaming) {
-    send.classList.add('hide');
     stop.classList.add('show');
-    send.disabled = true;
+    // Keep send button visible — allows queuing messages during stream
+    send.disabled = false;
   } else {
-    send.classList.remove('hide');
     stop.classList.remove('show');
     send.disabled = false;
   }
@@ -2801,44 +3467,92 @@ $('apply-tg')?.addEventListener('click', applyTelegram);
 
 // ═══ SETUP: WHATSAPP ═══
 let _waNumbers = [];
+let _waAdmins = [];
+let _waBlacklist = [];
 let _waPolling = null;
+let _waConnected = false;
+let _waNavInjected = false;
+let _waMode = 'personal';
 
 async function waRefreshStatus() {
   try {
     const r = await fetch('/api/core/v1/whatsapp/status');
-    if (!r.ok) { waSetStatus('off', 'Service unavailable'); return; }
+    if (!r.ok) { _waConnected = false; waSetStatus('off', 'Service unavailable'); waUpdateNav(); return; }
     const d = await r.json();
     waApplyStatus(d);
   } catch {
+    _waConnected = false;
     waSetStatus('off', 'Connection error');
+    waUpdateNav();
   }
 }
 
 function waApplyStatus(d) {
   const zone = $('wa-qr-zone');
-  const conn = $('wa-connected');
+  const phone = $('wa-phone');
+  const desc = $('wa-desc');
+  const logout = $('wa-logout');
+  const reconnect = $('wa-reconnect');
+  const errZone = $('wa-error-zone');
 
   if (d.connected || d.status === 'connected') {
+    _waConnected = true;
     waSetStatus('on', 'Connected');
+    if (phone && d.phone) phone.textContent = '— ' + d.phone;
+    if (desc) desc.textContent = 'Linked and running';
     if (zone) zone.style.display = 'none';
-    if (conn) {
-      conn.style.display = 'block';
-      const phone = $('wa-phone');
-      if (phone && d.phone) phone.textContent = d.phone;
-    }
-    // Stop frequent polling, slow down
+    if (errZone) errZone.style.display = 'none';
+    if (logout) logout.style.display = 'inline-flex';
+    if (reconnect) reconnect.style.display = 'none';
     if (_waPolling) { clearInterval(_waPolling); _waPolling = setInterval(waRefreshStatus, 30000); }
   } else if (d.qr) {
+    _waConnected = false;
     waSetStatus('wait', 'Scan QR code');
+    if (phone) phone.textContent = '';
+    if (desc) desc.textContent = 'Scan QR to link your WhatsApp account';
     if (zone) zone.style.display = 'flex';
-    if (conn) conn.style.display = 'none';
+    if (errZone) errZone.style.display = 'none';
+    if (logout) logout.style.display = 'none';
+    if (reconnect) reconnect.style.display = 'none';
     const img = $('wa-qr-img');
     if (img) img.innerHTML = '<img src="' + d.qr + '" alt="QR">';
   } else {
-    waSetStatus('off', d.status || 'Disconnected');
+    _waConnected = false;
+    // Show detailed error status
+    const err = d.error;
+    let label = 'Disconnected';
+    let detail = '';
+    if (d.status === 'reconnecting') {
+      label = 'Reconnecting (' + (d.reconnectCount || '?') + '/10)';
+      if (err) detail = err.message || '';
+    } else if (d.status === 'error') {
+      label = 'Error';
+      if (err) detail = err.message || 'Max retries reached';
+    } else if (err) {
+      label = err.reason === 'session_expired' ? 'Session expired' :
+              err.reason === 'logged_out' ? 'Logged out' :
+              err.reason === 'timeout' ? 'Timeout (' + (d.consecutive408 || 0) + '/3)' : 'Disconnected';
+      detail = err.message || '';
+    }
+    waSetStatus(d.status === 'reconnecting' ? 'wait' : 'off', label);
+    if (phone) phone.textContent = '';
+    if (desc) desc.textContent = detail || 'Not connected';
+    if (errZone) {
+      if (detail) { errZone.style.display = 'block'; errZone.textContent = detail; }
+      else { errZone.style.display = 'none'; }
+    }
     if (zone) zone.style.display = 'none';
-    if (conn) conn.style.display = 'none';
+    if (logout) logout.style.display = (err && err.reason !== 'logged_out') ? 'inline-flex' : 'none';
+    if (reconnect) reconnect.style.display = 'inline-flex';
+    // Fast poll during reconnect
+    if (d.status === 'reconnecting' && _waPolling) {
+      clearInterval(_waPolling); _waPolling = setInterval(waRefreshStatus, 3000);
+    }
   }
+  waUpdateNav();
+  // Sync panel header status
+  const ps = $('wa-panel-status');
+  if (ps) ps.innerHTML = $('wa-status')?.innerHTML || '';
 }
 
 function waSetStatus(state, text) {
@@ -2847,57 +3561,133 @@ function waSetStatus(state, text) {
   el.innerHTML = '<span class="dot ' + state + '"></span><span>' + text + '</span>';
 }
 
+// ── Dynamic nav injection ──
+function waUpdateNav() {
+  const nav = $('sb-nav');
+  if (!nav) return;
+  const existing = $('nav-whatsapp');
+  if (_waConnected && !existing) {
+    // Insert before the services separator (before config)
+    const configBtn = $('nav-config');
+    const svcSep = configBtn?.previousElementSibling;
+    const btn = document.createElement('button');
+    btn.className = 'sb-item';
+    btn.id = 'nav-whatsapp';
+    btn.title = 'WhatsApp';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="lbl">WhatsApp</span>';
+    btn.addEventListener('click', () => show('whatsapp'));
+    if (svcSep) nav.insertBefore(btn, svcSep);
+    else nav.appendChild(btn);
+    _waNavInjected = true;
+  } else if (!_waConnected && existing) {
+    existing.remove();
+    _waNavInjected = false;
+    // If user was on whatsapp panel, redirect to setup
+    if (S.panel === 'whatsapp') show('setup');
+  }
+}
+
+// ── Load full WhatsApp config ──
 async function waLoadConfig() {
   try {
     const r = await fetch('/api/core/v1/whatsapp/config');
     if (!r.ok) return;
     const d = await r.json();
+    // allow_from
     const raw = d.allow_from || '';
     _waNumbers = raw === '*' ? ['*'] : raw.split(',').map(s => s.trim()).filter(Boolean);
-    waRenderTags();
+    waRenderTagList('wa-allow-tags', _waNumbers, 'allow');
+    // admins
+    const rawA = d.admins || '';
+    _waAdmins = rawA ? rawA.split(',').map(s => s.trim()).filter(Boolean) : [];
+    waRenderTagList('wa-admin-tags', _waAdmins, 'admin');
+    // blacklist
+    const rawB = d.blacklist || '';
+    _waBlacklist = rawB ? rawB.split(',').map(s => s.trim()).filter(Boolean) : [];
+    waRenderTagList('wa-blacklist-tags', _waBlacklist, 'blacklist');
+    // mode
+    _waMode = d.mode || 'personal';
+    const modeEl = $('wa-cfg-mode');
+    if (modeEl) modeEl.value = _waMode;
+    // AI mode
+    const aiEl = $('wa-cfg-ai-mode');
+    if (aiEl) aiEl.value = d.default_mode || 'core';
+    // vault 2fa
+    const v2fa = $('wa-cfg-vault2fa');
+    if (v2fa) v2fa.checked = (d.vault_2fa === 'on');
+    // Update panel mode badge
+    waUpdateModeBadge(d.mode || 'personal');
   } catch {}
 }
 
-function waRenderTags() {
-  const container = $('wa-allow-tags');
+function waUpdateModeBadge(mode) {
+  const badge = $('wa-panel-mode');
+  if (badge) badge.textContent = mode === 'autonomous' ? 'Autonomous' : 'Personal';
+}
+
+// ── Generic tag list renderer ──
+function waRenderTagList(containerId, arr, type) {
+  const container = $(containerId);
   if (!container) return;
   container.innerHTML = '';
-  _waNumbers.forEach((num, idx) => {
+  arr.forEach((val, idx) => {
     const tag = document.createElement('span');
     tag.className = 'tag';
-    tag.innerHTML = num + ' <span class="tag-x" data-idx="' + idx + '">\u2715</span>';
+    tag.innerHTML = esc(val) + ' <span class="tag-x" data-idx="' + idx + '" data-type="' + type + '">\u2715</span>';
     tag.querySelector('.tag-x').addEventListener('click', function() {
-      _waNumbers.splice(parseInt(this.dataset.idx), 1);
-      waRenderTags();
-      $('wa-save-allow').style.display = 'inline-flex';
+      const i = parseInt(this.dataset.idx);
+      const t = this.dataset.type;
+      if (t === 'allow') { _waNumbers.splice(i, 1); waRenderTagList('wa-allow-tags', _waNumbers, 'allow'); }
+      else if (t === 'admin') { _waAdmins.splice(i, 1); waRenderTagList('wa-admin-tags', _waAdmins, 'admin'); }
+      else if (t === 'blacklist') { _waBlacklist.splice(i, 1); waRenderTagList('wa-blacklist-tags', _waBlacklist, 'blacklist'); }
+      waShowSaveBtn();
     });
     container.appendChild(tag);
   });
 }
 
-function waAddNumber() {
-  const input = $('wa-allow-input');
+function waShowSaveBtn() {
+  const btn = $('wa-save-config');
+  if (btn) btn.style.display = 'inline-flex';
+}
+
+// ── Add number helpers ──
+function waAddToList(inputId, arr, containerId, type) {
+  const input = $(inputId);
   const val = input?.value.trim();
   if (!val) return;
-  if (!_waNumbers.includes(val)) {
-    _waNumbers.push(val);
-    waRenderTags();
-    $('wa-save-allow').style.display = 'inline-flex';
+  if (!arr.includes(val)) {
+    arr.push(val);
+    waRenderTagList(containerId, arr, type);
+    waShowSaveBtn();
   }
   if (input) input.value = '';
 }
 
-async function waSaveAllowed() {
+function waAddNumber() { waAddToList('wa-allow-input', _waNumbers, 'wa-allow-tags', 'allow'); }
+function waAddAdmin() { waAddToList('wa-admin-input', _waAdmins, 'wa-admin-tags', 'admin'); }
+function waAddBlacklist() { waAddToList('wa-blacklist-input', _waBlacklist, 'wa-blacklist-tags', 'blacklist'); }
+
+// ── Save full config ──
+async function waSaveConfig() {
   try {
-    const allow_from = _waNumbers.join(',') || '*';
+    const payload = {
+      mode: $('wa-cfg-mode')?.value || 'personal',
+      default_mode: $('wa-cfg-ai-mode')?.value || 'core',
+      admins: _waAdmins.join(','),
+      allow_from: _waNumbers.join(',') || '*',
+      blacklist: _waBlacklist.join(','),
+      vault_2fa: $('wa-cfg-vault2fa')?.checked ? 'on' : 'off'
+    };
     const r = await fetch('/api/core/v1/whatsapp/config', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({allow_from})
+      body: JSON.stringify(payload)
     });
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    toast('Allowed numbers saved');
-    $('wa-save-allow').style.display = 'none';
+    toast('WhatsApp config saved');
+    $('wa-save-config').style.display = 'none';
+    waUpdateModeBadge(payload.mode);
   } catch(e) {
     toast('Save failed: ' + e.message, true);
   }
@@ -2905,18 +3695,445 @@ async function waSaveAllowed() {
 
 async function waLogout() {
   try {
-    await fetch('/api/core/v1/whatsapp/logout', {method:'POST'});
-    toast('WhatsApp disconnected');
-    waRefreshStatus();
+    const r = await fetch('/api/core/v1/whatsapp/logout', {method:'POST', headers:{'Content-Type':'application/json'}, body:'{}'});
+    const d = await r.json();
+    toast(d.message || 'WhatsApp disconnected');
+    if (_waPolling) { clearInterval(_waPolling); _waPolling = setInterval(waRefreshStatus, 3000); }
+    setTimeout(waRefreshStatus, 1000);
   } catch {
     toast('Logout failed', true);
   }
 }
 
+// ── WhatsApp panel: conversations + thread view ──
+let _waSelectedConv = null;
+let _waPanelPolling = null;
+let _waConversations = [];
+
+function loadWhatsAppPanel() {
+  // Sync header
+  const ps = $('wa-panel-status');
+  if (ps) ps.innerHTML = $('wa-status')?.innerHTML || '';
+  const badge = $('wa-panel-mode');
+  if (badge) {
+    const m = $('wa-cfg-mode')?.value || 'personal';
+    badge.textContent = m === 'autonomous' ? 'Autonomous' : 'Personal';
+  }
+  // If bridge disconnected, show disconnected state
+  if (!_waConnected) {
+    waRenderDisconnected();
+    return;
+  }
+  // Load conversations
+  waLoadConversations();
+  // Start polling (30s)
+  waStartPanelPolling();
+}
+
+function waRenderDisconnected() {
+  waStopPanelPolling();
+  const list = $('wa-conv-list');
+  const thread = $('wa-thread-view');
+  if (list) list.innerHTML = '<div class="wa-disconnected"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="var(--td)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>Bridge disconnected</span><span style="font-size:.65rem;color:var(--td)">Connect via Setup panel</span></div>';
+  if (thread) thread.innerHTML = '';
+}
+
+async function waLoadConversations() {
+  try {
+    const r = await fetch(SESS_API);
+    if (!r.ok) return;
+    const d = await r.json();
+    const sessions = d.sessions || d || [];
+    // Filter: only wa_* sessions, exclude newsletters and groups
+    _waConversations = sessions.filter(s => {
+      if (!s.id || !s.id.startsWith('wa_')) return false;
+      const id = s.id;
+      if (id.includes('@newsletter')) return false;
+      if (id.includes('@g.us')) return false;
+      return true;
+    });
+    waRenderConvList();
+  } catch {}
+}
+
+function waExtractPhone(sessionId) {
+  // wa_<phone>@s.whatsapp.net or wa_<phone>
+  const m = sessionId.match(/^wa_(\d+)/);
+  return m ? '+' + m[1] : sessionId.replace('wa_', '');
+}
+
+function waFormatPhone(phone) {
+  // Format +33642536328 → +33 6 42 53 63 28
+  if (phone.length > 6) {
+    const cc = phone.startsWith('+86') ? phone.slice(0, 3) : phone.startsWith('+1') ? phone.slice(0, 2) : phone.slice(0, 3);
+    const rest = phone.slice(cc.length);
+    if (rest.length % 2 === 1) {
+      return cc + ' ' + rest[0] + ' ' + rest.slice(1).replace(/(\d{2})/g, '$1 ').trim();
+    }
+    return cc + ' ' + rest.replace(/(\d{2})/g, '$1 ').trim();
+  }
+  return phone;
+}
+
+function waIsAdmin(phone) {
+  // Personal mode: bridge phone = auto admin
+  if ((!_waAdmins || _waAdmins.length === 0) && _waMode === 'personal') return true;
+  if (!_waAdmins || _waAdmins.length === 0) return false;
+  const clean = phone.replace(/\s/g, '');
+  return _waAdmins.some(a => a.replace(/\s/g, '') === clean);
+}
+
+function waTimeAgo(ts) {
+  if (!ts) return '';
+  const d = new Date(typeof ts === 'number' && ts > 1e12 ? ts : ts * 1000);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'now';
+  if (diff < 3600000) return Math.floor(diff / 60000) + 'm';
+  if (diff < 86400000) return Math.floor(diff / 3600000) + 'h';
+  if (diff < 172800000) return 'yesterday';
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+}
+
+function waRenderConvList() {
+  const list = $('wa-conv-list');
+  if (!list) return;
+  if (_waConversations.length === 0) {
+    list.innerHTML = '<div class="wa-empty-state"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--td)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>No conversations yet</span></div>';
+    return;
+  }
+  list.innerHTML = '';
+  _waConversations.forEach(s => {
+    const phone = waExtractPhone(s.id);
+    const formatted = waFormatPhone(phone);
+    const isAdmin = waIsAdmin(phone);
+    const processing = !!s.processing;
+    const mode = s.mode || 'core';
+    const preview = s.name && s.name !== 'New chat' ? s.name : '';
+    const time = waTimeAgo(s.updatedAt);
+
+    const div = document.createElement('div');
+    div.className = 'wa-conv' + (_waSelectedConv === s.id ? ' active' : '');
+    div.dataset.sid = s.id;
+    div.innerHTML =
+      '<div class="wa-conv-top">' +
+        '<span class="wa-conv-name">' + esc(formatted) + ' <span class="wa-role-tag ' + (isAdmin ? 'wa-role-admin' : 'wa-role-user') + '">' + (isAdmin ? 'admin' : 'user') + '</span></span>' +
+        '<span class="wa-conv-time">' + esc(time) + '</span>' +
+      '</div>' +
+      (preview ? '<div class="wa-conv-preview">' + esc(preview) + '</div>' : '') +
+      '<div class="wa-conv-meta">' +
+        (processing ? '<span class="wa-proc"><span class="wa-proc-dots"><span></span><span></span><span></span></span> processing</span>' : '<span style="color:var(--ok)">' + mode + '</span>') +
+      '</div>';
+    div.addEventListener('click', () => waSelectConv(s.id));
+    list.appendChild(div);
+  });
+}
+
+async function waSelectConv(sessionId) {
+  _waSelectedConv = sessionId;
+  // Update active class
+  document.querySelectorAll('.wa-conv').forEach(c => c.classList.toggle('active', c.dataset.sid === sessionId));
+  // Load thread
+  await waLoadThread(sessionId);
+}
+
+async function waLoadThread(sessionId) {
+  const view = $('wa-thread-view');
+  if (!view) return;
+  try {
+    const r = await fetch(SESS_API + '/' + sessionId);
+    if (!r.ok) { view.innerHTML = '<div class="wa-empty-state"><span>Failed to load conversation</span></div>'; return; }
+    const d = await r.json();
+    waRenderThread(view, d, sessionId);
+  } catch {
+    view.innerHTML = '<div class="wa-empty-state"><span>Failed to load conversation</span></div>';
+  }
+}
+
+function waRenderThread(view, session, sessionId) {
+  const phone = waExtractPhone(sessionId);
+  const formatted = waFormatPhone(phone);
+  const isAdmin = waIsAdmin(phone);
+  const mode = session.mode || 'core';
+  const messages = session.messages || [];
+
+  view.innerHTML = '';
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'wa-thread-hdr';
+  hdr.innerHTML =
+    '<div class="wa-thread-hdr-name">' + esc(formatted) +
+      ' <span class="wa-role-tag ' + (isAdmin ? 'wa-role-admin' : 'wa-role-user') + '">' + (isAdmin ? 'admin' : 'user') + '</span></div>' +
+    '<div class="wa-thread-hdr-badges">' +
+      '<span class="wa-thread-hdr-badge status">' + (_waConnected ? 'Connected' : 'Offline') + '</span>' +
+      '<span class="wa-thread-hdr-badge mode">' + esc(mode) + '</span>' +
+    '</div>';
+  view.appendChild(hdr);
+
+  // Messages area
+  const msgs = document.createElement('div');
+  msgs.className = 'wa-thread-msgs';
+
+  // Collect tool call names for inline display
+  const toolMap = {};
+  messages.forEach(m => {
+    if (m.role === 'assistant' && m.tool_calls) {
+      m.tool_calls.forEach(tc => {
+        toolMap[tc.id] = { name: tc.function?.name || 'tool', args: tc.function?.arguments || '' };
+      });
+    }
+  });
+
+  // Build tool results map
+  const toolResults = {};
+  messages.forEach(m => {
+    if (m.role === 'tool' && m.tool_call_id) {
+      const info = toolMap[m.tool_call_id] || {};
+      const isErr = m.content && (m.content.startsWith('Error') || m.content.startsWith('error') || m.content.includes('denied') || m.content.includes('not allowed'));
+      toolResults[m.tool_call_id] = { name: info.name || 'tool', ok: !isErr, denied: m.content && m.content.includes('denied') };
+    }
+  });
+
+  let pendingTools = [];
+
+  messages.forEach(m => {
+    if (m.role === 'user') {
+      // Flush pending tools before user msg
+      if (pendingTools.length > 0) { waFlushTools(msgs, pendingTools); pendingTools = []; }
+      const bubble = document.createElement('div');
+      bubble.className = 'wa-msg wa-msg-user';
+      bubble.textContent = m.content || '';
+      const time = document.createElement('div');
+      time.className = 'wa-msg-time';
+      time.textContent = '';
+      bubble.appendChild(time);
+      msgs.appendChild(bubble);
+    } else if (m.role === 'assistant') {
+      // Flush pending tools
+      if (pendingTools.length > 0) { waFlushTools(msgs, pendingTools); pendingTools = []; }
+      // Collect tool calls for this assistant message
+      if (m.tool_calls && m.tool_calls.length > 0) {
+        m.tool_calls.forEach(tc => {
+          const res = toolResults[tc.id];
+          pendingTools.push({
+            name: tc.function?.name || 'tool',
+            ok: res ? res.ok : true,
+            denied: res ? res.denied : false
+          });
+        });
+      }
+      if (m.content) {
+        // Check for tool denial system messages
+        if (m.content.includes('denied') || m.content.includes('not allowed') || m.content.includes('requires admin')) {
+          const sys = document.createElement('div');
+          sys.className = 'wa-msg wa-msg-sys';
+          sys.textContent = m.content;
+          msgs.appendChild(sys);
+        } else {
+          const bubble = document.createElement('div');
+          bubble.className = 'wa-msg wa-msg-bot';
+          bubble.innerHTML = marked.parse(m.content, { renderer: mdRender });
+          // Append inline tool summary if there were tool calls
+          if (pendingTools.length > 0) {
+            waFlushToolsInline(bubble, pendingTools);
+            pendingTools = [];
+          }
+          const time = document.createElement('div');
+          time.className = 'wa-msg-time';
+          time.textContent = '';
+          bubble.appendChild(time);
+          msgs.appendChild(bubble);
+        }
+      }
+    } else if (m.role === 'tool') {
+      // Tool results are handled via toolResults map above
+    }
+  });
+  // Flush remaining tools
+  if (pendingTools.length > 0) waFlushTools(msgs, pendingTools);
+
+  view.appendChild(msgs);
+
+  // Read-only bar
+  const ro = document.createElement('div');
+  ro.className = 'wa-thread-ro';
+  ro.textContent = 'Read-only \u00b7 ' + (isAdmin ? 'Admin' : 'User') + ' \u00b7 ' + mode;
+  view.appendChild(ro);
+
+  // Scroll to bottom
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function waFlushTools(container, tools) {
+  const wrap = document.createElement('div');
+  wrap.className = 'wa-msg wa-msg-sys';
+  wrap.style.borderColor = 'var(--br)';
+  wrap.style.color = 'var(--ts)';
+  wrap.style.background = 'var(--bg-c)';
+  const inner = tools.map(t => {
+    const dotCls = t.denied ? 'err' : (t.ok ? 'ok' : 'err');
+    return '<span class="wa-tl-row"><span class="wa-tl-dot ' + dotCls + '"></span><span class="wa-tl-name">' + esc(t.name) + '</span></span>';
+  }).join('');
+  wrap.innerHTML = '<div class="wa-msg-tools">' + inner + '</div>';
+  container.appendChild(wrap);
+}
+
+function waFlushToolsInline(bubble, tools) {
+  const wrap = document.createElement('div');
+  wrap.className = 'wa-msg-tools';
+  wrap.innerHTML = tools.map(t => {
+    const dotCls = t.denied ? 'err' : (t.ok ? 'ok' : 'err');
+    return '<span class="wa-tl-row"><span class="wa-tl-dot ' + dotCls + '"></span><span class="wa-tl-name">' + esc(t.name) + '</span></span>';
+  }).join('');
+  bubble.appendChild(wrap);
+}
+
+// ── Polling with Page Visibility API ──
+function waStartPanelPolling() {
+  waStopPanelPolling();
+  _waPanelPolling = setInterval(() => {
+    if (document.hidden || S.panel !== 'whatsapp') return;
+    waLoadConversations();
+    if (_waSelectedConv) waLoadThread(_waSelectedConv);
+  }, 30000);
+}
+
+function waStopPanelPolling() {
+  if (_waPanelPolling) { clearInterval(_waPanelPolling); _waPanelPolling = null; }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    waStopPanelPolling();
+  } else if (S.panel === 'whatsapp' && _waConnected) {
+    waLoadConversations();
+    if (_waSelectedConv) waLoadThread(_waSelectedConv);
+    waStartPanelPolling();
+  }
+});
+
+// ── Event listeners ──
 $('wa-add-num')?.addEventListener('click', waAddNumber);
 $('wa-allow-input')?.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); waAddNumber(); } });
-$('wa-save-allow')?.addEventListener('click', waSaveAllowed);
+$('wa-add-admin')?.addEventListener('click', waAddAdmin);
+$('wa-admin-input')?.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); waAddAdmin(); } });
+$('wa-add-blacklist')?.addEventListener('click', waAddBlacklist);
+$('wa-blacklist-input')?.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); waAddBlacklist(); } });
+$('wa-save-config')?.addEventListener('click', waSaveConfig);
 $('wa-logout')?.addEventListener('click', waLogout);
+// Show save button on any config change
+$('wa-cfg-mode')?.addEventListener('change', waShowSaveBtn);
+$('wa-cfg-ai-mode')?.addEventListener('change', waShowSaveBtn);
+$('wa-cfg-vault2fa')?.addEventListener('change', waShowSaveBtn);
+
+async function waReconnect() {
+  const btn = $('wa-reconnect');
+  if (btn) { btn.disabled = true; btn.textContent = 'Restarting...'; }
+  try {
+    const r = await fetch('/api/core/v1/whatsapp/restart', {method:'POST'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('WhatsApp bridge restarting...');
+    setTimeout(waRefreshStatus, 3000);
+    setTimeout(waRefreshStatus, 8000);
+  } catch(e) {
+    toast('Restart failed: ' + e.message, true);
+  }
+  if (btn) { btn.disabled = false; btn.textContent = 'Reconnect'; }
+}
+
+// ═══ SETUP: WECOM ═══
+let _wcPolling = null;
+
+async function wcRefreshStatus() {
+  try {
+    const r = await fetch('/api/core/v1/wecom/status');
+    if (!r.ok) { wcSetStatus('off', 'Service unavailable'); return; }
+    const d = await r.json();
+    wcApplyStatus(d);
+  } catch {
+    wcSetStatus('off', 'Connection error');
+  }
+}
+
+function wcApplyStatus(d) {
+  const desc = $('wc-desc');
+  const reconnect = $('wc-reconnect');
+
+  if (d.connected || d.status === 'connected') {
+    wcSetStatus('on', 'Connected');
+    if (desc) desc.textContent = 'Linked and running';
+    if (reconnect) reconnect.style.display = 'none';
+    if (_wcPolling) { clearInterval(_wcPolling); _wcPolling = setInterval(wcRefreshStatus, 30000); }
+  } else if (d.status === 'waiting_config' || (!d.botId && d.status !== 'error')) {
+    wcSetStatus('off', 'Not configured');
+    if (desc) desc.innerHTML = '<a href="https://work.weixin.qq.com/wework_admin/register_wx" target="_blank" style="color:var(--ac)">Create a free account</a> then add your bot credentials';
+    if (reconnect) reconnect.style.display = 'none';
+  } else {
+    wcSetStatus('off', d.status || 'Disconnected');
+    if (desc) desc.textContent = 'Not connected';
+    if (reconnect) reconnect.style.display = 'inline-flex';
+  }
+}
+
+function wcSetStatus(state, text) {
+  const el = $('wc-status');
+  if (!el) return;
+  el.innerHTML = '<span class="dot ' + state + '"></span><span>' + text + '</span>';
+}
+
+async function wcLoadConfig() {
+  try {
+    const r = await fetch('/api/core/v1/wecom/config');
+    if (!r.ok) return;
+    const d = await r.json();
+    if (d.bot_id) $('setup-wc-botid').value = d.bot_id;
+    if (d.secret) $('setup-wc-secret').value = d.secret || '';
+  } catch {}
+}
+
+async function applyWeCom() {
+  const botId = $('setup-wc-botid')?.value.trim();
+  const secret = $('setup-wc-secret')?.value.trim();
+  const msgEl = $('msg-wc');
+  if (!botId || !secret) { showSetupMsg(msgEl, 'Bot ID and Secret required', true); return; }
+
+  try {
+    const r = await fetch('/api/core/v1/wecom/config', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({bot_id: botId, secret: secret})
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+
+    // Reconnect the bridge to pick up new config
+    await fetch('/api/core/v1/wecom/reconnect', {method: 'POST'}).catch(() => {});
+
+    showSetupMsg(msgEl, '\u2713 Config saved & bridge reconnecting', false);
+    toast('WeCom configured');
+    setTimeout(wcRefreshStatus, 3000);
+    setTimeout(wcRefreshStatus, 8000);
+  } catch(e) {
+    showSetupMsg(msgEl, 'Error: ' + e.message, true);
+  }
+}
+
+$('apply-wc')?.addEventListener('click', applyWeCom);
+
+async function wcReconnect() {
+  const btn = $('wc-reconnect');
+  if (btn) { btn.disabled = true; btn.textContent = 'Restarting...'; }
+  try {
+    const r = await fetch('/api/core/v1/wecom/reconnect', {method:'POST'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('WeCom bridge restarting...');
+    setTimeout(wcRefreshStatus, 3000);
+    setTimeout(wcRefreshStatus, 8000);
+  } catch(e) {
+    toast('Restart failed: ' + e.message, true);
+  }
+  if (btn) { btn.disabled = false; btn.textContent = 'Reconnect'; }
+}
 
 // ═══ SETUP: QUICK REFERENCE ═══
 async function loadRefInfo() {
@@ -4215,6 +5432,37 @@ let _logsAutoInterval = null;
 async function loadLogs(svc) {
   if (svc) _logsSvc = svc;
   const out = $('logs-output');
+
+  // WhatsApp bridge logs — via bridge HTTP API, not journalctl
+  if (_logsSvc === 'wa-bridge') {
+    try {
+      const r = await fetch('/api/core/v1/whatsapp/logs');
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      const logs = data.logs || [];
+      out.innerHTML = '';
+      if (!logs.length) { out.textContent = 'No bridge logs yet (bridge may not be running)'; return; }
+      logs.forEach(entry => {
+        const span = document.createElement('span');
+        span.style.display = 'block';
+        if (entry.level === 'error') span.className = 'log-err';
+        else if (entry.level === 'warn') span.className = 'log-warn';
+        else if (/connected|started|listening/i.test(entry.msg)) span.className = 'log-ok';
+        const ts = new Date(entry.ts).toLocaleTimeString();
+        const tsSpan = document.createElement('span');
+        tsSpan.className = 'log-ts';
+        tsSpan.textContent = ts;
+        span.appendChild(tsSpan);
+        span.appendChild(document.createTextNode(' ' + entry.msg));
+        out.appendChild(span);
+      });
+      out.scrollTop = out.scrollHeight;
+    } catch (e) {
+      out.textContent = 'Failed to load WA bridge logs: ' + e.message;
+    }
+    return;
+  }
+
   try {
     const r = await fetch('/api/system/logs?service=' + encodeURIComponent(_logsSvc) + '&lines=150');
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -4359,7 +5607,8 @@ const SVC_LABELS = {
   'clawbot-telegram': 'Telegram Bot',
   'clawbot-cloud': 'ClawBot Cloud',
   'clawbot-status-api': 'Status API',
-  'whatsapp-bridge': 'WhatsApp Bridge'
+  'whatsapp-bridge': 'WhatsApp Bridge',
+  'wecom-bridge': 'WeCom Bridge'
 };
 
 async function loadServices() {
@@ -4445,7 +5694,52 @@ function renderModelChips() {
   });
 }
 
+async function loadVaultToggle() {
+  try {
+    const r = await fetch('/api/core/vault/settings');
+    if (!r.ok) return;
+    const d = await r.json();
+    const enabled = d.vault_enabled !== false;
+    const tog = $('vault-enabled-toggle');
+    if (tog) tog.checked = enabled;
+    _applyVaultCardState(enabled);
+  } catch (e) {}
+}
+
+function _applyVaultCardState(enabled) {
+  const card = $('vault-enabled-toggle');
+  if (!card) return;
+  const cfgCard = card.closest('.cfg-card');
+  if (!cfgCard) return;
+  const inner = cfgCard.querySelector('.sec-t');
+  if (enabled) {
+    cfgCard.style.opacity = '';
+    if (inner) inner.style.opacity = '';
+  } else {
+    cfgCard.style.opacity = '0.45';
+  }
+}
+
+async function toggleVaultEnabled(checked) {
+  try {
+    const r = await fetch('/api/core/vault/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vault_enabled: checked })
+    });
+    if (!r.ok) { toast('Failed to update vault setting', true); return; }
+    _applyVaultCardState(checked);
+    toast(checked ? 'Vault enabled' : 'Vault disabled');
+  } catch (e) { toast('Failed to update vault setting', true); }
+}
+
 async function loadConfig() {
+  // Load vault + protected + master password status in parallel
+  loadVault();
+  loadProtected();
+  checkMasterPasswordStatus();
+  loadVaultToggle();
+  loadUsbDrives();
   try {
     const r = await fetch('/api/system/config');
     if (!r.ok) return;
@@ -4558,6 +5852,919 @@ $('cfg-prompts-save').addEventListener('click', async function() {
   } catch (e) { toast('Save failed: ' + e.message, true); }
 });
 
+// ═══ VAULT & PRIVACY SHIELD ═══
+let _vaultSecrets = [];
+let _protectedWords = [];
+let _privacyTab = 'blacklist';
+let _editingSecret = null;
+
+async function loadVault() {
+  try {
+    const r = await fetch('/api/core/vault');
+    if (!r.ok) return;
+    const d = await r.json();
+    _vaultSecrets = d.secrets || [];
+    renderVault();
+  } catch (e) {}
+}
+
+function renderVault() {
+  const el = $('vault-list');
+  const countText = _vaultSecrets.length + ' secret' + (_vaultSecrets.length !== 1 ? 's' : '');
+  // Update both Settings card counter and overlay counter
+  const countEl = $('vault-count'); if (countEl) { const s = countEl.querySelector('span'); if (s) s.textContent = countText; }
+  const countInner = $('vault-count-inner'); if (countInner) countInner.textContent = countText;
+  if (!_vaultSecrets.length) { el.innerHTML = '<div class="vault-empty">No secrets stored yet</div>'; return; }
+  el.innerHTML = _vaultSecrets.map(s => {
+    const userHtml = s.username ? '<span style="font-family:var(--fmo);font-size:.58rem;color:var(--td);opacity:.7;margin-left:8px">' + esc(s.username) + '</span>' : '';
+    const noteHtml = s.note ? '<div style="font-family:var(--fmo);font-size:.52rem;color:var(--td);opacity:.5;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px">' + esc(s.note) + '</div>' : '';
+    return '<div class="vault-item">' +
+      '<svg class="vault-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>' +
+      '<div style="flex:1;min-width:0"><div style="display:flex;align-items:baseline"><span class="vault-item-name">' + esc(s.name) + '</span>' + userHtml + '</div>' + noteHtml + '</div>' +
+      '<span class="vault-item-badge">' + esc(s.category || 'OTHER') + '</span>' +
+      '<span class="vault-item-masked" id="vm-masked-' + esc(s.name) + '">***</span>' +
+      '<div class="vault-item-actions">' +
+        '<button class="vault-item-btn" onclick="copyVaultSecret(\'' + esc(s.name) + '\',this)" title="Copy to clipboard">Copy</button>' +
+        '<button class="vault-item-btn" onclick="editVaultSecret(\'' + esc(s.name) + '\')">Edit</button>' +
+        '<button class="vault-item-btn del" onclick="deleteVaultSecret(\'' + esc(s.name) + '\')">Delete</button>' +
+      '</div></div>';
+  }).join('');
+  // Fetch masked values
+  _vaultSecrets.forEach(s => {
+    fetch('/api/core/vault/' + encodeURIComponent(s.name))
+      .then(r => r.json())
+      .then(d => { if (d.masked_value) { const m = $('vm-masked-' + s.name); if (m) m.textContent = d.masked_value; } })
+      .catch(() => {});
+  });
+}
+
+function openVaultModal(editName) {
+  _editingSecret = editName || null;
+  $('vm-title').textContent = editName ? 'Edit Secret' : 'Add Secret';
+  $('vm-name').value = editName || '';
+  $('vm-name').readOnly = !!editName;
+  $('vm-name').style.opacity = editName ? '.6' : '1';
+  $('vm-value').value = '';
+  $('vm-value').type = 'password';
+  $('vm-username').value = '';
+  if (!editName) { $('vm-category').value = 'LLM'; $('vm-note').value = ''; }
+  else {
+    const s = _vaultSecrets.find(x => x.name === editName);
+    if (s) { $('vm-category').value = s.category || 'OTHER'; $('vm-note').value = s.note || ''; $('vm-username').value = s.username || ''; }
+  }
+  $('vault-modal').classList.add('open');
+  setTimeout(() => $('vm-' + (editName ? 'value' : 'name')).focus(), 100);
+}
+function closeVaultModal() { $('vault-modal').classList.remove('open'); _editingSecret = null; }
+
+async function saveVaultSecret() {
+  const name = $('vm-name').value.trim();
+  const value = $('vm-value').value;
+  const username = $('vm-username').value.trim();
+  const category = $('vm-category').value;
+  const note = $('vm-note').value.trim();
+  if (!name) { toast('Name is required', true); return; }
+  if (!value) { toast('Value is required', true); return; }
+  try {
+    const r = await fetch('/api/core/vault', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, value, username, category, note })
+    });
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'HTTP ' + r.status); }
+    toast(_editingSecret ? 'Secret updated' : 'Secret stored');
+    closeVaultModal();
+    loadVault();
+  } catch (e) { toast('Failed: ' + e.message, true); }
+}
+
+async function copyVaultSecret(name, btn) {
+  try {
+    const r = await fetch('/api/core/vault/' + encodeURIComponent(name) + '?reveal=1');
+    const d = await r.json();
+    if (d.value) {
+      await navigator.clipboard.writeText(d.value);
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.style.color = 'var(--ac)';
+      btn.style.borderColor = 'var(--ac)';
+      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 1500);
+    }
+  } catch(e) { toast('Copy failed', true); }
+}
+
+async function editVaultSecret(name) {
+  openVaultModal(name);
+  // Fetch real value if vault overlay is open (user already authenticated)
+  if ($('vault-overlay').style.display !== 'none') {
+    try {
+      const r = await fetch('/api/core/vault/' + encodeURIComponent(name) + '?reveal=1');
+      const d = await r.json();
+      if (d.value) { $('vm-value').value = d.value; $('vm-value').type = 'password'; }
+    } catch(e) {}
+  }
+}
+
+async function deleteVaultSecret(name) {
+  if (!confirm('Delete secret "' + name + '"? This cannot be undone.')) return;
+  try {
+    const r = await fetch('/api/core/vault/' + encodeURIComponent(name), {
+      method: 'DELETE',
+      headers: { 'X-Vault-Confirm': 'true' }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('Secret deleted');
+    loadVault();
+  } catch (e) { toast('Delete failed: ' + e.message, true); }
+}
+
+let _vaultRevealed = false;
+async function loadProtected() {
+  try {
+    const url = '/api/core/vault/protected' + (_vaultRevealed ? '?reveal=true' : '');
+    const r = await fetch(url);
+    if (!r.ok) return;
+    const d = await r.json();
+    _protectedWords = d.protected || [];
+    renderProtected();
+  } catch (e) {}
+}
+
+function switchPrivacyTab(tab) {
+  _privacyTab = tab;
+  document.querySelectorAll('.vault-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  const isTotp = tab === 'totp';
+  $('privacy-list').style.display = isTotp ? 'none' : '';
+  $('privacy-add-btn').style.display = tab === 'blacklist' ? '' : 'none';
+  if ($('privacy-info')) $('privacy-info').style.display = isTotp ? 'none' : '';
+  $('totp-panel').style.display = isTotp ? '' : 'none';
+  if (isTotp) { loadTOTP(); } else { stopTOTPTimers(); renderProtected(); }
+}
+
+function renderProtected() {
+  const el = $('privacy-list');
+  const countEl = $('privacy-count').querySelector('span');
+  countEl.textContent = _protectedWords.length + ' protected';
+  const filtered = _protectedWords.filter(p => _privacyTab === 'blacklist' ? p.kind === 'pii' : p.kind === 'secret');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="vault-empty">' + (_privacyTab === 'blacklist' ? 'No protected words yet' : 'No auto-detected secrets') + '</div>';
+    return;
+  }
+  el.innerHTML = filtered.map(p => {
+    const isAuto = p.kind === 'secret';
+    const displayName = p.masked_value && p.masked_value !== '***' ? p.masked_value : p.name;
+    return '<div class="vault-item">' +
+      '<svg class="vault-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
+      '<span class="vault-item-name">' + esc(displayName) + '</span>' +
+      '<span class="vault-item-badge">' + esc(p.category || 'CUSTOM') + '</span>' +
+      '<span class="vault-item-alias">' + esc(p.alias || '__vault_' + p.name + '__') + '</span>' +
+      '<div class="vault-item-actions">' +
+        (isAuto ? '<button class="vault-item-btn del" onclick="deleteProtectedWord(\'' + esc(p.name) + '\')">Remove</button>'
+                : '<button class="vault-item-btn" onclick="editProtectedWord(\'' + esc(p.name) + '\')">Edit</button>' +
+                  '<button class="vault-item-btn del" onclick="deleteProtectedWord(\'' + esc(p.name) + '\')">Delete</button>') +
+      '</div></div>';
+  }).join('');
+}
+
+function openProtectedModal() {
+  $('pm-name').value = '';
+  $('pm-name').readOnly = false;
+  $('pm-name').style.opacity = '1';
+  $('pm-value').value = '';
+  $('pm-value').type = 'password';
+  $('pm-category').value = 'NAME';
+  $('protected-modal').classList.add('open');
+  setTimeout(() => $('pm-name').focus(), 100);
+}
+function closeProtectedModal() { $('protected-modal').classList.remove('open'); }
+
+function editProtectedWord(name) {
+  const p = _protectedWords.find(x => x.name === name);
+  $('pm-name').value = name;
+  $('pm-name').readOnly = true;
+  $('pm-name').style.opacity = '.6';
+  $('pm-value').value = '';
+  $('pm-value').type = 'password';
+  $('pm-category').value = p ? (p.category || 'CUSTOM') : 'CUSTOM';
+  $('protected-modal').classList.add('open');
+  setTimeout(() => $('pm-value').focus(), 100);
+}
+
+async function saveProtectedWord() {
+  const name = $('pm-name').value.trim();
+  const value = $('pm-value').value;
+  const category = $('pm-category').value;
+  if (!name) { toast('Name is required', true); return; }
+  if (!value) { toast('Value is required', true); return; }
+  try {
+    const r = await fetch('/api/core/vault/protected', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, value, kind: 'pii', category })
+    });
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'HTTP ' + r.status); }
+    toast('Word protected');
+    closeProtectedModal();
+    loadProtected();
+  } catch (e) { toast('Failed: ' + e.message, true); }
+}
+
+async function deleteProtectedWord(name) {
+  if (!confirm('Remove protection for "' + name + '"?')) return;
+  try {
+    const r = await fetch('/api/core/vault/protected/' + encodeURIComponent(name), {
+      method: 'DELETE',
+      headers: { 'X-Vault-Confirm': 'true' }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('Protection removed');
+    loadProtected();
+  } catch (e) { toast('Delete failed: ' + e.message, true); }
+}
+
+// ── TOTP (2FA) ─────────────────────────────────────────────
+let _totpEntries = [];
+let _totpCodes = {};   // {name: {code, remaining, period}}
+let _totpRefreshTimer = null;
+let _totpTickTimer = null;
+let _totpMode = 'manual';
+
+async function loadTOTP() {
+  try {
+    const r = await fetch('/api/core/vault/totp');
+    if (!r.ok) return;
+    const d = await r.json();
+    _totpEntries = d.entries || d.totp || [];
+    if (_totpEntries.length) await refreshTOTPCodes();
+    renderTOTP();
+    startTOTPTimers();
+  } catch (e) {}
+}
+
+async function refreshTOTPCodes() {
+  for (const entry of _totpEntries) {
+    try {
+      const r = await fetch('/api/core/vault/totp/' + encodeURIComponent(entry.name) + '/code');
+      if (r.ok) {
+        const d = await r.json();
+        _totpCodes[entry.name] = { code: d.code, remaining: d.remaining, period: d.period || 30 };
+      }
+    } catch (e) {}
+  }
+}
+
+function startTOTPTimers() {
+  stopTOTPTimers();
+  if (!_totpEntries.length) return;
+  // Tick every 1s for local interpolation
+  _totpTickTimer = setInterval(() => {
+    let needsRefresh = false;
+    for (const name in _totpCodes) {
+      _totpCodes[name].remaining = Math.max(0, _totpCodes[name].remaining - 1);
+      if (_totpCodes[name].remaining <= 0) needsRefresh = true;
+    }
+    if (_privacyTab === 'totp') updateTOTPDisplay();
+    if (needsRefresh) refreshTOTPCodes().then(() => { if (_privacyTab === 'totp') renderTOTP(); });
+  }, 1000);
+  // Full refresh every 5s
+  _totpRefreshTimer = setInterval(async () => {
+    await refreshTOTPCodes();
+    if (_privacyTab === 'totp') renderTOTP();
+  }, 5000);
+}
+
+function stopTOTPTimers() {
+  if (_totpRefreshTimer) { clearInterval(_totpRefreshTimer); _totpRefreshTimer = null; }
+  if (_totpTickTimer) { clearInterval(_totpTickTimer); _totpTickTimer = null; }
+}
+
+function updateTOTPDisplay() {
+  for (const name in _totpCodes) {
+    const c = _totpCodes[name];
+    const codeEl = document.querySelector('[data-totp-code="' + CSS.escape(name) + '"]');
+    if (!codeEl) continue;
+    const formatted = String(c.code).padStart(6, '0');
+    codeEl.querySelector('.totp-digits').textContent = formatted.slice(0, 3) + ' ' + formatted.slice(3);
+    const timerEl = codeEl.closest('.totp-item');
+    const secsEl = timerEl.querySelector('.totp-secs');
+    const barEl = timerEl.querySelector('.totp-bar-fill');
+    const pct = (c.remaining / c.period) * 100;
+    secsEl.textContent = c.remaining + 's';
+    secsEl.classList.toggle('urgent', c.remaining < 5);
+    barEl.style.width = pct + '%';
+    barEl.classList.toggle('urgent', c.remaining < 5);
+  }
+}
+
+function renderTOTP() {
+  const el = $('totp-list');
+  if (!_totpEntries.length) {
+    el.innerHTML = '<div class="vault-empty">No TOTP entries — add your first 2FA code</div>';
+    return;
+  }
+  el.innerHTML = _totpEntries.map(entry => {
+    const c = _totpCodes[entry.name] || { code: '------', remaining: 30, period: 30 };
+    const formatted = String(c.code).padStart(6, '0');
+    const codeDisplay = formatted === '------' ? '--- ---' : formatted.slice(0, 3) + ' ' + formatted.slice(3);
+    const pct = (c.remaining / c.period) * 100;
+    const urgent = c.remaining < 5;
+    return '<div class="totp-item">' +
+      '<svg style="width:16px;height:16px;flex-shrink:0" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h2m6 0h2"/></svg>' +
+      '<div class="totp-meta">' +
+        '<div class="totp-name" id="totp-name-' + esc(entry.name) + '">' + esc(entry.name) + '</div>' +
+        (entry.issuer ? '<div class="totp-issuer">' + esc(entry.issuer) + '</div>' : '') +
+      '</div>' +
+      '<div class="totp-code" data-totp-code="' + esc(entry.name) + '" onclick="copyTOTPCode(\'' + esc(entry.name).replace(/'/g, "\\'") + '\', this)">' +
+        '<span class="totp-digits">' + codeDisplay + '</span>' +
+        '<span class="totp-copied">&#10003; Copied</span>' +
+      '</div>' +
+      '<div class="totp-timer">' +
+        '<span class="totp-secs' + (urgent ? ' urgent' : '') + '">' + c.remaining + 's</span>' +
+        '<div class="totp-bar"><div class="totp-bar-fill' + (urgent ? ' urgent' : '') + '" style="width:' + pct + '%"></div></div>' +
+      '</div>' +
+      '<div class="totp-actions">' +
+        '<button class="vault-item-btn del" onclick="deleteTOTP(\'' + esc(entry.name).replace(/'/g, "\\'") + '\')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function copyTOTPCode(name, el) {
+  const c = _totpCodes[name];
+  if (!c || c.code === '------') return;
+  const code = String(c.code).padStart(6, '0');
+  navigator.clipboard.writeText(code).then(() => {
+    const badge = el.querySelector('.totp-copied');
+    badge.classList.add('show');
+    setTimeout(() => badge.classList.remove('show'), 1000);
+  }).catch(() => toast('Copy failed', true));
+}
+
+function renameTOTP(name) {
+  const item = document.querySelector('#totp-name-' + CSS.escape(name));
+  if (!item) return;
+  const oldName = name;
+  const input = document.createElement('input');
+  input.className = 'totp-name-input';
+  input.value = oldName;
+  item.replaceWith(input);
+  input.focus();
+  input.select();
+  const doRename = async () => {
+    const newName = input.value.trim();
+    if (!newName || newName === oldName) { input.replaceWith(item); return; }
+    try {
+      const r = await fetch('/api/core/vault/totp/' + encodeURIComponent(oldName) + '/rename', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ new_name: newName })
+      });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'HTTP ' + r.status); }
+      toast('Renamed to ' + newName);
+      loadTOTP();
+    } catch (e) { toast('Rename failed: ' + e.message, true); input.replaceWith(item); }
+  };
+  input.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); doRename(); } if (e.key === 'Escape') input.replaceWith(item); };
+  input.onblur = doRename;
+}
+
+async function deleteTOTP(name) {
+  if (!confirm('Delete TOTP "' + name + '"? This cannot be undone.')) return;
+  try {
+    const r = await fetch('/api/core/vault/totp/' + encodeURIComponent(name), {
+      method: 'DELETE',
+      headers: { 'X-Vault-Confirm': 'true' }
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    toast('TOTP deleted');
+    delete _totpCodes[name];
+    loadTOTP();
+  } catch (e) { toast('Delete failed: ' + e.message, true); }
+}
+
+function switchTOTPMode(mode) {
+  _totpMode = mode;
+  $('totp-form-manual').style.display = mode === 'manual' ? '' : 'none';
+  $('totp-form-uri').style.display = mode === 'uri' ? '' : 'none';
+  $('totp-mode-manual').classList.toggle('active', mode === 'manual');
+  $('totp-mode-uri').classList.toggle('active', mode === 'uri');
+}
+
+function openTOTPModal() {
+  _totpMode = 'manual';
+  $('totp-name').value = '';
+  $('totp-secret').value = '';
+  $('totp-secret').type = 'password';
+  $('totp-issuer').value = '';
+  $('totp-uri').value = '';
+  $('totp-uri').type = 'password';
+  $('totp-uri-name').value = '';
+  $('totp-form-manual').style.display = '';
+  $('totp-form-uri').style.display = 'none';
+  $('totp-mode-manual').classList.add('active');
+  $('totp-mode-uri').classList.remove('active');
+  $('totp-modal').classList.add('open');
+  setTimeout(() => $('totp-name').focus(), 100);
+}
+
+function closeTOTPModal() { $('totp-modal').classList.remove('open'); }
+
+async function saveTOTPEntry() {
+  let body;
+  if (_totpMode === 'uri') {
+    const uri = $('totp-uri').value.trim();
+    if (!uri) { toast('URI is required', true); return; }
+    // API expects secret field — it detects otpauth:// prefix internally
+    const nameOverride = $('totp-uri-name').value.trim();
+    // Extract label from URI as fallback name: otpauth://totp/Label?... or otpauth://totp/Issuer:Label?...
+    let uriName = nameOverride;
+    if (!uriName) {
+      try { const m = uri.match(/otpauth:\/\/totp\/([^?]+)/); if (m) uriName = decodeURIComponent(m[1]).split(':').pop().trim(); } catch(e) {}
+    }
+    if (!uriName) uriName = 'TOTP-' + Date.now();
+    body = { name: uriName, secret: uri };
+  } else {
+    const name = $('totp-name').value.trim();
+    const secret = $('totp-secret').value.trim().replace(/\s/g, '').toUpperCase();
+    if (!name) { toast('Name is required', true); return; }
+    if (!secret) { toast('Secret is required', true); return; }
+    body = { name, secret };
+    const issuer = $('totp-issuer').value.trim();
+    if (issuer) body.issuer = issuer;
+  }
+  try {
+    const r = await fetch('/api/core/vault/totp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'HTTP ' + r.status); }
+    toast('TOTP entry added');
+    closeTOTPModal();
+    loadTOTP();
+  } catch (e) { toast('Failed: ' + e.message, true); }
+}
+
+function toggleVaultPw(inputId) {
+  const inp = $(inputId);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+// ── Vault Import ─────────────────────────────────────────
+function showImportModal() {
+  $('import-file').value = '';
+  $('import-source').value = 'auto';
+  $('import-result').style.display = 'none';
+  $('import-btn').disabled = false;
+  $('import-modal').classList.add('open');
+}
+function closeImportModal() { $('import-modal').classList.remove('open'); }
+
+async function doImport() {
+  const fileInput = $('import-file');
+  const source = $('import-source').value;
+  const resultEl = $('import-result');
+  if (!fileInput.files.length) { toast('Please select a file', true); return; }
+  const file = fileInput.files[0];
+  if (file.size > 5 * 1024 * 1024) { toast('File too large (max 5MB)', true); return; }
+  $('import-btn').disabled = true;
+  resultEl.style.display = 'none';
+  try {
+    const b64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+    const r = await fetch('/api/core/vault/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_data: b64, filename: file.name, source })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'HTTP ' + r.status);
+    let html = '<span style="color:var(--ac)">' + d.imported + ' imported</span>';
+    if (d.skipped) html += ', <span style="color:var(--td)">' + d.skipped + ' skipped</span>';
+    if (d.errors && d.errors.length) html += ', <span style="color:#f44">' + d.errors.length + ' errors</span>';
+    resultEl.innerHTML = html;
+    resultEl.style.display = 'block';
+    resultEl.style.background = 'var(--ac-d)';
+    resultEl.style.border = '1px solid var(--ac-m)';
+    if (d.imported > 0) {
+      toast(d.imported + ' secrets imported');
+      loadVault();
+    }
+  } catch (e) {
+    resultEl.innerHTML = '<span style="color:#f44">' + esc(e.message) + '</span>';
+    resultEl.style.display = 'block';
+    resultEl.style.background = '#f4440d';
+    resultEl.style.border = '1px solid #f44';
+    toast('Import failed: ' + e.message, true);
+  }
+  $('import-btn').disabled = false;
+}
+
+// Modal backdrop close
+$('vault-modal').addEventListener('click', function(e) { if (e.target === this) closeVaultModal(); });
+$('protected-modal').addEventListener('click', function(e) { if (e.target === this) closeProtectedModal(); });
+$('import-modal').addEventListener('click', function(e) { if (e.target === this) closeImportModal(); });
+$('master-pw-modal').addEventListener('click', function(e) { if (e.target === this) closeMasterPwModal(); });
+$('unlock-modal').addEventListener('click', function(e) { /* no backdrop close for unlock */ });
+$('backup-download-modal').addEventListener('click', function(e) { if (e.target === this) closeBackupDownloadModal(); });
+$('restore-file-modal').addEventListener('click', function(e) { if (e.target === this) closeRestoreFileModal(); });
+$('restore-usb-modal').addEventListener('click', function(e) { if (e.target === this) closeRestoreUsbModal(); });
+
+// ═══ MASTER PASSWORD & USB BACKUP ═══
+let _usbDrives = [];
+
+async function checkMasterPasswordStatus() {
+  const statusEl = $('master-pw-status');
+  const btnEl = $('btn-set-master');
+  try {
+    const r = await fetch('/api/core/vault/master-password');
+    if (!r.ok) { statusEl.textContent = 'error'; return; }
+    const d = await r.json();
+    if (d.has_master) {
+      statusEl.textContent = d.locked ? 'LOCKED' : 'ACTIVE';
+      statusEl.style.color = d.locked ? '#ff8800' : '#00ffe0';
+      statusEl.style.background = d.locked ? 'rgba(255,136,0,.12)' : 'rgba(0,255,224,.08)';
+      btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Change Master Password';
+      if (d.locked) showUnlockModal();
+    } else {
+      statusEl.textContent = 'NOT SET';
+      statusEl.style.color = '#888';
+      btnEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Set Master Password';
+    }
+  } catch(e) { statusEl.textContent = 'error'; }
+}
+
+function openMasterPwModal() {
+  $('master-pw-input').value = '';
+  $('master-pw-confirm').value = '';
+  $('master-pw-strength').textContent = '';
+  $('master-pw-modal').classList.add('open');
+  setTimeout(() => $('master-pw-input').focus(), 100);
+}
+function closeMasterPwModal() { $('master-pw-modal').classList.remove('open'); }
+
+$('master-pw-input').addEventListener('input', function() {
+  const pw = this.value;
+  const el = $('master-pw-strength');
+  if (!pw) { el.textContent = ''; return; }
+  if (pw.length < 8) { el.textContent = 'Too short (min 8)'; el.style.color = '#ff4444'; return; }
+  let score = 0;
+  if (pw.length >= 12) score++;
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^a-zA-Z0-9]/.test(pw)) score++;
+  const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+  const colors = ['#ff4444', '#ff8800', '#88cc00', '#00ffe0'];
+  el.textContent = labels[score] || 'Weak';
+  el.style.color = colors[score] || '#ff4444';
+});
+
+async function saveMasterPassword() {
+  const pw = $('master-pw-input').value;
+  const confirm = $('master-pw-confirm').value;
+  if (pw.length < 8) { toast('Password must be at least 8 characters', true); return; }
+  if (pw !== confirm) { toast('Passwords do not match', true); return; }
+  $('master-pw-save-btn').disabled = true;
+  try {
+    const r = await fetch('/api/core/vault/master-password', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: pw, confirm: confirm})
+    });
+    const d = await r.json();
+    if (r.ok && d.ok) {
+      toast('Master password set — all secrets re-encrypted');
+      closeMasterPwModal();
+      checkMasterPasswordStatus();
+    } else {
+      toast(d.error || 'Failed to set master password', true);
+    }
+  } catch(e) { toast('Error: ' + e.message, true); }
+  $('master-pw-save-btn').disabled = false;
+}
+
+function showUnlockModal() {
+  $('unlock-pw-input').value = '';
+  $('unlock-error').style.display = 'none';
+  $('unlock-modal').classList.add('open');
+  setTimeout(() => $('unlock-pw-input').focus(), 100);
+}
+
+async function doUnlockVault() {
+  const pw = $('unlock-pw-input').value;
+  if (!pw) return;
+  try {
+    const r = await fetch('/api/core/vault/unlock', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: pw})
+    });
+    if (r.ok) {
+      $('unlock-modal').classList.remove('open');
+      toast('Vault unlocked');
+      checkMasterPasswordStatus();
+      loadVault();
+      loadProtected();
+    } else {
+      $('unlock-error').textContent = 'Invalid password';
+      $('unlock-error').style.display = 'block';
+    }
+  } catch(e) {
+    $('unlock-error').textContent = 'Error: ' + e.message;
+    $('unlock-error').style.display = 'block';
+  }
+}
+
+$('unlock-pw-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') doUnlockVault(); });
+
+async function loadUsbDrives() {
+  try {
+    const r = await fetch('/api/core/vault/usb');
+    if (!r.ok) return;
+    const d = await r.json();
+    _usbDrives = d.drives || [];
+    const badge = $('usb-status-badge');
+    if (_usbDrives.length === 0) {
+      badge.textContent = 'No USB';
+      badge.style.color = '#888';
+      badge.style.background = 'rgba(255,255,255,.06)';
+    } else {
+      badge.textContent = _usbDrives[0].label + ' — ' + _usbDrives[0].backups.length + ' backup(s)';
+      badge.style.color = '#00ffe0';
+      badge.style.background = 'rgba(0,255,224,.08)';
+      // Auto-backup to USB if vault is unlocked
+      autoBackupToUsb();
+    }
+  } catch(e) { /* silent */ }
+}
+
+let _autoBackupDone = false;
+async function autoBackupToUsb() {
+  if (_autoBackupDone || _usbDrives.length === 0) return;
+  try {
+    const st = await fetch('/api/core/vault/master-password');
+    const sd = await st.json();
+    if (!sd.has_master || sd.locked) return;
+    // Auto-backup to first USB drive using master password unlock session
+    const r = await fetch('/api/core/vault/backup-usb', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: '__auto__', usb_path: _usbDrives[0].path})
+    });
+    // If it fails due to password, that's OK — auto backup is best-effort
+    if (r.ok) {
+      _autoBackupDone = true;
+      loadUsbDrives();
+    }
+  } catch(e) { /* silent */ }
+}
+
+function _populateUsbSelect(selectId) {
+  const sel = $(selectId);
+  sel.innerHTML = '';
+  if (_usbDrives.length === 0) {
+    sel.innerHTML = '<option value="">No USB drive detected</option>';
+    return;
+  }
+  _usbDrives.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d.path;
+    opt.textContent = d.label + ' (' + d.path + ')';
+    sel.appendChild(opt);
+  });
+}
+
+// ── Vault Overlay (safe UX) ──────────────────────────────────────────
+function openVaultOverlay() {
+  $('vault-overlay').style.display = 'block';
+  $('vault-lock-screen').style.display = 'flex';
+  $('vault-unlocked').style.display = 'none';
+  $('vault-overlay-pw').value = '';
+  $('vault-overlay-error').style.display = 'none';
+  setTimeout(() => $('vault-overlay-pw').focus(), 100);
+  // Allow Enter to unlock
+  $('vault-overlay-pw').onkeydown = (e) => { if (e.key === 'Enter') unlockVaultOverlay(); };
+}
+
+async function unlockVaultOverlay() {
+  const pw = $('vault-overlay-pw').value;
+  if (!pw) { $('vault-overlay-error').textContent = 'Enter your master password'; $('vault-overlay-error').style.display = 'block'; return; }
+  try {
+    const r = await fetch('/api/core/vault/unlock', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: pw})
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) {
+      $('vault-overlay-error').textContent = 'Wrong master password';
+      $('vault-overlay-error').style.display = 'block';
+      $('vault-overlay-pw').select();
+      return;
+    }
+    // Unlocked — show content
+    $('vault-lock-screen').style.display = 'none';
+    $('vault-unlocked').style.display = 'block';
+    _vaultRevealed = true;
+    loadVault();
+    loadProtected();
+    // Pre-load TOTP entries (codes will refresh when tab is opened)
+    loadTOTP();
+  } catch (e) {
+    $('vault-overlay-error').textContent = 'Connection error';
+    $('vault-overlay-error').style.display = 'block';
+  }
+}
+
+function closeVaultOverlay() {
+  $('vault-overlay').style.display = 'none';
+  $('vault-lock-screen').style.display = 'flex';
+  $('vault-unlocked').style.display = 'none';
+  _vaultRevealed = false;
+  stopTOTPTimers();
+  // Reset to blacklist tab
+  _privacyTab = 'blacklist';
+  document.querySelectorAll('.vault-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === 'blacklist'));
+  if ($('totp-panel')) $('totp-panel').style.display = 'none';
+  if ($('privacy-list')) $('privacy-list').style.display = '';
+  if ($('privacy-add-btn')) $('privacy-add-btn').style.display = '';
+  if ($('privacy-info')) $('privacy-info').style.display = '';
+}
+
+function openBackupDownloadModal() {
+  $('backup-dl-pw').value = '';
+  $('backup-dl-result').style.display = 'none';
+  $('backup-download-modal').classList.add('open');
+  setTimeout(() => $('backup-dl-pw').focus(), 100);
+}
+function closeBackupDownloadModal() { $('backup-download-modal').classList.remove('open'); }
+
+async function doBackupDownload() {
+  const pw = $('backup-dl-pw').value;
+  if (!pw) { toast('Enter a password', true); return; }
+  $('backup-dl-btn').disabled = true;
+  const resultEl = $('backup-dl-result');
+  try {
+    const r = await fetch('/api/core/vault/export', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: pw})
+    });
+    if (!r.ok) {
+      const d = await r.json();
+      resultEl.textContent = d.error || 'Export failed';
+      resultEl.style.background = 'rgba(255,68,68,.08)';
+      resultEl.style.border = '1px solid rgba(255,68,68,.2)';
+      resultEl.style.color = '#ff4444';
+      resultEl.style.display = 'block';
+      $('backup-dl-btn').disabled = false;
+      return;
+    }
+    const blob = await r.blob();
+    const cd = r.headers.get('Content-Disposition') || '';
+    const match = cd.match(/filename="?([^"]+)"?/);
+    const filename = match ? match[1] : 'clawbot-vault-backup.enc';
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    resultEl.textContent = 'Downloaded: ' + filename;
+    resultEl.style.background = 'rgba(0,255,224,.08)';
+    resultEl.style.border = '1px solid rgba(0,255,224,.2)';
+    resultEl.style.color = '#00ffe0';
+    resultEl.style.display = 'block';
+    toast('Vault backup downloaded');
+  } catch(e) {
+    resultEl.textContent = 'Error: ' + e.message;
+    resultEl.style.background = 'rgba(255,68,68,.08)';
+    resultEl.style.border = '1px solid rgba(255,68,68,.2)';
+    resultEl.style.color = '#ff4444';
+    resultEl.style.display = 'block';
+  }
+  $('backup-dl-btn').disabled = false;
+}
+
+function openRestoreFileModal() {
+  $('restore-file-input').value = '';
+  $('restore-file-pw').value = '';
+  $('restore-file-result').style.display = 'none';
+  $('restore-file-btn').disabled = false;
+  $('restore-file-modal').classList.add('open');
+  setTimeout(() => $('restore-file-pw').focus(), 100);
+}
+function closeRestoreFileModal() { $('restore-file-modal').classList.remove('open'); }
+
+async function doRestoreFile() {
+  const fileInput = $('restore-file-input');
+  const pw = $('restore-file-pw').value;
+  const resultEl = $('restore-file-result');
+  if (!fileInput.files.length) { toast('Please select a .enc backup file', true); return; }
+  if (!pw) { toast('Enter the backup password', true); return; }
+  const file = fileInput.files[0];
+  if (file.size > 10 * 1024 * 1024) { toast('File too large (max 10MB)', true); return; }
+  $('restore-file-btn').disabled = true;
+  resultEl.style.display = 'none';
+  try {
+    const b64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = () => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
+    const r = await fetch('/api/core/vault/import-backup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ file_data: b64, password: pw })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || (d.errors && d.errors[0]) || 'Restore failed');
+    let html = '<span style="color:var(--ac)">' + d.imported + ' imported</span>';
+    if (d.skipped) html += ', <span style="color:var(--td)">' + d.skipped + ' skipped</span>';
+    if (d.errors && d.errors.length) html += '<br><span style="color:#f44">' + esc(d.errors.join(', ')) + '</span>';
+    resultEl.innerHTML = html;
+    resultEl.style.background = 'rgba(0,255,224,.08)';
+    resultEl.style.border = '1px solid rgba(0,255,224,.2)';
+    resultEl.style.display = 'block';
+    if (d.imported > 0) {
+      toast(d.imported + ' secrets restored');
+      loadVault();
+    }
+  } catch (e) {
+    resultEl.innerHTML = '<span style="color:#f44">' + esc(e.message) + '</span>';
+    resultEl.style.background = 'rgba(255,68,68,.08)';
+    resultEl.style.border = '1px solid rgba(255,68,68,.2)';
+    resultEl.style.display = 'block';
+    toast('Restore failed: ' + e.message, true);
+  }
+  $('restore-file-btn').disabled = false;
+}
+
+function openRestoreUsbModal() {
+  loadUsbDrives().then(() => {
+    _populateUsbSelect('restore-usb-drive');
+    $('restore-usb-file').innerHTML = '<option value="">Select a backup file</option>';
+    $('restore-usb-pw').value = '';
+    $('restore-usb-result').style.display = 'none';
+    $('restore-usb-modal').classList.add('open');
+    onRestoreDriveChange();
+  });
+}
+function closeRestoreUsbModal() { $('restore-usb-modal').classList.remove('open'); }
+
+function onRestoreDriveChange() {
+  const drivePath = $('restore-usb-drive').value;
+  const fileSel = $('restore-usb-file');
+  fileSel.innerHTML = '<option value="">Select a backup file</option>';
+  const drive = _usbDrives.find(d => d.path === drivePath);
+  if (!drive || !drive.backups.length) return;
+  drive.backups.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = drive.path + '/' + f;
+    opt.textContent = f;
+    fileSel.appendChild(opt);
+  });
+}
+
+async function doRestoreUsb() {
+  const file = $('restore-usb-file').value;
+  const pw = $('restore-usb-pw').value;
+  if (!file) { toast('Select a backup file', true); return; }
+  if (!pw) { toast('Enter the backup password', true); return; }
+  if (!confirm('This will merge the backup into your current vault. Continue?')) return;
+  $('restore-usb-btn').disabled = true;
+  const resultEl = $('restore-usb-result');
+  try {
+    const r = await fetch('/api/core/vault/restore-usb', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: pw, backup_file: file})
+    });
+    const d = await r.json();
+    if (r.ok) {
+      const msg = 'Imported: ' + (d.imported||0) + ', Skipped: ' + (d.skipped||0) +
+                  (d.errors && d.errors.length ? ', Errors: ' + d.errors.length : '');
+      resultEl.textContent = msg;
+      resultEl.style.background = d.errors && d.errors.length ? 'rgba(255,136,0,.08)' : 'rgba(0,255,224,.08)';
+      resultEl.style.border = '1px solid ' + (d.errors && d.errors.length ? 'rgba(255,136,0,.2)' : 'rgba(0,255,224,.2)');
+      resultEl.style.color = d.errors && d.errors.length ? '#ff8800' : '#00ffe0';
+      resultEl.style.display = 'block';
+      toast('Vault restored from USB');
+      loadVault();
+      loadProtected();
+    } else {
+      resultEl.textContent = d.error || 'Restore failed';
+      resultEl.style.background = 'rgba(255,68,68,.08)';
+      resultEl.style.border = '1px solid rgba(255,68,68,.2)';
+      resultEl.style.color = '#ff4444';
+      resultEl.style.display = 'block';
+    }
+  } catch(e) {
+    resultEl.textContent = 'Error: ' + e.message;
+    resultEl.style.display = 'block';
+  }
+  $('restore-usb-btn').disabled = false;
+}
+
 // ═══ INIT ═══
 const hn = window.location.hostname;
 if (hn && hn !== 'localhost') $('sb-ip').textContent = hn;
@@ -4609,6 +6816,9 @@ loadSetupConfig();
 waRefreshStatus();
 waLoadConfig();
 _waPolling = setInterval(waRefreshStatus, 5000);
+wcRefreshStatus();
+wcLoadConfig();
+_wcPolling = setInterval(wcRefreshStatus, 5000);
 loadRefInfo();
 // Device code from hostname
 const dc = $('setup-device-code');
